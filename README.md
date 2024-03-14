@@ -61,6 +61,39 @@ logger.debug("This is alias of info message");
 logger.txt("This only registered message, not console viewer");
 ```
 
+Use Colors in string Check Supported Colors in [Colors](./docs/Colors.md)
+
+```typescript
+import { Loggings } from "loggings";
+const logger = new Loggings("Loggings","blue")
+/**
+ * Use [].colorname to color text
+ * use -b for bold extra colors
+ */
+
+logger.info("This is [Green].green");
+logger.info("This is [Green Bold].green-b");
+logger.info("This is [Red Bold].red-b");
+logger.info("This is [Red].red");
+```
+
+Console Args use
+
+```typescript
+import { Loggings } from "loggings";
+const logger = new Loggings("Loggings","blue")
+
+// number is blue color in terminal
+logger.info(1,"is [Number].blue");
+
+// number is green color in terminal
+logger.info({loggings:{ is:"Cool"} },"is [Object].green");
+
+// boolean is blue or red
+logger.info(true,"is [Boolean].blue"); // blue
+logger.info(false,"is [Boolean].red"); // red
+```
+
 ### Exemples
 
 Check [Exemples](./exemples/)
