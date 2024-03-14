@@ -1,11 +1,11 @@
 {
-  "name": "loggings",
-  "version": "0.0.1",
+  "name": "loggings-alt",
+  "version": "0.0.0",
   "description": "Simple log system for your node js application, supported colors.",
-  "main": "dist/Loggings.js",
+  "main": "./dist/Loggings.js",
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only --transpiler sucrase/ts-node-plugin src/test.ts",
-    "test": "ts-node-dev test.ts",
+    "test": "ts-node-dev --respawn --transpile-only test.ts",
     "build": "tsc --project ./tsconfig.json"
   },
   "repository": {
@@ -34,6 +34,5 @@
     "typescript": "^5.4.2"
   },
   "dependencies": {
-    "chalk": "^4.1.2"
   }
 }
