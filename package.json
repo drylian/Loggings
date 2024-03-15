@@ -1,6 +1,6 @@
 {
   "name": "loggings",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Simple log system for your node js application, supported colors.",
   "main": "./dist/Loggings.js",
   "scripts": {
@@ -32,6 +32,5 @@
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.4.2"
   },
-  "dependencies": {
-  }
+  "dependencies": {}
 }
