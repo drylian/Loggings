@@ -26,11 +26,11 @@ export function LoggingsRegisterJson(options: LoggingsDefaultConfig & LoggingsCo
  */
 export function LoggingsRegisterJsonFile(options: LoggingsDefaultConfig & LoggingsController, message: object) {
     const timer = Timer("").timer
-    const logFileName = `${timer.day}_${timer.month}_${timer.year}_${options.current_level}.log`;
-    const logFilePath = path.join(options.register_locale_file, logFileName);
+    const JsonFileName = `${timer.day}_${timer.month}_${timer.year}_${options.current_level}.json`;
+    const JsonFilePath = path.join(options.register_locale_file, JsonFileName);
     let data: Record<string, object[]> = {};
-    if (fs.existsSync(logFilePath)) data = JSON.parse(fs.readFileSync(logFilePath, "utf-8"));
+    if (fs.existsSync(JsonFilePath)) data = JSON.parse(fs.readFileSync(JsonFilePath, "utf-8"));
     const logCounter = Object.keys(data).length + 1;
     data[`case_${logCounter}`] = [message];
-    fs.writeFileSync(logFilePath, JSON.stringify(data, null, 2), { flag: "w" });
+    fs.writeFileSync(JsonFilePath, JSON.stringify(data, null, 2), { flag: "w" });
 }

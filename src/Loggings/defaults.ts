@@ -2,9 +2,8 @@
  * Loggings Defaults Configurations.
  */
 import path from "path";
-import { LoggingsDefaultConfig, LoggingsOptionalConfig } from "./types"
+import { LoggingsDefaultConfig } from "./types"
 import * as fs from "fs";
-import { Colors } from "./Colors";
 import { Formatter } from "../Loggings";
 /**
  * Default configurations of Loggings
@@ -81,7 +80,7 @@ export enum LoggingsColors {
  * DefaultLoggings Arguments function
  */
 export default (): LoggingsDefaultConfig => {
-    let UserOptions: Function | {} = {}
+    let UserOptions = {}
     let optionFILE= "unknown";
     try {
         if (fs.existsSync("./loggings.config.js")) {

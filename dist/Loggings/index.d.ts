@@ -1,5 +1,4 @@
-import defaults from "./defaults";
-export const LoggingsDefault = defaults;
+export declare const LoggingsDefault: () => import("./types").LoggingsDefaultConfig;
 export * from "./types";
 export * from "./Controller";
 export * from "./Functions/Console";

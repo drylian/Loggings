@@ -2,85 +2,85 @@
 
 ### Reset
 - **Description**: Resets the color and style to default.
-- **Usage**: `LoggingsColors.reset`
+- **Usage**: `reset`
 
 ### Bold
 - **Description**: Makes the text bold.
-- **Usage**: `LoggingsColors.bold`
+- **Usage**: `bold`
 
 ### Bright
 - **Description**: Same as `Bold`. Makes the text bold.
-- **Usage**: `LoggingsColors.bright`
+- **Usage**: `bright`
 
 ### Dim
 - **Description**: Makes the text appear dimmed.
-- **Usage**: `LoggingsColors.dim`
+- **Usage**: `dim`
 
 ### Underscore
 - **Description**: Underlines the text.
-- **Usage**: `LoggingsColors.underscore`
+- **Usage**: `underscore`
 
 ### Blink
 - **Description**: Makes the text blink.
-- **Usage**: `LoggingsColors.blink`
+- **Usage**: `blink`
 
 ### Reverse
 - **Description**: Reverses the foreground and background colors.
-- **Usage**: `LoggingsColors.reverse`
+- **Usage**: `reverse`
 
 ### Hidden
 - **Description**: Hides the text.
-- **Usage**: `LoggingsColors.hidden`
+- **Usage**: `hidden`
 
 ### Black
 - **Description**: Sets the text color to black.
-- **Usage**: `LoggingsColors.black`
+- **Usage**: `black`
 
 ### Red
 - **Description**: Sets the text color to red.
-- **Usage**: `LoggingsColors.red`
+- **Usage**: `red`
 
 ### Green
 - **Description**: Sets the text color to green.
-- **Usage**: `LoggingsColors.green`
+- **Usage**: `green`
 
 ### Gray
 - **Description**: Sets the text color to gray.
-- **Usage**: `LoggingsColors.gray`
+- **Usage**: `gray`
 
 ### Yellow
 - **Description**: Sets the text color to yellow.
-- **Usage**: `LoggingsColors.yellow`
+- **Usage**: `yellow`
 
 ### Blue
 - **Description**: Sets the text color to blue.
-- **Usage**: `LoggingsColors.blue`
+- **Usage**: `blue`
 
 ### Magenta
 - **Description**: Sets the text color to magenta.
-- **Usage**: `LoggingsColors.magenta`
+- **Usage**: `magenta`
 
 ### Cyan
 - **Description**: Sets the text color to cyan.
-- **Usage**: `LoggingsColors.cyan`
+- **Usage**: `cyan`
 
 ### White
 - **Description**: Sets the text color to white.
-- **Usage**: `LoggingsColors.white`
+- **Usage**: `white`
 
 ### Background Colors
 The following colors are used for setting the background color of the text.
 
-- **Usage**: `LoggingsColors.bgBlack`, `LoggingsColors.bgRed`, `LoggingsColors.bgGreen`, `LoggingsColors.bgYellow`, `LoggingsColors.bgBlue`, `LoggingsColors.bgMagenta`, `LoggingsColors.bgCyan`, `LoggingsColors.bgWhite`
+- **Usage**: `bgBlack`, `bgRed`, `bgGreen`, `bgYellow`, `bgBlue`, `bgMagenta`, `bgCyan`, `bgWhite`
 
 ### Bright Foreground Colors
 The following colors are brighter versions of the standard foreground colors.
 
-- **Usage**: `LoggingsColors.fgBlackBright`, `LoggingsColors.fgRedBright`, `LoggingsColors.fgGreenBright`, `LoggingsColors.fgYellowBright`, `LoggingsColors.fgBlueBright`, `LoggingsColors.fgMagentaBright`, `LoggingsColors.fgCyanBright`, `LoggingsColors.fgWhiteBright`
+- **Usage**: `fgBlackBright`, `fgRedBright`, `fgGreenBright`, `fgYellowBright`, `fgBlueBright`, `fgMagentaBright`, `fgCyanBright`, `fgWhiteBright`
 
 ### Bright Background Colors
 The following colors are brighter versions of the standard background colors.
 
-- **Usage**: `LoggingsColors.bgBlackBright`, `LoggingsColors.bgRedBright`, `LoggingsColors.bgGreenBright`, `LoggingsColors.bgYellowBright`, `LoggingsColors.bgBlueBright`, `LoggingsColors.bgMagentaBright`, `LoggingsColors.bgCyanBright`, `LoggingsColors.bgWhiteBright`
+- **Usage**: `bgBlackBright`, `bgRedBright`, `bgGreenBright`, `bgYellowBright`, `bgBlueBright`, `bgMagentaBright`, `bgCyanBright`, `bgWhiteBright`
 
 These color constants can be used to customize the appearance of log messages in your application.

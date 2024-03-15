@@ -26,12 +26,14 @@ export class Loggings {
      * @param {LoggingsColor} Color - The color of the controller.
      * @param {Partial<LoggingsDefaultConfig>} options - Additional configuration options.
      */
-    constructor(Controller?: string, Color?: LoggingsColor, options?: Partial<LoggingsDefaultConfig>) {
-        this.options = options;
-        if (Controller) this.options.controller_title = Controller
-        if (Color) this.options.controller_color = Color
+    constructor(Controller: string = "All", Color: LoggingsColor = "blue", options?: Partial<LoggingsDefaultConfig>) {
+        this.options = {
+            controller_title: Controller,
+            controller_color: Color,
+            ...options
+        };
     }
-    
+
     /**
      * Loggings metadata Arguments
      */

@@ -1,9 +1,10 @@
 {
   "name": "loggings",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "Simple log system for your node js application, supported colors.",
   "main": "./dist/Loggings.js",
   "scripts": {
+    "test": "tsc --project ./tsconfig.json && node test/test.js",
     "build": "tsc --project ./tsconfig.json"
   },
   "repository": {
