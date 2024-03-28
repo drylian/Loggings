@@ -1,12 +1,12 @@
 {
   "name": "loggings",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "Simple log system for your node js application, supported colors.",
   "main": "./dist/Loggings.js",
   "scripts": {
     "build": "tsc --project ./tsconfig.json",
-    "test:dev":"ts-node-dev --respawn --transpile-only --transpiler sucrase/ts-node-plugin test/test.ts",
-    "npm:update":"tsc --project ./tsconfig.json && npm run build && node ./test/test.js && npm version minor && npm publish"
+    "test:dev": "ts-node-dev --respawn --transpile-only --transpiler sucrase/ts-node-plugin test/test.ts",
+    "npm:update": "tsc --project ./tsconfig.json && npm run build && node ./test/test.js && npm version minor && npm publish"
   },
   "repository": {
     "type": "git",
