@@ -1,4 +1,4 @@
-import defaults from "../defaults";
+import defaults, { LoggingsColors } from "../defaults";
 import { LoggingsColor, LoggingsMessage } from "../types";
 import { Timer } from "./Timer";
 import { Formatter } from "./Formatter";
@@ -11,7 +11,7 @@ import { Colors } from "../Colors";
  * @param color Color
  * @param args LoggingsMessage
  */
-export function Console(status: string, color: LoggingsColor, ...args: LoggingsMessage[]) {
+export function Console(status: string, color: keyof typeof LoggingsColors, ...args: LoggingsMessage[]) {
     let format = defaults().format
     format = Timer(format).format
     format = Formatter([format]).message_csl

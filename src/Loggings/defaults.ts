@@ -5,6 +5,7 @@ import path from "path";
 import { LoggingsDefaultConfig } from "./types"
 import * as fs from "fs";
 import { Formatter } from "../Loggings";
+import { Bgc, Rgb } from "./Colors";
 /**
  * Default configurations of Loggings
  */
@@ -12,9 +13,9 @@ const LoggingsDefaults: LoggingsDefaultConfig = {
     format: '[{status}] {title} [{hours}:{minutes}:{seconds}].gray {message}',
     console: true,
     level: "Debug",
-    color_fallback: "blue",
+    color_fallback: "cyan",
     controller_title: 'All',
-    controller_color: "blue",
+    controller_color: "cyan",
     register: true,
     register_del: true,
     register_limit: 10,
@@ -23,65 +24,100 @@ const LoggingsDefaults: LoggingsDefaultConfig = {
     register_format: '[ {day}/{month}/{year}-{hours}:{minutes}:{seconds} ] [ _.{title}._ ] {message}',
     register_type: 'log',
     status_colors: {
-        Debug: "magenta",
-        Info: "blue",
-        Warn: "yellow",
-        Error: "red"
+        Debug: {
+            color:"magenta",
+            bg:"none"
+        },
+        Info: {
+            color:"blue",
+            bg:"none"
+        },
+        Warn: {
+            color:"yellow",
+            bg:"none"
+        },
+        Error: {
+            color:"red",
+            bg:"none"
+        },
     },
     progress_format: " {progress}% [{bar}].red | [{current}].blue/[{total}].green TIME:[{progress_time}].gray|ETA:[{progress_eta}].red - {message}",
     progress_size: 50,
     progress_bar: "=",
     progress_mili: true,
 }
+
+const ColorsTxT = {
+    red: Rgb(255, 0, 0),
+    green: Rgb(0, 255, 0),
+    lime: Rgb(128, 255, 128),
+    blue: Rgb(0, 0, 255),
+    yellow: Rgb(255, 255, 0),
+    cyan: Rgb(0, 255, 255),
+    magenta: Rgb(255, 0, 255),
+    black: Rgb(0, 0, 0),
+    white: Rgb(255, 255, 255),
+    gray: Rgb(128, 128, 128),
+    maroon: Rgb(128, 0, 0),
+    olive: Rgb(128, 128, 0),
+    navy: Rgb(0, 0, 128),
+    purple: Rgb(128, 0, 128),
+    teal: Rgb(0, 128, 128),
+    silver: Rgb(192, 192, 192),
+    indigo: Rgb(75, 0, 130),
+    gold: Rgb(255, 215, 0),
+    pink: Rgb(255, 192, 203),
+    orange: Rgb(255, 165, 0),
+    brown: Rgb(165, 42, 42),
+    peach: Rgb(255, 218, 185),
+    lavender: Rgb(230, 230, 250),
+} as const;
+
+
+const ColorsBg = {
+    bred: Bgc(255, 0, 0),
+    bgreen: Bgc(0, 255, 0),
+    blime: Bgc(128, 255, 128),
+    bblue: Bgc(0, 0, 255),
+    byellow: Bgc(255, 255, 0),
+    bcyan: Bgc(0, 255, 255),
+    bmagenta: Bgc(255, 0, 255),
+    bblack: Bgc(0, 0, 0),
+    bwhite: Bgc(255, 255, 255),
+    bgray: Bgc(128, 128, 128),
+    bmaroon: Bgc(128, 0, 0),
+    bolive: Bgc(128, 128, 0),
+    bnavy: Bgc(0, 0, 128),
+    bpurple: Bgc(128, 0, 128),
+    bteal: Bgc(0, 128, 128),
+    bsilver: Bgc(192, 192, 192),
+    bindigo: Bgc(75, 0, 130),
+    bgold: Bgc(255, 215, 0),
+    bpink: Bgc(255, 192, 203),
+    borange: Bgc(255, 165, 0),
+    bbrown: Bgc(165, 42, 42),
+    bpeach: Bgc(255, 218, 185),
+    blavender: Bgc(230, 230, 250),
+} as const;
+
 /**
  * Declared Colors
  */
-export enum LoggingsColors {
-    reset = "\x1b[0m",
-    bold = "\x1b[1m",
-    bright = "\x1b[1m",
-    dim = "\x1b[2m",
-    underscore = "\x1b[4m",
-    blink = "\x1b[5m",
-    reverse = "\x1b[7m",
-    hidden = "\x1b[8m",
-    black = "\x1b[30m",
-    red = "\x1b[31m",
-    green = "\x1b[32m",
-    gray = "\x1b[90m",
-    yellow = "\x1b[33m",
-    blue = "\x1b[34m",
-    magenta = "\x1b[35m",
-    cyan = "\x1b[36m",
-    white = "\x1b[37m",
-    bgBlack = "\x1b[40m",
-    bgRed = "\x1b[41m",
-    bgGreen = "\x1b[42m",
-    bgYellow = "\x1b[43m",
-    bgBlue = "\x1b[44m",
-    bgMagenta = "\x1b[45m",
-    bgCyan = "\x1b[46m",
-    bgWhite = "\x1b[47m",
-    fgGray = "\x1b[90m",
-    bgGray = "\x1b[100m",
-    fgBlackBright = "\x1b[90m",
-    fgRedBright = "\x1b[91m",
-    fgGreenBright = "\x1b[92m",
-    fgYellowBright = "\x1b[93m",
-    fgBlueBright = "\x1b[94m",
-    fgMagentaBright = "\x1b[95m",
-    fgCyanBright = "\x1b[96m",
-    fgWhiteBright = "\x1b[97m",
-    bgBlackBright = "\x1b[100m",
-    bgRedBright = "\x1b[101m",
-}
+export const LoggingsColors = {
+    inverse:"\x1b[7m",
+    none:"none",
+    reset:"\x1b[0m",
+    bold:"\x1b[1m",
+    ...ColorsBg,
+    ...ColorsTxT
+}as const
 
 /**
  * DefaultLoggings Arguments function
  */
 export default (): LoggingsDefaultConfig => {
     let UserOptions = {}
-    let optionFILE= "unknown";
+    let optionFILE = "unknown";
     try {
         if (fs.existsSync("./loggings.config.js")) {
             optionFILE = "./loggings.config.js";

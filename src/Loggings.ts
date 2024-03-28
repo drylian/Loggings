@@ -5,7 +5,7 @@
 export * from "./Loggings/index";
 import { Progress } from "./Loggings";
 import { Controller } from "./Loggings/Controller";
-import defaults from "./Loggings/defaults";
+import defaults, { LoggingsColors } from "./Loggings/defaults";
 import { LoggingsColor, LoggingsDefaultConfig, LoggingsMessage } from "./Loggings/types";
 
 /**
@@ -26,7 +26,7 @@ export class Loggings {
      * @param {LoggingsColor} Color - The color of the controller.
      * @param {Partial<LoggingsDefaultConfig>} options - Additional configuration options.
      */
-    constructor(Controller: string = "All", Color: LoggingsColor = "blue", options?: Partial<LoggingsDefaultConfig>) {
+    constructor(Controller: string = "All", Color: keyof typeof LoggingsColors = "blue", options?: Partial<LoggingsDefaultConfig>) {
         this.options = {
             controller_title: Controller,
             controller_color: Color,

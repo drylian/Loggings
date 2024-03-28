@@ -10,7 +10,10 @@ export type LoggingsLevel = keyof ReturnType<typeof defaults>['status_colors'];
 /**
  * Loggings Supported colors logs
  */
-export type LoggingsColor = keyof typeof LoggingsColors;
+export type LoggingsColor = {
+    color: keyof typeof LoggingsColors;
+    bg: keyof typeof LoggingsColors;
+};
 /**
  * Loggings Default Config types
  */
@@ -38,7 +41,7 @@ export type LoggingsDefaultConfig = {
      * If any color using the [].color declaration is wrong,
      * we will use that color instead.
      */
-    color_fallback: LoggingsColor;
+    color_fallback: keyof typeof LoggingsColors;
     /**
      * Level for show/register logs,
      *
@@ -57,7 +60,7 @@ export type LoggingsDefaultConfig = {
     /**
      * Color in {title} arg, only visual.
      */
-    controller_color: LoggingsColor;
+    controller_color: keyof typeof LoggingsColors;
     /**
      * Allows register logs in file, on {register_dir}
      */

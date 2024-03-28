@@ -4,6 +4,7 @@
  */
 export * from "./Loggings/index";
 import { Progress } from "./Loggings";
+import { LoggingsColors } from "./Loggings/defaults";
 import { LoggingsColor, LoggingsDefaultConfig, LoggingsMessage } from "./Loggings/types";
 /**
  * Loggings Rework, version 3.5
@@ -23,23 +24,23 @@ export declare class Loggings {
      * @param {LoggingsColor} Color - The color of the controller.
      * @param {Partial<LoggingsDefaultConfig>} options - Additional configuration options.
      */
-    constructor(Controller?: string, Color?: LoggingsColor, options?: Partial<LoggingsDefaultConfig>);
+    constructor(Controller?: string, Color?: keyof typeof LoggingsColors, options?: Partial<LoggingsDefaultConfig>);
     /**
      * Loggings metadata Arguments
      */
     get meta(): {
         format: string;
         status_colors: {
-            Debug: "reset" | "bold" | "bright" | "dim" | "underscore" | "blink" | "reverse" | "hidden" | "black" | "red" | "green" | "gray" | "yellow" | "blue" | "magenta" | "cyan" | "white" | "bgBlack" | "bgRed" | "bgGreen" | "bgYellow" | "bgBlue" | "bgMagenta" | "bgCyan" | "bgWhite" | "fgGray" | "bgGray" | "fgBlackBright" | "fgRedBright" | "fgGreenBright" | "fgYellowBright" | "fgBlueBright" | "fgMagentaBright" | "fgCyanBright" | "fgWhiteBright" | "bgBlackBright" | "bgRedBright";
-            Info: "reset" | "bold" | "bright" | "dim" | "underscore" | "blink" | "reverse" | "hidden" | "black" | "red" | "green" | "gray" | "yellow" | "blue" | "magenta" | "cyan" | "white" | "bgBlack" | "bgRed" | "bgGreen" | "bgYellow" | "bgBlue" | "bgMagenta" | "bgCyan" | "bgWhite" | "fgGray" | "bgGray" | "fgBlackBright" | "fgRedBright" | "fgGreenBright" | "fgYellowBright" | "fgBlueBright" | "fgMagentaBright" | "fgCyanBright" | "fgWhiteBright" | "bgBlackBright" | "bgRedBright";
-            Warn: "reset" | "bold" | "bright" | "dim" | "underscore" | "blink" | "reverse" | "hidden" | "black" | "red" | "green" | "gray" | "yellow" | "blue" | "magenta" | "cyan" | "white" | "bgBlack" | "bgRed" | "bgGreen" | "bgYellow" | "bgBlue" | "bgMagenta" | "bgCyan" | "bgWhite" | "fgGray" | "bgGray" | "fgBlackBright" | "fgRedBright" | "fgGreenBright" | "fgYellowBright" | "fgBlueBright" | "fgMagentaBright" | "fgCyanBright" | "fgWhiteBright" | "bgBlackBright" | "bgRedBright";
-            Error: "reset" | "bold" | "bright" | "dim" | "underscore" | "blink" | "reverse" | "hidden" | "black" | "red" | "green" | "gray" | "yellow" | "blue" | "magenta" | "cyan" | "white" | "bgBlack" | "bgRed" | "bgGreen" | "bgYellow" | "bgBlue" | "bgMagenta" | "bgCyan" | "bgWhite" | "fgGray" | "bgGray" | "fgBlackBright" | "fgRedBright" | "fgGreenBright" | "fgYellowBright" | "fgBlueBright" | "fgMagentaBright" | "fgCyanBright" | "fgWhiteBright" | "bgBlackBright" | "bgRedBright";
+            Debug: LoggingsColor;
+            Info: LoggingsColor;
+            Warn: LoggingsColor;
+            Error: LoggingsColor;
         };
-        color_fallback: "reset" | "bold" | "bright" | "dim" | "underscore" | "blink" | "reverse" | "hidden" | "black" | "red" | "green" | "gray" | "yellow" | "blue" | "magenta" | "cyan" | "white" | "bgBlack" | "bgRed" | "bgGreen" | "bgYellow" | "bgBlue" | "bgMagenta" | "bgCyan" | "bgWhite" | "fgGray" | "bgGray" | "fgBlackBright" | "fgRedBright" | "fgGreenBright" | "fgYellowBright" | "fgBlueBright" | "fgMagentaBright" | "fgCyanBright" | "fgWhiteBright" | "bgBlackBright" | "bgRedBright";
+        color_fallback: "none" | "red" | "green" | "lime" | "blue" | "yellow" | "cyan" | "magenta" | "black" | "white" | "gray" | "maroon" | "olive" | "navy" | "purple" | "teal" | "silver" | "indigo" | "gold" | "pink" | "orange" | "brown" | "peach" | "lavender" | "bred" | "bgreen" | "blime" | "bblue" | "byellow" | "bcyan" | "bmagenta" | "bblack" | "bwhite" | "bgray" | "bmaroon" | "bolive" | "bnavy" | "bpurple" | "bteal" | "bsilver" | "bindigo" | "bgold" | "bpink" | "borange" | "bbrown" | "bpeach" | "blavender" | "inverse" | "reset" | "bold";
         level: "Debug" | "Info" | "Warn" | "Error";
         console: boolean;
         controller_title: string;
-        controller_color: "reset" | "bold" | "bright" | "dim" | "underscore" | "blink" | "reverse" | "hidden" | "black" | "red" | "green" | "gray" | "yellow" | "blue" | "magenta" | "cyan" | "white" | "bgBlack" | "bgRed" | "bgGreen" | "bgYellow" | "bgBlue" | "bgMagenta" | "bgCyan" | "bgWhite" | "fgGray" | "bgGray" | "fgBlackBright" | "fgRedBright" | "fgGreenBright" | "fgYellowBright" | "fgBlueBright" | "fgMagentaBright" | "fgCyanBright" | "fgWhiteBright" | "bgBlackBright" | "bgRedBright";
+        controller_color: "none" | "red" | "green" | "lime" | "blue" | "yellow" | "cyan" | "magenta" | "black" | "white" | "gray" | "maroon" | "olive" | "navy" | "purple" | "teal" | "silver" | "indigo" | "gold" | "pink" | "orange" | "brown" | "peach" | "lavender" | "bred" | "bgreen" | "blime" | "bblue" | "byellow" | "bcyan" | "bmagenta" | "bblack" | "bwhite" | "bgray" | "bmaroon" | "bolive" | "bnavy" | "bpurple" | "bteal" | "bsilver" | "bindigo" | "bgold" | "bpink" | "borange" | "bbrown" | "bpeach" | "blavender" | "inverse" | "reset" | "bold";
         register: boolean;
         register_del: boolean;
         register_limit: number;

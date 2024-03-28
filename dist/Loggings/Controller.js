@@ -34,7 +34,7 @@ function Controller(isolated, args) {
             message_csl = message_csl.replaceAll("{title}", (0, Colors_1.Colors)(options.controller_color, options.controller_title));
         }
         if (message_csl.includes("{status}")) {
-            message_csl = message_csl.replaceAll("{status}", (0, Colors_1.Colors)(options.status_colors[options.current_level], options.current_level));
+            message_csl = message_csl.replaceAll("{status}", (0, Colors_1.Colors)(options.status_colors[options.current_level].bg, (0, Colors_1.Colors)(options.status_colors[options.current_level].color, (0, Colors_1.Colors)("bold", options.current_level))));
         }
         if (message_csl.includes("{message}")) {
             message_csl = message_csl.replaceAll("{message}", (0, Formatter_1.Formatter)(args).message_csl);

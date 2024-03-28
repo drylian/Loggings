@@ -68,7 +68,7 @@ import { Loggings } from "loggings";
 const logger = new Loggings("Loggings","blue")
 /**
  * Use [].colorname to color text
- * use -b for bold extra colors
+ * use -b for bold + colorname
  */
 
 logger.info("This is [Green].green");
@@ -112,7 +112,7 @@ logger.error("This is an error message");
 logger.warn("This is an warn message");
 logger.info("This is an info message");
 logger.log("This is alias of info message");
-logger.debug("This is alias of info message");
+logger.debug("This is an debug message");
 logger.txt("This only registered message, not console viewer");
 ```
 

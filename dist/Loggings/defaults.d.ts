@@ -2,45 +2,58 @@ import { LoggingsDefaultConfig } from "./types";
 /**
  * Declared Colors
  */
-export declare enum LoggingsColors {
-    reset = "\u001B[0m",
-    bold = "\u001B[1m",
-    bright = "\u001B[1m",
-    dim = "\u001B[2m",
-    underscore = "\u001B[4m",
-    blink = "\u001B[5m",
-    reverse = "\u001B[7m",
-    hidden = "\u001B[8m",
-    black = "\u001B[30m",
-    red = "\u001B[31m",
-    green = "\u001B[32m",
-    gray = "\u001B[90m",
-    yellow = "\u001B[33m",
-    blue = "\u001B[34m",
-    magenta = "\u001B[35m",
-    cyan = "\u001B[36m",
-    white = "\u001B[37m",
-    bgBlack = "\u001B[40m",
-    bgRed = "\u001B[41m",
-    bgGreen = "\u001B[42m",
-    bgYellow = "\u001B[43m",
-    bgBlue = "\u001B[44m",
-    bgMagenta = "\u001B[45m",
-    bgCyan = "\u001B[46m",
-    bgWhite = "\u001B[47m",
-    fgGray = "\u001B[90m",
-    bgGray = "\u001B[100m",
-    fgBlackBright = "\u001B[90m",
-    fgRedBright = "\u001B[91m",
-    fgGreenBright = "\u001B[92m",
-    fgYellowBright = "\u001B[93m",
-    fgBlueBright = "\u001B[94m",
-    fgMagentaBright = "\u001B[95m",
-    fgCyanBright = "\u001B[96m",
-    fgWhiteBright = "\u001B[97m",
-    bgBlackBright = "\u001B[100m",
-    bgRedBright = "\u001B[101m"
-}
+export declare const LoggingsColors: {
+    readonly red: string;
+    readonly green: string;
+    readonly lime: string;
+    readonly blue: string;
+    readonly yellow: string;
+    readonly cyan: string;
+    readonly magenta: string;
+    readonly black: string;
+    readonly white: string;
+    readonly gray: string;
+    readonly maroon: string;
+    readonly olive: string;
+    readonly navy: string;
+    readonly purple: string;
+    readonly teal: string;
+    readonly silver: string;
+    readonly indigo: string;
+    readonly gold: string;
+    readonly pink: string;
+    readonly orange: string;
+    readonly brown: string;
+    readonly peach: string;
+    readonly lavender: string;
+    readonly bred: string;
+    readonly bgreen: string;
+    readonly blime: string;
+    readonly bblue: string;
+    readonly byellow: string;
+    readonly bcyan: string;
+    readonly bmagenta: string;
+    readonly bblack: string;
+    readonly bwhite: string;
+    readonly bgray: string;
+    readonly bmaroon: string;
+    readonly bolive: string;
+    readonly bnavy: string;
+    readonly bpurple: string;
+    readonly bteal: string;
+    readonly bsilver: string;
+    readonly bindigo: string;
+    readonly bgold: string;
+    readonly bpink: string;
+    readonly borange: string;
+    readonly bbrown: string;
+    readonly bpeach: string;
+    readonly blavender: string;
+    readonly inverse: "\u001B[7m";
+    readonly none: "none";
+    readonly reset: "\u001B[0m";
+    readonly bold: "\u001B[1m";
+};
 /**
  * DefaultLoggings Arguments function
  */

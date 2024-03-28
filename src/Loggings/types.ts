@@ -1,4 +1,4 @@
-import defaults,{ LoggingsColors } from "./defaults";
+import defaults, { LoggingsColors } from "./defaults";
 
 /**
  * Type of logs
@@ -13,7 +13,7 @@ export type LoggingsLevel = keyof ReturnType<typeof defaults>['status_colors'];
 /**
  * Loggings Supported colors logs
  */
-export type LoggingsColor = keyof typeof LoggingsColors;
+export type LoggingsColor = { color: keyof typeof LoggingsColors, bg: keyof typeof LoggingsColors };
 
 /**
  * Loggings Default Config types
@@ -32,17 +32,17 @@ export type LoggingsDefaultConfig = {
     /**
      * Change Status default colors, use ansi Colors
      */
-    status_colors:{
-        Debug:LoggingsColor,
-        Info:LoggingsColor,
-        Warn:LoggingsColor,
-        Error:LoggingsColor,
+    status_colors: {
+        Debug: LoggingsColor,
+        Info: LoggingsColor,
+        Warn: LoggingsColor,
+        Error: LoggingsColor,
     }
     /**
      * If any color using the [].color declaration is wrong,
      * we will use that color instead.
      */
-    color_fallback: LoggingsColor;
+    color_fallback: keyof typeof LoggingsColors;
     /**
      * Level for show/register logs,
      * 
@@ -61,7 +61,7 @@ export type LoggingsDefaultConfig = {
     /**
      * Color in {title} arg, only visual.
      */
-    controller_color: LoggingsColor;
+    controller_color: keyof typeof LoggingsColors;
     /**
      * Allows register logs in file, on {register_dir}
      */
@@ -148,10 +148,10 @@ export type ProgressType = {
     /**
      * Progress Mili enable;
      */
-    progress_mili:boolean,
+    progress_mili: boolean,
     /**
      * [Optional] Progress Fixed total and current value "visual", not value;
      */
-    progress_fixed?:number,
+    progress_fixed?: number,
 
 }

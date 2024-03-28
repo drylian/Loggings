@@ -33,6 +33,7 @@ exports.LoggingsColors = void 0;
 const path_1 = __importDefault(require("path"));
 const fs = __importStar(require("fs"));
 const Loggings_1 = require("../Loggings");
+const Colors_1 = require("./Colors");
 /**
  * Default configurations of Loggings
  */
@@ -40,9 +41,9 @@ const LoggingsDefaults = {
     format: '[{status}] {title} [{hours}:{minutes}:{seconds}].gray {message}',
     console: true,
     level: "Debug",
-    color_fallback: "blue",
+    color_fallback: "cyan",
     controller_title: 'All',
-    controller_color: "blue",
+    controller_color: "cyan",
     register: true,
     register_del: true,
     register_limit: 10,
@@ -51,59 +52,89 @@ const LoggingsDefaults = {
     register_format: '[ {day}/{month}/{year}-{hours}:{minutes}:{seconds} ] [ _.{title}._ ] {message}',
     register_type: 'log',
     status_colors: {
-        Debug: "magenta",
-        Info: "blue",
-        Warn: "yellow",
-        Error: "red"
+        Debug: {
+            color: "magenta",
+            bg: "none"
+        },
+        Info: {
+            color: "blue",
+            bg: "none"
+        },
+        Warn: {
+            color: "yellow",
+            bg: "none"
+        },
+        Error: {
+            color: "red",
+            bg: "none"
+        },
     },
     progress_format: " {progress}% [{bar}].red | [{current}].blue/[{total}].green TIME:[{progress_time}].gray|ETA:[{progress_eta}].red - {message}",
     progress_size: 50,
     progress_bar: "=",
     progress_mili: true,
 };
+const ColorsTxT = {
+    red: (0, Colors_1.Rgb)(255, 0, 0),
+    green: (0, Colors_1.Rgb)(0, 255, 0),
+    lime: (0, Colors_1.Rgb)(128, 255, 128),
+    blue: (0, Colors_1.Rgb)(0, 0, 255),
+    yellow: (0, Colors_1.Rgb)(255, 255, 0),
+    cyan: (0, Colors_1.Rgb)(0, 255, 255),
+    magenta: (0, Colors_1.Rgb)(255, 0, 255),
+    black: (0, Colors_1.Rgb)(0, 0, 0),
+    white: (0, Colors_1.Rgb)(255, 255, 255),
+    gray: (0, Colors_1.Rgb)(128, 128, 128),
+    maroon: (0, Colors_1.Rgb)(128, 0, 0),
+    olive: (0, Colors_1.Rgb)(128, 128, 0),
+    navy: (0, Colors_1.Rgb)(0, 0, 128),
+    purple: (0, Colors_1.Rgb)(128, 0, 128),
+    teal: (0, Colors_1.Rgb)(0, 128, 128),
+    silver: (0, Colors_1.Rgb)(192, 192, 192),
+    indigo: (0, Colors_1.Rgb)(75, 0, 130),
+    gold: (0, Colors_1.Rgb)(255, 215, 0),
+    pink: (0, Colors_1.Rgb)(255, 192, 203),
+    orange: (0, Colors_1.Rgb)(255, 165, 0),
+    brown: (0, Colors_1.Rgb)(165, 42, 42),
+    peach: (0, Colors_1.Rgb)(255, 218, 185),
+    lavender: (0, Colors_1.Rgb)(230, 230, 250),
+};
+const ColorsBg = {
+    bred: (0, Colors_1.Bgc)(255, 0, 0),
+    bgreen: (0, Colors_1.Bgc)(0, 255, 0),
+    blime: (0, Colors_1.Bgc)(128, 255, 128),
+    bblue: (0, Colors_1.Bgc)(0, 0, 255),
+    byellow: (0, Colors_1.Bgc)(255, 255, 0),
+    bcyan: (0, Colors_1.Bgc)(0, 255, 255),
+    bmagenta: (0, Colors_1.Bgc)(255, 0, 255),
+    bblack: (0, Colors_1.Bgc)(0, 0, 0),
+    bwhite: (0, Colors_1.Bgc)(255, 255, 255),
+    bgray: (0, Colors_1.Bgc)(128, 128, 128),
+    bmaroon: (0, Colors_1.Bgc)(128, 0, 0),
+    bolive: (0, Colors_1.Bgc)(128, 128, 0),
+    bnavy: (0, Colors_1.Bgc)(0, 0, 128),
+    bpurple: (0, Colors_1.Bgc)(128, 0, 128),
+    bteal: (0, Colors_1.Bgc)(0, 128, 128),
+    bsilver: (0, Colors_1.Bgc)(192, 192, 192),
+    bindigo: (0, Colors_1.Bgc)(75, 0, 130),
+    bgold: (0, Colors_1.Bgc)(255, 215, 0),
+    bpink: (0, Colors_1.Bgc)(255, 192, 203),
+    borange: (0, Colors_1.Bgc)(255, 165, 0),
+    bbrown: (0, Colors_1.Bgc)(165, 42, 42),
+    bpeach: (0, Colors_1.Bgc)(255, 218, 185),
+    blavender: (0, Colors_1.Bgc)(230, 230, 250),
+};
 /**
  * Declared Colors
  */
-var LoggingsColors;
-(function (LoggingsColors) {
-    LoggingsColors["reset"] = "\u001B[0m";
-    LoggingsColors["bold"] = "\u001B[1m";
-    LoggingsColors["bright"] = "\u001B[1m";
-    LoggingsColors["dim"] = "\u001B[2m";
-    LoggingsColors["underscore"] = "\u001B[4m";
-    LoggingsColors["blink"] = "\u001B[5m";
-    LoggingsColors["reverse"] = "\u001B[7m";
-    LoggingsColors["hidden"] = "\u001B[8m";
-    LoggingsColors["black"] = "\u001B[30m";
-    LoggingsColors["red"] = "\u001B[31m";
-    LoggingsColors["green"] = "\u001B[32m";
-    LoggingsColors["gray"] = "\u001B[90m";
-    LoggingsColors["yellow"] = "\u001B[33m";
-    LoggingsColors["blue"] = "\u001B[34m";
-    LoggingsColors["magenta"] = "\u001B[35m";
-    LoggingsColors["cyan"] = "\u001B[36m";
-    LoggingsColors["white"] = "\u001B[37m";
-    LoggingsColors["bgBlack"] = "\u001B[40m";
-    LoggingsColors["bgRed"] = "\u001B[41m";
-    LoggingsColors["bgGreen"] = "\u001B[42m";
-    LoggingsColors["bgYellow"] = "\u001B[43m";
-    LoggingsColors["bgBlue"] = "\u001B[44m";
-    LoggingsColors["bgMagenta"] = "\u001B[45m";
-    LoggingsColors["bgCyan"] = "\u001B[46m";
-    LoggingsColors["bgWhite"] = "\u001B[47m";
-    LoggingsColors["fgGray"] = "\u001B[90m";
-    LoggingsColors["bgGray"] = "\u001B[100m";
-    LoggingsColors["fgBlackBright"] = "\u001B[90m";
-    LoggingsColors["fgRedBright"] = "\u001B[91m";
-    LoggingsColors["fgGreenBright"] = "\u001B[92m";
-    LoggingsColors["fgYellowBright"] = "\u001B[93m";
-    LoggingsColors["fgBlueBright"] = "\u001B[94m";
-    LoggingsColors["fgMagentaBright"] = "\u001B[95m";
-    LoggingsColors["fgCyanBright"] = "\u001B[96m";
-    LoggingsColors["fgWhiteBright"] = "\u001B[97m";
-    LoggingsColors["bgBlackBright"] = "\u001B[100m";
-    LoggingsColors["bgRedBright"] = "\u001B[101m";
-})(LoggingsColors || (exports.LoggingsColors = LoggingsColors = {}));
+exports.LoggingsColors = {
+    inverse: "\x1b[7m",
+    none: "none",
+    reset: "\x1b[0m",
+    bold: "\x1b[1m",
+    ...ColorsBg,
+    ...ColorsTxT
+};
 /**
  * DefaultLoggings Arguments function
  */

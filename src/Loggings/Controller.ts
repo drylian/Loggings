@@ -29,7 +29,7 @@ export function Controller(isolated: LoggingsController, args: LoggingsMessage[]
             message_csl = message_csl.replaceAll("{title}", Colors(options.controller_color, options.controller_title));
         }
         if (message_csl.includes("{status}")) {
-            message_csl = message_csl.replaceAll("{status}", Colors(options.status_colors[options.current_level], options.current_level));
+            message_csl = message_csl.replaceAll("{status}", Colors(options.status_colors[options.current_level].bg, Colors(options.status_colors[options.current_level].color, Colors("bold",options.current_level))));
         }
         if (message_csl.includes("{message}")) {
             message_csl = message_csl.replaceAll("{message}", Formatter(args).message_csl);
