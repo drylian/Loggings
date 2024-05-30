@@ -1,6 +1,7 @@
 import { LoggingsMessage } from "../types";
 import defaults, { LoggingsColors } from "../defaults";
 import { Colors } from "../Colors";
+import { Loggings } from "../../Loggings";
 
 export function Formatter(messages: LoggingsMessage[]) {
     let message_csl: string = "";
@@ -17,7 +18,7 @@ export function Formatter(messages: LoggingsMessage[]) {
                 if (Object.keys(LoggingsColors).includes(color)) {
                     return Colors(color, formattedText);
                 } else {
-                    return Colors(defaults().color_fallback, formattedText);
+                    return Colors(Loggings._default_configurations.color_fallback, formattedText);
                 }
             });
         } else if (typeof message === "number") {

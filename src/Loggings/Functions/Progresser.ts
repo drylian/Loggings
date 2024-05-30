@@ -1,3 +1,4 @@
+import { Loggings } from "../../Loggings";
 import defaults from "../defaults";
 import { ProgressType } from "../types";
 import { Formatter } from "./Formatter";
@@ -21,7 +22,7 @@ export class Progress {
      * @param options Configuration options for the progress bar.
      */
     constructor(options?: Partial<ProgressType>) {
-        const data = defaults()
+        const data = Loggings._default_configurations
         this.options = {
             ...data,
             ...options,

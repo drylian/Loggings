@@ -78,6 +78,21 @@ export type LoggingsDefaultConfig = {
      */
     register_limit: number;
     /**
+     * In some types of hosting, the terminal does not support
+     * ansi colors or uses the terminal to display logs.
+     * The loggings module uses arguments that apply colors to the terminal
+     * using ansi codes, which can make logs difficult to read when saved in
+     * .txt files due to the presence of several random characters.
+     * 
+     * To solve this problem, this boolean has been added, that,
+     * when activated, causes the loggings module to ignore the color codes
+     * and imprint simple logs on the terminal, without color formatting.
+     * 
+     * Hosts that this boolean becomes useful:
+     * [Discloud, Squarecloud]
+     */
+    remove_colors: boolean;
+    /**
      * Directory where the files will be stored, if "register" is disabled, it will be ignored
      */
     register_dir: string;
@@ -153,5 +168,4 @@ export type ProgressType = {
      * [Optional] Progress Fixed total and current value "visual", not value;
      */
     progress_fixed?: number,
-
 }

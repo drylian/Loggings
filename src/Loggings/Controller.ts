@@ -6,6 +6,7 @@ import { Register } from "./Functions/Register";
 import { LoggingsRegisterJson } from "./Functions/Register/Json";
 import { LoggingsRegisterLog } from "./Functions/Register/Log";
 import { Colors } from "./Colors";
+import { Loggings } from "../Loggings";
 /**
  * Main Controller for Loggings
  * @param isolated LoggingsConfigurations
@@ -16,23 +17,35 @@ export function Controller(isolated: LoggingsController, args: LoggingsMessage[]
      * Merge default options in Partial options
      */
     const options = {
-        ...defaults(),
+        ...Loggings._default_configurations,
         ...isolated
     }
     /**
      * Check console is allowed
      */
     if (options.console && options.current_level >= options.level) {
-        let message_csl = Formatter([options.format]).message_csl
+        let message_csl = Formatter([options.format])[options.remove_colors ? "message_rgt" : "message_csl"]
         message_csl = Timer(message_csl).format
-        if (message_csl.includes("{title}")) {
-            message_csl = message_csl.replaceAll("{title}", Colors(options.controller_color, options.controller_title));
-        }
-        if (message_csl.includes("{status}")) {
-            message_csl = message_csl.replaceAll("{status}", Colors(options.status_colors[options.current_level].bg, Colors(options.status_colors[options.current_level].color, Colors("bold",options.current_level))));
-        }
-        if (message_csl.includes("{message}")) {
-            message_csl = message_csl.replaceAll("{message}", Formatter(args).message_csl);
+        if(!options.remove_colors) {
+            if (message_csl.includes("{title}")) {
+                message_csl = message_csl.replaceAll("{title}", Colors(options.controller_color, options.controller_title));
+            }
+            if (message_csl.includes("{status}")) {
+                message_csl = message_csl.replaceAll("{status}", Colors(options.status_colors[options.current_level].bg, Colors(options.status_colors[options.current_level].color, Colors("bold", options.current_level))));
+            }
+            if (message_csl.includes("{message}")) {
+                message_csl = message_csl.replaceAll("{message}", Formatter(args).message_csl);
+            }
+        } else {
+            if (message_csl.includes("{title}")) {
+                message_csl = message_csl.replaceAll("{title}", options.controller_title);
+            }
+            if (message_csl.includes("{status}")) {
+                message_csl = message_csl.replaceAll("{status}", options.current_level);
+            }
+            if (message_csl.includes("{message}")) {
+                message_csl = message_csl.replaceAll("{message}", Formatter(args).message_rgt);
+            }
         }
         console[options.current_level.toLowerCase()](message_csl);
     }

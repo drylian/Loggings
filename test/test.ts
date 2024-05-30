@@ -1,6 +1,6 @@
 import * as fs from "fs";
 import { Loggings, Formatter, LoggingsDefault, Timer, Controller } from "../src/Loggings";
-import { LoggingsColors } from "../src/Loggings/defaults";
+import { LoggingsColors, LoggingsConfig } from "../src/Loggings/defaults";
 import { Colors } from "../src/Loggings/Colors";
 import { isEqual } from "./utils";
 
@@ -13,7 +13,7 @@ for (const key in LoggingsColors) {
     if (Object.prototype.hasOwnProperty.call(LoggingsColors, key)) {
         const Expected = LoggingsColors[key] + "test" + LoggingsColors.reset;
         const Value = Colors(key as keyof typeof LoggingsColors, "test");
-        if(key === "none") console.log(Formatter([`Color Key [${key}].${key} - [OK].green-b`]).message_csl);
+        if (key === "none") console.log(Formatter([`Color Key [${key}].${key} - [OK].green-b`]).message_csl);
         else if (!(Expected === Value)) {
             throw new Error(`Color Key ${key} is invalid, the response obtained is different from what was expected`);
         } else {
@@ -29,7 +29,7 @@ const FormatterTest = Formatter(["[Testing].blue [Formatter].red-b", "[Arguments
 const FormatterExpect = {
     message_csl: '\x1B[38;2;1;0;255mTesting\x1B[0m \x1B[38;2;255;0;0m\x1B[1mFormatter\x1B[0m\x1B[0m\x1B[38;2;255;255;0mArguments\x1B[0m \x1B[38;2;1;0;255m1\x1B[0m \x1B[38;2;1;255;0m{"teste":"teste"}\x1B[0m',
     message_rgt: '"Testing" "Formatter""Arguments" 1 "{"teste":"teste"}"'
-  }
+}
 if (!(FormatterTest.message_csl === FormatterExpect.message_csl) || !(FormatterTest.message_rgt === FormatterExpect.message_rgt)) throw new Error("Formatter is invalid, the response obtained is different from what was expected");
 console.log(Formatter(['Formatter Test - [OK].green-b']).message_csl);
 
@@ -108,5 +108,36 @@ if (isEqual(core.meta, MetaExpected)) {
 } else {
     throw new Error(`Function of class "meta" is invalid, the response obtained is different from what was expected`);
 }
+
+/**
+ * Checker config update of instance
+ */
+const logger = new Loggings("Testing", "blue", { level: "Debug", register: false });
+const options = logger.options;
+logger.config({ level: "Info" });
+if (JSON.stringify(options) === JSON.stringify(logger.options)) {
+    throw new Error(`Function of class "config" is invalid, the response obtained is different from what was expected`);
+} else {
+    console.log(Formatter(["Config class updated - [OK].green"]).message_csl);
+}
+
+/**
+ * Check update Global config of loggings
+ */
+fs.rmSync("./test/logs", { recursive: true });
+LoggingsConfig({
+    register: false
+});
+core.txt("test");
+if (fs.existsSync("./test/logs/Testing/Logs/" + `${timer.day}_${timer.month}_${timer.year}_Info.log`)) {
+    throw new Error(`LogginsConfig Global update is invalid, not have update instance`);
+} else {
+    console.log(Formatter(["LogginsConfig Global - [OK].green"]).message_csl);
+}
+
+LoggingsConfig({
+    remove_colors: __filename.endsWith(".js") ? true : false
+});
+core.info("This is Exemple");
 
 console.log(Formatter(["ALL Tests as [Approved].green-b"]).message_csl);

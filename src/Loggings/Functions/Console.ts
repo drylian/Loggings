@@ -3,6 +3,7 @@ import { LoggingsColor, LoggingsMessage } from "../types";
 import { Timer } from "./Timer";
 import { Formatter } from "./Formatter";
 import { Colors } from "../Colors";
+import { Loggings } from "../../Loggings";
 
 /**
  * Isolated Console, not register, only uses basics configurations
@@ -12,7 +13,7 @@ import { Colors } from "../Colors";
  * @param args LoggingsMessage
  */
 export function Console(status: string, color: keyof typeof LoggingsColors, ...args: LoggingsMessage[]) {
-    let format = defaults().format
+    let format = Loggings._default_configurations.format
     format = Timer(format).format
     format = Formatter([format]).message_csl
     if (format.includes("{status}")) {

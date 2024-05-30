@@ -5,20 +5,29 @@
 export * from "./Loggings/index";
 import { Progress } from "./Loggings";
 import { Controller } from "./Loggings/Controller";
-import defaults, { LoggingsColors } from "./Loggings/defaults";
-import { LoggingsColor, LoggingsDefaultConfig, LoggingsMessage } from "./Loggings/types";
-
+import defaults, { ColorsTxT, LoggingsColors } from "./Loggings/defaults";
+import { LoggingsDefaultConfig, LoggingsMessage } from "./Loggings/types";
 /**
  * Loggings Rework, version 3.5
  * @class
  * @classdesc Class for logging and controlling logs.
  */
 export class Loggings {
+    public static _default_configurations = defaults();
     public static progress = Progress
     /**
-     * Loggings Options
+     * Updates Loggings config
      */
-    private options: Partial<LoggingsDefaultConfig>;
+    public config(config: Partial<LoggingsDefaultConfig>){
+        this.options = {
+            ...config
+        }
+    }
+    /**
+     * Only show Custom infos of loggings,
+     * To show all the settings use the const meta
+     */
+    public options: Partial<LoggingsDefaultConfig>;
     /**
      * Creates an instance of Loggings.
      * @constructor
@@ -26,7 +35,7 @@ export class Loggings {
      * @param {LoggingsColor} Color - The color of the controller.
      * @param {Partial<LoggingsDefaultConfig>} options - Additional configuration options.
      */
-    constructor(Controller: string = "All", Color: keyof typeof LoggingsColors = "blue", options?: Partial<LoggingsDefaultConfig>) {
+    constructor(Controller: string = "All", Color: keyof typeof ColorsTxT = "blue", options?: Partial<LoggingsDefaultConfig>) {
         this.options = {
             controller_title: Controller,
             controller_color: Color,
@@ -39,7 +48,7 @@ export class Loggings {
      */
     public get meta() {
         return {
-            ...defaults(),
+            ...Loggings._default_configurations,
             ...this.options
         }
     }
@@ -92,5 +101,4 @@ export class Loggings {
     public txt(...messages: LoggingsMessage[]): void {
         Controller({ ...this.options, current_level: "Info", register_text: true, console: false }, messages)
     }
-
 }

@@ -17,22 +17,21 @@ The loggings itself already has an internal configuration, but it also has suppo
 #### TypeScript (loggings.config.ts)
 
 ```typescript
-import { LoggingsOptionalConfig } from "loggings";
+import { LoggingsConfig } from "loggings";
 
-export default (): LoggingsOptionalConfig => {
-    return {
-        register_dir: "./Logs",
-    };
-};
+LoggingsConfig({
+    register_dir: "./Logs",
+});
 ```
 
 #### JavaScript (loggings.config.js)
 
 ```javascript
 /** @type {import('loggings').LoggingsOptionalConfig} */
-module.exports = {
-    register_dir:"./Logs",    
-}
+const { LoggingsConfig } = require("loggings");
+LoggingsConfig({
+    register_dir: "./Logs",
+});
 ```
 
 #### JSON (loggings.config.json)

@@ -4,7 +4,7 @@
 import path from "path";
 import { LoggingsDefaultConfig } from "./types"
 import * as fs from "fs";
-import { Formatter } from "../Loggings";
+import { Formatter, Loggings } from "../Loggings";
 import { Bgc, Rgb } from "./Colors";
 /**
  * Default configurations of Loggings
@@ -14,6 +14,7 @@ const LoggingsDefaults: LoggingsDefaultConfig = {
     console: true,
     level: "Debug",
     color_fallback: "cyan",
+    remove_colors:false,
     controller_title: 'All',
     controller_color: "cyan",
     register: true,
@@ -25,20 +26,20 @@ const LoggingsDefaults: LoggingsDefaultConfig = {
     register_type: 'log',
     status_colors: {
         Debug: {
-            color:"magenta",
-            bg:"none"
+            color: "magenta",
+            bg: "none"
         },
         Info: {
-            color:"blue",
-            bg:"none"
+            color: "blue",
+            bg: "none"
         },
         Warn: {
-            color:"yellow",
-            bg:"none"
+            color: "yellow",
+            bg: "none"
         },
         Error: {
-            color:"red",
-            bg:"none"
+            color: "red",
+            bg: "none"
         },
     },
     progress_format: " {progress}% [{bar}].red | [{current}].blue/[{total}].green TIME:[{progress_time}].gray|ETA:[{progress_eta}].red - {message}",
@@ -47,7 +48,7 @@ const LoggingsDefaults: LoggingsDefaultConfig = {
     progress_mili: true,
 }
 
-const ColorsTxT = {
+export const ColorsTxT = {
     red: Rgb(255, 0, 0),
     green: Rgb(0, 255, 0),
     lime: Rgb(128, 255, 128),
@@ -74,7 +75,7 @@ const ColorsTxT = {
 } as const;
 
 
-const ColorsBg = {
+export const ColorsBg = {
     bred: Bgc(255, 0, 0),
     bgreen: Bgc(0, 255, 0),
     blime: Bgc(128, 255, 128),
@@ -104,13 +105,13 @@ const ColorsBg = {
  * Declared Colors
  */
 export const LoggingsColors = {
-    inverse:"\x1b[7m",
-    none:"none",
-    reset:"\x1b[0m",
-    bold:"\x1b[1m",
+    inverse: "\x1b[7m",
+    none: "none",
+    reset: "\x1b[0m",
+    bold: "\x1b[1m",
     ...ColorsBg,
     ...ColorsTxT
-}as const
+} as const
 
 /**
  * DefaultLoggings Arguments function
@@ -139,5 +140,20 @@ export default (): LoggingsDefaultConfig => {
     return {
         ...LoggingsDefaults,
         ...UserOptions
+    }
+}
+
+/**
+ * Updates Global configs of Loggings, 
+ * Update this update in real time all standard settings
+ * of all instances started by Loggings, more remember, 
+ * if instance has a custom configuration that overlaps
+ * the default configuration (custom settings) will need
+ * to change the instance us using .config(configs).
+ */
+export function LoggingsConfig(config: Partial<LoggingsDefaultConfig>) {
+    Loggings._default_configurations = {
+        ...Loggings._default_configurations,
+        ...config
     }
 }
