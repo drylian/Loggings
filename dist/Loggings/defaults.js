@@ -26,7 +26,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.LoggingsColors = void 0;
+exports.LoggingsConfig = exports.LoggingsColors = exports.ColorsBg = exports.ColorsTxT = void 0;
 /**
  * Loggings Defaults Configurations.
  */
@@ -42,6 +42,7 @@ const LoggingsDefaults = {
     console: true,
     level: "Debug",
     color_fallback: "cyan",
+    remove_colors: false,
     controller_title: 'All',
     controller_color: "cyan",
     register: true,
@@ -74,7 +75,7 @@ const LoggingsDefaults = {
     progress_bar: "=",
     progress_mili: true,
 };
-const ColorsTxT = {
+exports.ColorsTxT = {
     red: (0, Colors_1.Rgb)(255, 0, 0),
     green: (0, Colors_1.Rgb)(0, 255, 0),
     lime: (0, Colors_1.Rgb)(128, 255, 128),
@@ -99,7 +100,7 @@ const ColorsTxT = {
     peach: (0, Colors_1.Rgb)(255, 218, 185),
     lavender: (0, Colors_1.Rgb)(230, 230, 250),
 };
-const ColorsBg = {
+exports.ColorsBg = {
     bred: (0, Colors_1.Bgc)(255, 0, 0),
     bgreen: (0, Colors_1.Bgc)(0, 255, 0),
     blime: (0, Colors_1.Bgc)(128, 255, 128),
@@ -132,8 +133,8 @@ exports.LoggingsColors = {
     none: "none",
     reset: "\x1b[0m",
     bold: "\x1b[1m",
-    ...ColorsBg,
-    ...ColorsTxT
+    ...exports.ColorsBg,
+    ...exports.ColorsTxT
 };
 /**
  * DefaultLoggings Arguments function
@@ -167,3 +168,18 @@ exports.default = () => {
         ...UserOptions
     };
 };
+/**
+ * Updates Global configs of Loggings,
+ * Update this update in real time all standard settings
+ * of all instances started by Loggings, more remember,
+ * if instance has a custom configuration that overlaps
+ * the default configuration (custom settings) will need
+ * to change the instance us using .config(configs).
+ */
+function LoggingsConfig(config) {
+    Loggings_1.Loggings._default_configurations = {
+        ...Loggings_1.Loggings._default_configurations,
+        ...config
+    };
+}
+exports.LoggingsConfig = LoggingsConfig;

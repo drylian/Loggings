@@ -4,19 +4,25 @@
  */
 export * from "./Loggings/index";
 import { Progress } from "./Loggings";
-import { LoggingsColors } from "./Loggings/defaults";
-import { LoggingsColor, LoggingsDefaultConfig, LoggingsMessage } from "./Loggings/types";
+import { ColorsTxT } from "./Loggings/defaults";
+import { LoggingsDefaultConfig, LoggingsMessage } from "./Loggings/types";
 /**
  * Loggings Rework, version 3.5
  * @class
  * @classdesc Class for logging and controlling logs.
  */
 export declare class Loggings {
+    static _default_configurations: LoggingsDefaultConfig;
     static progress: typeof Progress;
     /**
-     * Loggings Options
+     * Updates Loggings config
      */
-    private options;
+    config(config: Partial<LoggingsDefaultConfig>): void;
+    /**
+     * Only show Custom infos of loggings,
+     * To show all the settings use the const meta
+     */
+    options: Partial<LoggingsDefaultConfig>;
     /**
      * Creates an instance of Loggings.
      * @constructor
@@ -24,17 +30,17 @@ export declare class Loggings {
      * @param {LoggingsColor} Color - The color of the controller.
      * @param {Partial<LoggingsDefaultConfig>} options - Additional configuration options.
      */
-    constructor(Controller?: string, Color?: keyof typeof LoggingsColors, options?: Partial<LoggingsDefaultConfig>);
+    constructor(Controller?: string, Color?: keyof typeof ColorsTxT, options?: Partial<LoggingsDefaultConfig>);
     /**
      * Loggings metadata Arguments
      */
     get meta(): {
         format: string;
         status_colors: {
-            Debug: LoggingsColor;
-            Info: LoggingsColor;
-            Warn: LoggingsColor;
-            Error: LoggingsColor;
+            Debug: import("./Loggings").LoggingsColor;
+            Info: import("./Loggings").LoggingsColor;
+            Warn: import("./Loggings").LoggingsColor;
+            Error: import("./Loggings").LoggingsColor;
         };
         color_fallback: "none" | "red" | "green" | "lime" | "blue" | "yellow" | "cyan" | "magenta" | "black" | "white" | "gray" | "maroon" | "olive" | "navy" | "purple" | "teal" | "silver" | "indigo" | "gold" | "pink" | "orange" | "brown" | "peach" | "lavender" | "bred" | "bgreen" | "blime" | "bblue" | "byellow" | "bcyan" | "bmagenta" | "bblack" | "bwhite" | "bgray" | "bmaroon" | "bolive" | "bnavy" | "bpurple" | "bteal" | "bsilver" | "bindigo" | "bgold" | "bpink" | "borange" | "bbrown" | "bpeach" | "blavender" | "inverse" | "reset" | "bold";
         level: "Debug" | "Info" | "Warn" | "Error";
@@ -44,6 +50,7 @@ export declare class Loggings {
         register: boolean;
         register_del: boolean;
         register_limit: number;
+        remove_colors: boolean;
         register_dir: string;
         register_locale_file: string;
         register_format: string;

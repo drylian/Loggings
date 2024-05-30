@@ -32,9 +32,19 @@ const defaults_1 = __importDefault(require("./Loggings/defaults"));
  * @classdesc Class for logging and controlling logs.
  */
 class Loggings {
+    static _default_configurations = (0, defaults_1.default)();
     static progress = Loggings_1.Progress;
     /**
-     * Loggings Options
+     * Updates Loggings config
+     */
+    config(config) {
+        this.options = {
+            ...config
+        };
+    }
+    /**
+     * Only show Custom infos of loggings,
+     * To show all the settings use the const meta
      */
     options;
     /**
@@ -56,7 +66,7 @@ class Loggings {
      */
     get meta() {
         return {
-            ...(0, defaults_1.default)(),
+            ...Loggings._default_configurations,
             ...this.options
         };
     }

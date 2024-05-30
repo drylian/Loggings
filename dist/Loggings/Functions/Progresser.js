@@ -1,10 +1,7 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Progress = void 0;
-const defaults_1 = __importDefault(require("../defaults"));
+const Loggings_1 = require("../../Loggings");
 const Formatter_1 = require("./Formatter");
 const Timer_1 = require("./Timer");
 /**
@@ -24,7 +21,7 @@ class Progress {
      * @param options Configuration options for the progress bar.
      */
     constructor(options) {
-        const data = (0, defaults_1.default)();
+        const data = Loggings_1.Loggings._default_configurations;
         this.options = {
             ...data,
             ...options,

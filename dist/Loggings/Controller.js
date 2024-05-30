@@ -1,16 +1,13 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Controller = void 0;
-const defaults_1 = __importDefault(require("./defaults"));
 const Formatter_1 = require("./Functions/Formatter");
 const Timer_1 = require("./Functions/Timer");
 const Register_1 = require("./Functions/Register");
 const Json_1 = require("./Functions/Register/Json");
 const Log_1 = require("./Functions/Register/Log");
 const Colors_1 = require("./Colors");
+const Loggings_1 = require("../Loggings");
 /**
  * Main Controller for Loggings
  * @param isolated LoggingsConfigurations
@@ -21,23 +18,36 @@ function Controller(isolated, args) {
      * Merge default options in Partial options
      */
     const options = {
-        ...(0, defaults_1.default)(),
+        ...Loggings_1.Loggings._default_configurations,
         ...isolated
     };
     /**
      * Check console is allowed
      */
     if (options.console && options.current_level >= options.level) {
-        let message_csl = (0, Formatter_1.Formatter)([options.format]).message_csl;
+        let message_csl = (0, Formatter_1.Formatter)([options.format])[options.remove_colors ? "message_rgt" : "message_csl"];
         message_csl = (0, Timer_1.Timer)(message_csl).format;
-        if (message_csl.includes("{title}")) {
-            message_csl = message_csl.replaceAll("{title}", (0, Colors_1.Colors)(options.controller_color, options.controller_title));
+        if (!options.remove_colors) {
+            if (message_csl.includes("{title}")) {
+                message_csl = message_csl.replaceAll("{title}", (0, Colors_1.Colors)(options.controller_color, options.controller_title));
+            }
+            if (message_csl.includes("{status}")) {
+                message_csl = message_csl.replaceAll("{status}", (0, Colors_1.Colors)(options.status_colors[options.current_level].bg, (0, Colors_1.Colors)(options.status_colors[options.current_level].color, (0, Colors_1.Colors)("bold", options.current_level))));
+            }
+            if (message_csl.includes("{message}")) {
+                message_csl = message_csl.replaceAll("{message}", (0, Formatter_1.Formatter)(args).message_csl);
+            }
         }
-        if (message_csl.includes("{status}")) {
-            message_csl = message_csl.replaceAll("{status}", (0, Colors_1.Colors)(options.status_colors[options.current_level].bg, (0, Colors_1.Colors)(options.status_colors[options.current_level].color, (0, Colors_1.Colors)("bold", options.current_level))));
-        }
-        if (message_csl.includes("{message}")) {
-            message_csl = message_csl.replaceAll("{message}", (0, Formatter_1.Formatter)(args).message_csl);
+        else {
+            if (message_csl.includes("{title}")) {
+                message_csl = message_csl.replaceAll("{title}", options.controller_title);
+            }
+            if (message_csl.includes("{status}")) {
+                message_csl = message_csl.replaceAll("{status}", options.current_level);
+            }
+            if (message_csl.includes("{message}")) {
+                message_csl = message_csl.replaceAll("{message}", (0, Formatter_1.Formatter)(args).message_rgt);
+            }
         }
         console[options.current_level.toLowerCase()](message_csl);
     }

@@ -1,13 +1,10 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Console = void 0;
-const defaults_1 = __importDefault(require("../defaults"));
 const Timer_1 = require("./Timer");
 const Formatter_1 = require("./Formatter");
 const Colors_1 = require("../Colors");
+const Loggings_1 = require("../../Loggings");
 /**
  * Isolated Console, not register, only uses basics configurations
  * Warning: Console not have {title} argument, is removed in "format"
@@ -16,7 +13,7 @@ const Colors_1 = require("../Colors");
  * @param args LoggingsMessage
  */
 function Console(status, color, ...args) {
-    let format = (0, defaults_1.default)().format;
+    let format = Loggings_1.Loggings._default_configurations.format;
     format = (0, Timer_1.Timer)(format).format;
     format = (0, Formatter_1.Formatter)([format]).message_csl;
     if (format.includes("{status}")) {
