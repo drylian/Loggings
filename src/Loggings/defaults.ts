@@ -142,18 +142,3 @@ export default (): LoggingsDefaultConfig => {
         ...UserOptions
     }
 }
-
-/**
- * Updates Global configs of Loggings, 
- * Update this update in real time all standard settings
- * of all instances started by Loggings, more remember, 
- * if instance has a custom configuration that overlaps
- * the default configuration (custom settings) will need
- * to change the instance us using .config(configs).
- */
-export function LoggingsConfig(config: Partial<LoggingsDefaultConfig>) {
-    Loggings._default_configurations = {
-        ...Loggings._default_configurations,
-        ...config
-    }
-}

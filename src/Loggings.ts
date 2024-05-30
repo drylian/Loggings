@@ -5,8 +5,24 @@
 export * from "./Loggings/index";
 import { Progress } from "./Loggings";
 import { Controller } from "./Loggings/Controller";
-import defaults, { ColorsTxT, LoggingsColors } from "./Loggings/defaults";
+import defaults, { ColorsTxT } from "./Loggings/defaults";
 import { LoggingsDefaultConfig, LoggingsMessage } from "./Loggings/types";
+
+/**
+ * Updates Global configs of Loggings, 
+ * Update this update in real time all standard settings
+ * of all instances started by Loggings, more remember, 
+ * if instance has a custom configuration that overlaps
+ * the default configuration (custom settings) will need
+ * to change the instance us using .config(configs).
+ */
+export function LoggingsConfig(config: Partial<LoggingsDefaultConfig>) {
+    Loggings._default_configurations = {
+        ...Loggings._default_configurations,
+        ...config
+    }
+}
+
 /**
  * Loggings Rework, version 3.5
  * @class
