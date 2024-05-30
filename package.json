@@ -1,6 +1,6 @@
 {
   "name": "loggings",
-  "version": "1.3.0",
+  "version": "Canary",
   "description": "Simple log system for your node js application, supported colors.",
   "main": "./dist/Loggings.js",
   "scripts": {
