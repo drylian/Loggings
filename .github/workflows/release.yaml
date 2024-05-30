@@ -18,12 +18,6 @@ jobs:
         with:
           node-version: 20
 
-      - name: Install dependencies
-        run: npm install
-
-      - name: Build
-        run: npm build
-
       - name: Create release branch and bump version
         env:
           REF: ${{ github.ref }}
@@ -38,9 +32,15 @@ jobs:
           git commit -m "New Loggings release inbound!"
           git push
 
-      - name: Create release archive
+      - name: Remove unnecessary files 
         run: | 
           rm -rf node_modules test tsconfig.json src docs package-lock.json
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build
+        run: npm build
 
       - name: Publish to npm
         run: npm publish
