@@ -27,7 +27,7 @@ jobs:
           git config --local user.name "Loggings Releases"
           git checkout -b $BRANCH
           git push -u origin $BRANCH
-          sed -i "s/  \"version\": \"Canary\",/  \"version\": \"${REF:11}\",/" package.json
+          sed -i "s/  \"version\": \"Canary\",/  "version": "${REF:11}",/" package.json
           git add package.json
           git commit -m "New Loggings release inbound!"
           git push
@@ -36,7 +36,7 @@ jobs:
         run: npm install
 
       - name: Build
-        run: npm build
+        run: npm run build
 
       - name: Remove unnecessary files 
         run: | 
