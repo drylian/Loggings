@@ -1,3 +1,4 @@
 node_modules
 Logs
+dist
 package-lock.json
