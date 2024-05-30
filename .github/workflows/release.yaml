@@ -21,13 +21,15 @@ jobs:
       - name: Create release branch and bump version
         env:
           REF: ${{ github.ref }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           BRANCH=release/${REF:10}
-          git config --local user.email "109999325+drylian@users.noreply.github.com"
-          git config --local user.name "Loggings Releases"
-          git checkout -b $BRANCH
-          git push -u origin $BRANCH
-          sed -i "s/    "version": "canary",/    "version": "${REF:11}",/" package.json
+          curl -X POST \
+          https://api.github.com/repos/${{ github.repository }}/git/refs \
+          -H 'Authorization: Bearer $GITHUB_TOKEN' \
+          -H 'Content-Type: application/json' \
+          -d '{"ref": "refs/heads/'$BRANCH'", "sha": "'${{ github.sha }}'"}'
+          sed -i "s/    \"version\": \"canary\",/    \"version\": \"${REF:11}\",/" package.json
           git add package.json
           git commit -m "New Loggings release inbound!"
           git push
