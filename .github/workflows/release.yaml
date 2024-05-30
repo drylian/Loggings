@@ -23,7 +23,7 @@ jobs:
           REF: ${{ github.ref }}
         run: |
           BRANCH=release/${REF:10}
-          git config --local user.email "github@drylian.com.br"
+          git config --local user.email "109999325+drylian@users.noreply.github.com"
           git config --local user.name "Loggings Releases"
           git checkout -b $BRANCH
           git push -u origin $BRANCH
@@ -32,17 +32,21 @@ jobs:
           git commit -m "New Loggings release inbound!"
           git push
 
-      - name: Remove unnecessary files 
-        run: | 
-          rm -rf node_modules test tsconfig.json src docs package-lock.json
-
       - name: Install dependencies
         run: npm install
 
       - name: Build
         run: npm build
 
-      - name: Publish to npm
-        run: npm publish
+      - name: Remove unnecessary files 
+        run: | 
+          rm -rf node_modules test tsconfig.json src docs package-lock.json
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          registry-url: 'https://registry.npmjs.org'
+      - run: npm ci
+      - run: npm publish --provenance --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
