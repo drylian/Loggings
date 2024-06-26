@@ -1,6 +1,6 @@
 import * as fs from "fs";
 import { Loggings, Formatter, LoggingsDefault, Timer, Controller } from "../src/Loggings";
-import { LoggingsColors, LoggingsConfig } from "../src/Loggings/defaults";
+import { LoggingsColors, LoggingsConfig } from "../src/Loggings";
 import { Colors } from "../src/Loggings/Colors";
 import { isEqual } from "./utils";
 
@@ -139,5 +139,20 @@ LoggingsConfig({
     remove_colors: __filename.endsWith(".js") ? true : false
 });
 core.info("This is Exemple");
-
+let _logger = false ;
+LoggingsConfig({
+    register: false,
+    logger(contents, type) {
+        if(type === "error"|| type === "warn") {
+            process.stderr.write(`${contents.formated}\n`)
+        } else {
+            _logger = true;
+            process.stdout.write(`${contents.formated}\n`)
+        }
+    },
+});
+core.info("This is Exemple with modded logger");
+if(!_logger) {
+    throw new Error(`LogginsConfig Global update is invalid, not have update instance`)
+}
 console.log(Formatter(["ALL Tests as [Approved].green-b"]).message_csl);
