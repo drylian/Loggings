@@ -15,7 +15,7 @@ const LoggingsDefaults: LoggingsDefaultConfig = {
     level: "Debug",
     color_fallback: "cyan",
     remove_colors: false,
-    logger(m, t) { console[t](m.formated) },
+    logger(m, t) { console[t](m.formatted) },
     controller_title: 'All',
     controller_color: "cyan",
     register: true,

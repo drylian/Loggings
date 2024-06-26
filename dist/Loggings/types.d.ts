@@ -21,7 +21,7 @@ export type LoggingsLoggerContents = {
     /**
      * Message already processed and formatted by loggings
      */
-    formated: string;
+    formatted: string;
     /**
      * messages not processed
      */

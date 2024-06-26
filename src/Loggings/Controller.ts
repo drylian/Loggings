@@ -47,7 +47,7 @@ export function Controller(isolated: LoggingsController, args: LoggingsMessage[]
                 message_csl = message_csl.replaceAll("{message}", Formatter(args).message_rgt);
             }
         }
-        options.logger({ formated:message_csl, messages:args }, options.current_level.toLowerCase() as "error" | "warn" | "info" | "debug")
+        options.logger({ formatted:message_csl, messages:args }, options.current_level.toLowerCase() as "error" | "warn" | "info" | "debug")
     }
     /**
      * Check register is allowed

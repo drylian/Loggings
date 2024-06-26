@@ -144,10 +144,10 @@ LoggingsConfig({
     register: false,
     logger(contents, type) {
         if(type === "error"|| type === "warn") {
-            process.stderr.write(`${contents.formated}\n`)
+            process.stderr.write(`${contents.formatted}\n`)
         } else {
             _logger = true;
-            process.stdout.write(`${contents.formated}\n`)
+            process.stdout.write(`${contents.formatted}\n`)
         }
     },
 });
