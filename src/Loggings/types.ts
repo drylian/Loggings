@@ -16,6 +16,20 @@ export type LoggingsLevel = keyof ReturnType<typeof defaults>['status_colors'];
 export type LoggingsColor = { color: keyof typeof LoggingsColors, bg: keyof typeof LoggingsColors };
 
 /**
+ * Loggings Logger Message Contents
+ */
+export type LoggingsLoggerContents = {
+    /**
+     * Message already processed and formatted by loggings
+     */
+    formated:string,
+    /**
+     * messages not processed
+     */
+    messages:LoggingsMessage[]
+}
+
+/**
  * Loggings Default Config types
  */
 export type LoggingsDefaultConfig = {
@@ -53,6 +67,11 @@ export type LoggingsDefaultConfig = {
      * Allows show logs in terminal
      */
     console: boolean
+    /**
+     * Advanced: Function that is used by loggings to print the code on the terminal
+     * default :logger(m, t) { console[t](...m) }
+     */
+    logger(contents:LoggingsLoggerContents, type: "error" | "warn" | "info" | "debug"): any
     /**
      * Title show in {title} arg, but is used in logs register.
      * Case "register" is allowed

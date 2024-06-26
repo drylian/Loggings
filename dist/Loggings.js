@@ -17,7 +17,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Loggings = void 0;
+exports.Loggings = exports.LoggingsConfig = void 0;
 /**
  * Module Loggings.
  * @module Loggings
@@ -26,6 +26,21 @@ __exportStar(require("./Loggings/index"), exports);
 const Loggings_1 = require("./Loggings");
 const Controller_1 = require("./Loggings/Controller");
 const defaults_1 = __importDefault(require("./Loggings/defaults"));
+/**
+ * Updates Global configs of Loggings,
+ * Update this update in real time all standard settings
+ * of all instances started by Loggings, more remember,
+ * if instance has a custom configuration that overlaps
+ * the default configuration (custom settings) will need
+ * to change the instance us using .config(configs).
+ */
+function LoggingsConfig(config) {
+    Loggings._default_configurations = {
+        ...Loggings._default_configurations,
+        ...config
+    };
+}
+exports.LoggingsConfig = LoggingsConfig;
 /**
  * Loggings Rework, version 3.5
  * @class

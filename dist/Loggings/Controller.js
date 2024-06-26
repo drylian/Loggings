@@ -49,7 +49,7 @@ function Controller(isolated, args) {
                 message_csl = message_csl.replaceAll("{message}", (0, Formatter_1.Formatter)(args).message_rgt);
             }
         }
-        console[options.current_level.toLowerCase()](message_csl);
+        options.logger({ formated: message_csl, messages: args }, options.current_level.toLowerCase());
     }
     /**
      * Check register is allowed

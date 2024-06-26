@@ -20,6 +20,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.LoggingsDefault = void 0;
 const defaults_1 = __importDefault(require("./defaults"));
 exports.LoggingsDefault = defaults_1.default;
+__exportStar(require("./defaults"), exports);
 __exportStar(require("./types"), exports);
 __exportStar(require("./Controller"), exports);
 __exportStar(require("./Functions/Console"), exports);

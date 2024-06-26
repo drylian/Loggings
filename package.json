@@ -1,6 +1,6 @@
 {
   "name": "loggings",
-  "version": "1.2.2",
+  "version": "1.2.5",
   "description": "Simple log system for your node js application, supported colors.",
   "main": "./dist/Loggings.js",
   "scripts": {

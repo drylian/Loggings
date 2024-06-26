@@ -26,7 +26,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.LoggingsConfig = exports.LoggingsColors = exports.ColorsBg = exports.ColorsTxT = void 0;
+exports.LoggingsColors = exports.ColorsBg = exports.ColorsTxT = void 0;
 /**
  * Loggings Defaults Configurations.
  */
@@ -43,6 +43,7 @@ const LoggingsDefaults = {
     level: "Debug",
     color_fallback: "cyan",
     remove_colors: false,
+    logger(m, t) { console[t](m.formated); },
     controller_title: 'All',
     controller_color: "cyan",
     register: true,
@@ -168,18 +169,3 @@ exports.default = () => {
         ...UserOptions
     };
 };
-/**
- * Updates Global configs of Loggings,
- * Update this update in real time all standard settings
- * of all instances started by Loggings, more remember,
- * if instance has a custom configuration that overlaps
- * the default configuration (custom settings) will need
- * to change the instance us using .config(configs).
- */
-function LoggingsConfig(config) {
-    Loggings_1.Loggings._default_configurations = {
-        ...Loggings_1.Loggings._default_configurations,
-        ...config
-    };
-}
-exports.LoggingsConfig = LoggingsConfig;

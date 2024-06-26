@@ -7,6 +7,15 @@ import { Progress } from "./Loggings";
 import { ColorsTxT } from "./Loggings/defaults";
 import { LoggingsDefaultConfig, LoggingsMessage } from "./Loggings/types";
 /**
+ * Updates Global configs of Loggings,
+ * Update this update in real time all standard settings
+ * of all instances started by Loggings, more remember,
+ * if instance has a custom configuration that overlaps
+ * the default configuration (custom settings) will need
+ * to change the instance us using .config(configs).
+ */
+export declare function LoggingsConfig(config: Partial<LoggingsDefaultConfig>): void;
+/**
  * Loggings Rework, version 3.5
  * @class
  * @classdesc Class for logging and controlling logs.
@@ -45,6 +54,7 @@ export declare class Loggings {
         color_fallback: "none" | "red" | "green" | "lime" | "blue" | "yellow" | "cyan" | "magenta" | "black" | "white" | "gray" | "maroon" | "olive" | "navy" | "purple" | "teal" | "silver" | "indigo" | "gold" | "pink" | "orange" | "brown" | "peach" | "lavender" | "bred" | "bgreen" | "blime" | "bblue" | "byellow" | "bcyan" | "bmagenta" | "bblack" | "bwhite" | "bgray" | "bmaroon" | "bolive" | "bnavy" | "bpurple" | "bteal" | "bsilver" | "bindigo" | "bgold" | "bpink" | "borange" | "bbrown" | "bpeach" | "blavender" | "inverse" | "reset" | "bold";
         level: "Debug" | "Info" | "Warn" | "Error";
         console: boolean;
+        logger: (contents: import("./Loggings").LoggingsLoggerContents, type: "error" | "warn" | "info" | "debug") => any;
         controller_title: string;
         controller_color: "none" | "red" | "green" | "lime" | "blue" | "yellow" | "cyan" | "magenta" | "black" | "white" | "gray" | "maroon" | "olive" | "navy" | "purple" | "teal" | "silver" | "indigo" | "gold" | "pink" | "orange" | "brown" | "peach" | "lavender" | "bred" | "bgreen" | "blime" | "bblue" | "byellow" | "bcyan" | "bmagenta" | "bblack" | "bwhite" | "bgray" | "bmaroon" | "bolive" | "bnavy" | "bpurple" | "bteal" | "bsilver" | "bindigo" | "bgold" | "bpink" | "borange" | "bbrown" | "bpeach" | "blavender" | "inverse" | "reset" | "bold";
         register: boolean;
