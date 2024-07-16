@@ -75,6 +75,7 @@ const LoggingsDefaults = {
     progress_size: 50,
     progress_bar: "=",
     progress_mili: true,
+    progress_show: true
 };
 exports.ColorsTxT = {
     red: (0, Colors_1.Rgb)(255, 0, 0),

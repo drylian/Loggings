@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Progress = void 0;
+const ansi_escapes_1 = require("../../Extends/ansi-escapes");
 const Loggings_1 = require("../../Loggings");
 const Formatter_1 = require("./Formatter");
 const Timer_1 = require("./Timer");
@@ -46,7 +47,7 @@ class Progress {
             current: this.current,
             bar: this.bar,
             start_time: this.time,
-            options: this.options
+            options: this.options,
         };
     }
     /**
@@ -55,6 +56,8 @@ class Progress {
      */
     add(total) {
         this.total += total;
+        if (this.options.progress_onAdd)
+            this.options.progress_onAdd(this);
     }
     /**
      * Remove a value from the total of the progress bar.
@@ -63,6 +66,8 @@ class Progress {
     rem(total) {
         this.total = this.total - total;
         this.current = this.current - total;
+        if (this.options.progress_onRem)
+            this.options.progress_onRem(this);
     }
     /**
      * Reset the values of the progress bar.
@@ -75,6 +80,8 @@ class Progress {
         this.current = 0;
         this.bar = '';
         this.time = 0;
+        if (this.options.progress_onReset)
+            this.options.progress_onReset(this);
     }
     /**
      * Set a message to be displayed alongside the progress bar.
@@ -88,10 +95,13 @@ class Progress {
      * @returns Returns the progress bar data if the current count is less than the total, otherwise returns false.
      */
     end() {
+        if (this.options.progress_onEnd)
+            this.options.progress_onEnd(this);
         if (this.current <= this.total) {
             const data = this.show();
             this.current = this.total;
-            process.stdout.write("\n");
+            if (this.options.progress_show)
+                process.stdout.write("\n");
             this.reset();
             return data;
         }
@@ -123,10 +133,15 @@ class Progress {
         spaces = " ".repeat(Math.floor(this.options.progress_size - calc));
         newBar = newBar + spaces;
         this.bar = newBar;
-        process.stdout.clearLine(0);
-        process.stdout.cursorTo(0);
-        if (this.bar)
-            process.stdout.write(format.replaceAll("{bar}", this.bar));
+        if (this.options.progress_show)
+            process.stdout.write(ansi_escapes_1.eraseLine);
+        if (this.options.progress_show)
+            process.stdout.write((0, ansi_escapes_1.cursorTo)(0));
+        if (this.options.progress_show)
+            if (this.bar)
+                process.stdout.write(format.replaceAll("{bar}", this.bar));
+        if (this.options.progress_onShow)
+            this.options.progress_onShow(this);
         return { start: true };
     }
     /**
@@ -138,6 +153,8 @@ class Progress {
         this.current += cmt;
         if (this.current > this.total)
             this.current = this.total;
+        if (this.options.progress_onCmt)
+            this.options.progress_onCmt(this);
         return this.show();
     }
 }

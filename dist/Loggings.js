@@ -133,5 +133,13 @@ class Loggings {
     txt(...messages) {
         (0, Controller_1.Controller)({ ...this.options, current_level: "Info", register_text: true, console: false }, messages);
     }
+    /**
+     * Table of Console.table
+     * @param {...LoggingsMessage[]} messages - Text messages.
+     * @returns {void}
+     */
+    table(...messages) {
+        console.table(messages);
+    }
 }
 exports.Loggings = Loggings;

@@ -69,7 +69,14 @@ export declare class Loggings {
         progress_size: number;
         progress_bar: string;
         progress_mili: boolean;
+        progress_show: boolean;
         progress_fixed?: number;
+        progress_onAdd?: (progress: Progress) => unknown;
+        progress_onCmt?: (progress: Progress) => unknown;
+        progress_onEnd?: (progress: Progress) => unknown;
+        progress_onRem?: (progress: Progress) => unknown;
+        progress_onReset?: (progress: Progress) => unknown;
+        progress_onShow?: (progress: Progress) => unknown;
     };
     /**
      * Logs an error message.
@@ -107,4 +114,10 @@ export declare class Loggings {
      * @returns {void}
      */
     txt(...messages: LoggingsMessage[]): void;
+    /**
+     * Table of Console.table
+     * @param {...LoggingsMessage[]} messages - Text messages.
+     * @returns {void}
+     */
+    table(...messages: LoggingsMessage[]): void;
 }
