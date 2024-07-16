@@ -1,5 +1,5 @@
 import * as fs from "fs";
-import { Loggings, Formatter, LoggingsDefault, Timer, Controller } from "../src/Loggings";
+import { Loggings, Formatter, LoggingsDefault, Timer, Controller, Progress } from "../src/Loggings";
 import { LoggingsColors, LoggingsConfig } from "../src/Loggings";
 import { Colors } from "../src/Loggings/Colors";
 import { isEqual } from "./utils";
@@ -139,11 +139,11 @@ LoggingsConfig({
     remove_colors: __filename.endsWith(".js") ? true : false
 });
 core.info("This is Exemple");
-let _logger = false ;
+let _logger = false;
 LoggingsConfig({
     register: false,
     logger(contents, type) {
-        if(type === "error"|| type === "warn") {
+        if (type === "error" || type === "warn") {
             process.stderr.write(`${contents.formatted}\n`)
         } else {
             _logger = true;
@@ -152,7 +152,48 @@ LoggingsConfig({
     },
 });
 core.info("This is Exemple with modded logger");
-if(!_logger) {
+if (!_logger) {
     throw new Error(`LogginsConfig Global update is invalid, not have update instance`)
 }
+
+let testcmt, testadd, testrem, testend, testshow, testreset;
+const progress = new Progress({
+    progress_onAdd() {
+        testadd = true;
+    },
+    progress_onRem() {
+        testrem = true;
+    },
+    progress_onEnd() {
+        testend = true;
+    },
+    progress_onCmt() {
+        testcmt = true;
+    },
+    progress_onShow() {
+        testshow = true;
+    },
+    progress_onReset() {
+        testreset = true;
+    },
+});
+
+progress.add(10);
+if (!testadd) throw new Error("Function add of Progress not working");
+
+progress.rem(1);
+if (!testrem) throw new Error("Function rem of Progress not working");
+
+progress.cmt();
+if (!testcmt) throw new Error("Function cmt of Progress not working");
+
+progress.show();
+if (!testshow) throw new Error("Function show of Progress not working");
+
+progress.reset();
+if (!testreset) throw new Error("Function reset of Progress not working");
+
+progress.end();
+if (!testend) throw new Error("Function end of Progress not working");
+
 console.log(Formatter(["ALL Tests as [Approved].green-b"]).message_csl);

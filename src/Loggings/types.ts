@@ -1,3 +1,4 @@
+import { Progress } from "../Loggings";
 import defaults, { LoggingsColors } from "./defaults";
 
 /**
@@ -22,11 +23,11 @@ export type LoggingsLoggerContents = {
     /**
      * Message already processed and formatted by loggings
      */
-    formatted:string,
+    formatted: string,
     /**
      * messages not processed
      */
-    messages:LoggingsMessage[]
+    messages: LoggingsMessage[]
 }
 
 /**
@@ -71,7 +72,7 @@ export type LoggingsDefaultConfig = {
      * Advanced: Function that is used by loggings to print the code on the terminal
      * default :logger(m, t) { console[t](...m) }
      */
-    logger(contents:LoggingsLoggerContents, type: "error" | "warn" | "info" | "debug"): any
+    logger(contents: LoggingsLoggerContents, type: "error" | "warn" | "info" | "debug"): any
     /**
      * Title show in {title} arg, but is used in logs register.
      * Case "register" is allowed
@@ -184,7 +185,39 @@ export type ProgressType = {
      */
     progress_mili: boolean,
     /**
+     * Progress Show enable
+     * If deactivated, progress will not show 
+     * the terminal in the console, useful if 
+     * you want to use it in other functions, 
+     * instead of just showing it in the terminal
+     */
+    progress_show: boolean,
+    /**
      * [Optional] Progress Fixed total and current value "visual", not value;
      */
     progress_fixed?: number,
+    /**
+     * [Optional] Function executed when add was executed
+     */
+    progress_onAdd?: (progress: InstanceType<typeof Progress>) => unknown | Promise<unknown>
+    /**
+     * [Optional] Function executed when cmt was executed
+     */
+    progress_onCmt?: (progress: InstanceType<typeof Progress>) => unknown | Promise<unknown>
+    /**
+     * [Optional] Function executed when end was executed
+     */
+    progress_onEnd?: (progress: InstanceType<typeof Progress>) => unknown | Promise<unknown>
+    /**
+     * [Optional] Function executed when rem was executed
+     */
+    progress_onRem?: (progress: InstanceType<typeof Progress>) => unknown | Promise<unknown>
+    /**
+     * [Optional] Function executed when reset was executed
+     */
+    progress_onReset?: (progress: InstanceType<typeof Progress>) => unknown | Promise<unknown>
+    /**
+     * [Optional] Function executed when show was executed
+     */
+    progress_onShow?: (progress: InstanceType<typeof Progress>) => unknown | Promise<unknown>
 }

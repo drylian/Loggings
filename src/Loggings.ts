@@ -117,4 +117,12 @@ export class Loggings {
     public txt(...messages: LoggingsMessage[]): void {
         Controller({ ...this.options, current_level: "Info", register_text: true, console: false }, messages)
     }
+    /**
+     * Table of Console.table
+     * @param {...LoggingsMessage[]} messages - Text messages.
+     * @returns {void}
+     */
+    public table(...messages: LoggingsMessage[]): void {
+        console.table(messages);
+    }
 }

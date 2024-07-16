@@ -1,5 +1,5 @@
+import { cursorTo, eraseLine } from "../../Extends/ansi-escapes";
 import { Loggings } from "../../Loggings";
-import defaults from "../defaults";
 import { ProgressType } from "../types";
 import { Formatter } from "./Formatter";
 import { Timer, Uptimer } from "./Timer";
@@ -22,7 +22,7 @@ export class Progress {
      * @param options Configuration options for the progress bar.
      */
     constructor(options?: Partial<ProgressType>) {
-        const data = Loggings._default_configurations
+        const data = Loggings._default_configurations;
         this.options = {
             ...data,
             ...options,
@@ -48,8 +48,8 @@ export class Progress {
             current: this.current,
             bar: this.bar,
             start_time: this.time,
-            options: this.options
-        }
+            options: this.options,
+        };
     }
 
     /**
@@ -58,6 +58,7 @@ export class Progress {
      */
     public add(total: number) {
         this.total += total;
+        if (this.options.progress_onAdd) this.options.progress_onAdd(this);
     }
 
     /**
@@ -67,6 +68,7 @@ export class Progress {
     public rem(total: number) {
         this.total = this.total - total;
         this.current = this.current - total;
+        if (this.options.progress_onRem) this.options.progress_onRem(this);
     }
 
     /**
@@ -80,6 +82,7 @@ export class Progress {
         this.current = 0;
         this.bar = '';
         this.time = 0;
+        if (this.options.progress_onReset) this.options.progress_onReset(this);
     }
 
     /**
@@ -95,10 +98,11 @@ export class Progress {
      * @returns Returns the progress bar data if the current count is less than the total, otherwise returns false.
      */
     public end() {
+        if (this.options.progress_onEnd) this.options.progress_onEnd(this);
         if (this.current <= this.total) {
             const data = this.show();
             this.current = this.total;
-            process.stdout.write("\n");
+            if(this.options.progress_show) process.stdout.write("\n");
             this.reset();
             return data;
         } else {
@@ -117,22 +121,24 @@ export class Progress {
         this.increment = this.total / this.options.progress_size / 100;
         if (this.time === 0) this.time = process.uptime();
         this.progress += this.increment;
-        format = format.replaceAll("{current}", String(this.options?.progress_fixed ? this.current.toFixed(this.options.progress_fixed): this.current));
+        format = format.replaceAll("{current}", String(this.options?.progress_fixed ? this.current.toFixed(this.options.progress_fixed) : this.current));
         format = format.replaceAll("{message}", this.message);
-        format = format.replaceAll("{total}", String(this.options?.progress_fixed ? this.total.toFixed(this.options.progress_fixed): this.total));
+        format = format.replaceAll("{total}", String(this.options?.progress_fixed ? this.total.toFixed(this.options.progress_fixed) : this.total));
         format = format.replaceAll("{progress}", String(((this.current / this.total) * 100).toFixed(0)));
         format = format.replaceAll("{progress_time}", String(Uptimer(process.uptime() - this.time, this.options.progress_mili)));
         format = format.replaceAll("{progress_eta}", String(Uptimer(((this.total - this.current) / this.current) * (process.uptime() - this.time), this.options.progress_mili)));
-        const calc =Math.floor(this.current / this.total * this.options.progress_size)
+        const calc = Math.floor(this.current / this.total * this.options.progress_size);
         let newBar = this.options.progress_bar.repeat(calc);
         let spaces = "";
         spaces = " ".repeat(Math.floor(this.options.progress_size - calc));
         newBar = newBar + spaces;
         this.bar = newBar;
-        process.stdout.clearLine(0);
-        process.stdout.cursorTo(0);
-        if(this.bar) process.stdout.write(format.replaceAll("{bar}", this.bar));
-        return { start: true }
+
+        if(this.options.progress_show)process.stdout.write(eraseLine);
+        if(this.options.progress_show)process.stdout.write(cursorTo(0));
+        if(this.options.progress_show)if (this.bar) process.stdout.write(format.replaceAll("{bar}", this.bar));
+        if (this.options.progress_onShow) this.options.progress_onShow(this);
+        return { start: true };
     }
 
     /**
@@ -142,7 +148,8 @@ export class Progress {
      */
     public cmt(cmt = 1) {
         this.current += cmt;
-        if(this.current > this.total) this.current = this.total
+        if (this.current > this.total) this.current = this.total;
+        if (this.options.progress_onCmt) this.options.progress_onCmt(this);
         return this.show();
     }
 }

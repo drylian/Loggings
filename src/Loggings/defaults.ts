@@ -4,7 +4,7 @@
 import path from "path";
 import { LoggingsDefaultConfig } from "./types"
 import * as fs from "fs";
-import { Formatter, Loggings } from "../Loggings";
+import { Formatter } from "../Loggings";
 import { Bgc, Rgb } from "./Colors";
 /**
  * Default configurations of Loggings
@@ -47,6 +47,7 @@ const LoggingsDefaults: LoggingsDefaultConfig = {
     progress_size: 50,
     progress_bar: "=",
     progress_mili: true,
+    progress_show:true
 }
 
 export const ColorsTxT = {
