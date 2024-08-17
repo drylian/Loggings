@@ -1,4 +1,3 @@
-import { cursorTo, eraseLine } from "../../Extends/ansi-escapes";
 import { Loggings } from "../../Loggings";
 import { ProgressType } from "../types";
 import { Formatter } from "./Formatter";
@@ -134,8 +133,8 @@ export class Progress {
         newBar = newBar + spaces;
         this.bar = newBar;
 
-        if(this.options.progress_show)process.stdout.write(eraseLine);
-        if(this.options.progress_show)process.stdout.write(cursorTo(0));
+        process.stdout.clearLine(0);
+        process.stdout.cursorTo(0);
         if(this.options.progress_show)if (this.bar) process.stdout.write(format.replaceAll("{bar}", this.bar));
         if (this.options.progress_onShow) this.options.progress_onShow(this);
         return { start: true };

@@ -9,9 +9,9 @@ import defaults, { ColorsTxT } from "./Loggings/defaults";
 import { LoggingsDefaultConfig, LoggingsMessage } from "./Loggings/types";
 
 /**
- * Updates Global configs of Loggings, 
+ * Updates Global configs of Loggings,
  * Update this update in real time all standard settings
- * of all instances started by Loggings, more remember, 
+ * of all instances started by Loggings, more remember,
  * if instance has a custom configuration that overlaps
  * the default configuration (custom settings) will need
  * to change the instance us using .config(configs).
@@ -19,8 +19,8 @@ import { LoggingsDefaultConfig, LoggingsMessage } from "./Loggings/types";
 export function LoggingsConfig(config: Partial<LoggingsDefaultConfig>) {
     Loggings._default_configurations = {
         ...Loggings._default_configurations,
-        ...config
-    }
+        ...config,
+    };
 }
 
 /**
@@ -30,14 +30,34 @@ export function LoggingsConfig(config: Partial<LoggingsDefaultConfig>) {
  */
 export class Loggings {
     public static _default_configurations = defaults();
-    public static progress = Progress
+    public static progress = Progress;
+    /**
+     * Configures global logging methods to use the provided Loggings instance.
+     * 
+     * This method overrides the default console methods (log, error, warn, info, debug) 
+     * to use the corresponding methods from the provided Loggings instance. It allows 
+     * for custom logging behaviors such as using colors and recording logs/errors in the terminal.
+     * 
+     * @param logger - An instance of Loggings to handle the logging.
+     */
+    public static useConsole(logger: Loggings) {
+        global.loggings = logger;
+        global.console = {
+            ...global.console,
+            log: (...msg: any[]) => global.loggings.log(...msg),
+            error: (...msg: any[]) => global.loggings.error(...msg),
+            warn: (...msg: any[]) => global.loggings.warn(...msg),
+            info: (...msg: any[]) => global.loggings.info(...msg),
+            debug: (...msg: any[]) => global.loggings.debug(...msg),
+        };
+    }
     /**
      * Updates Loggings config
      */
-    public config(config: Partial<LoggingsDefaultConfig>){
+    public config(config: Partial<LoggingsDefaultConfig>) {
         this.options = {
-            ...config
-        }
+            ...config,
+        };
     }
     /**
      * Only show Custom infos of loggings,
@@ -51,11 +71,15 @@ export class Loggings {
      * @param {LoggingsColor} Color - The color of the controller.
      * @param {Partial<LoggingsDefaultConfig>} options - Additional configuration options.
      */
-    constructor(Controller: string = "All", Color: keyof typeof ColorsTxT = "blue", options?: Partial<LoggingsDefaultConfig>) {
+    constructor(
+        Controller: string = "All",
+        Color: keyof typeof ColorsTxT = "blue",
+        options?: Partial<LoggingsDefaultConfig>,
+    ) {
         this.options = {
             controller_title: Controller,
             controller_color: Color,
-            ...options
+            ...options,
         };
     }
 
@@ -65,8 +89,8 @@ export class Loggings {
     public get meta() {
         return {
             ...Loggings._default_configurations,
-            ...this.options
-        }
+            ...this.options,
+        };
     }
 
     /**
@@ -75,7 +99,7 @@ export class Loggings {
      * @returns {void}
      */
     public error(...messages: LoggingsMessage[]): void {
-        Controller({ ...this.options, current_level: "Error" }, messages)
+        Controller({ ...this.options, current_level: "Error" }, messages);
     }
     /**
      * Logs a warning message.
@@ -83,7 +107,7 @@ export class Loggings {
      * @returns {void}
      */
     public warn(...messages: LoggingsMessage[]): void {
-        Controller({ ...this.options, current_level: "Warn" }, messages)
+        Controller({ ...this.options, current_level: "Warn" }, messages);
     }
     /**
      * Logs a log message.
@@ -91,7 +115,7 @@ export class Loggings {
      * @returns {void}
      */
     public log(...messages: LoggingsMessage[]): void {
-        Controller({ ...this.options, current_level: "Info" }, messages)
+        Controller({ ...this.options, current_level: "Info" }, messages);
     }
     /**
      * Logs an information message.
@@ -99,7 +123,7 @@ export class Loggings {
      * @returns {void}
      */
     public info(...messages: LoggingsMessage[]): void {
-        Controller({ ...this.options, current_level: "Info" }, messages)
+        Controller({ ...this.options, current_level: "Info" }, messages);
     }
     /**
      * Logs a debug message.
@@ -107,7 +131,7 @@ export class Loggings {
      * @returns {void}
      */
     public debug(...messages: LoggingsMessage[]): void {
-        Controller({ ...this.options, current_level: "Debug" }, messages)
+        Controller({ ...this.options, current_level: "Debug" }, messages);
     }
     /**
      * Only register logs.
@@ -115,7 +139,12 @@ export class Loggings {
      * @returns {void}
      */
     public txt(...messages: LoggingsMessage[]): void {
-        Controller({ ...this.options, current_level: "Info", register_text: true, console: false }, messages)
+        Controller({
+            ...this.options,
+            current_level: "Info",
+            register_text: true,
+            console: false,
+        }, messages);
     }
     /**
      * Table of Console.table

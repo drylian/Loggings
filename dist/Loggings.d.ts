@@ -24,6 +24,16 @@ export declare class Loggings {
     static _default_configurations: LoggingsDefaultConfig;
     static progress: typeof Progress;
     /**
+     * Configures global logging methods to use the provided Loggings instance.
+     *
+     * This method overrides the default console methods (log, error, warn, info, debug)
+     * to use the corresponding methods from the provided Loggings instance. It allows
+     * for custom logging behaviors such as using colors and recording logs/errors in the terminal.
+     *
+     * @param logger - An instance of Loggings to handle the logging.
+     */
+    static useConsole(logger: Loggings): void;
+    /**
      * Updates Loggings config
      */
     config(config: Partial<LoggingsDefaultConfig>): void;
@@ -63,6 +73,7 @@ export declare class Loggings {
         remove_colors: boolean;
         register_dir: string;
         register_locale_file: string;
+        register_filename: string;
         register_format: string;
         register_type: "log" | "json";
         progress_format: string;

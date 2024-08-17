@@ -25,8 +25,11 @@ export function LoggingsRegisterJson(options: LoggingsDefaultConfig & LoggingsCo
  * @param args 
  */
 export function LoggingsRegisterJsonFile(options: LoggingsDefaultConfig & LoggingsController, message: object) {
-    const timer = Timer("").timer
-    const JsonFileName = `${timer.day}_${timer.month}_${timer.year}_${options.current_level}.json`;
+    const JsonFileName = Timer(options.register_filename).format
+    .replaceAll("{status}", options.current_level).replaceAll(
+        "{ext}",
+        "json",
+    );
     const JsonFilePath = path.join(options.register_locale_file, JsonFileName);
     let data: Record<string, object[]> = {};
     if (fs.existsSync(JsonFilePath)) data = JSON.parse(fs.readFileSync(JsonFilePath, "utf-8"));

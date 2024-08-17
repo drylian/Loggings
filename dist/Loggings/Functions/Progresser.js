@@ -1,7 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Progress = void 0;
-const ansi_escapes_1 = require("../../Extends/ansi-escapes");
 const Loggings_1 = require("../../Loggings");
 const Formatter_1 = require("./Formatter");
 const Timer_1 = require("./Timer");
@@ -133,10 +132,8 @@ class Progress {
         spaces = " ".repeat(Math.floor(this.options.progress_size - calc));
         newBar = newBar + spaces;
         this.bar = newBar;
-        if (this.options.progress_show)
-            process.stdout.write(ansi_escapes_1.eraseLine);
-        if (this.options.progress_show)
-            process.stdout.write((0, ansi_escapes_1.cursorTo)(0));
+        process.stdout.clearLine(0);
+        process.stdout.cursorTo(0);
         if (this.options.progress_show)
             if (this.bar)
                 process.stdout.write(format.replaceAll("{bar}", this.bar));

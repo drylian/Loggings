@@ -29,8 +29,8 @@ exports.LoggingsRegisterJson = LoggingsRegisterJson;
  * @param args
  */
 function LoggingsRegisterJsonFile(options, message) {
-    const timer = (0, Timer_1.Timer)("").timer;
-    const JsonFileName = `${timer.day}_${timer.month}_${timer.year}_${options.current_level}.json`;
+    const JsonFileName = (0, Timer_1.Timer)(options.register_filename).format
+        .replaceAll("{status}", options.current_level).replaceAll("{ext}", "json");
     const JsonFilePath = path_1.default.join(options.register_locale_file, JsonFileName);
     let data = {};
     if (fs_1.default.existsSync(JsonFilePath))

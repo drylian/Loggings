@@ -37,7 +37,7 @@ const defaults_1 = __importDefault(require("./Loggings/defaults"));
 function LoggingsConfig(config) {
     Loggings._default_configurations = {
         ...Loggings._default_configurations,
-        ...config
+        ...config,
     };
 }
 exports.LoggingsConfig = LoggingsConfig;
@@ -50,11 +50,31 @@ class Loggings {
     static _default_configurations = (0, defaults_1.default)();
     static progress = Loggings_1.Progress;
     /**
+     * Configures global logging methods to use the provided Loggings instance.
+     *
+     * This method overrides the default console methods (log, error, warn, info, debug)
+     * to use the corresponding methods from the provided Loggings instance. It allows
+     * for custom logging behaviors such as using colors and recording logs/errors in the terminal.
+     *
+     * @param logger - An instance of Loggings to handle the logging.
+     */
+    static useConsole(logger) {
+        global.loggings = logger;
+        global.console = {
+            ...global.console,
+            log: (...msg) => global.loggings.log(...msg),
+            error: (...msg) => global.loggings.error(...msg),
+            warn: (...msg) => global.loggings.warn(...msg),
+            info: (...msg) => global.loggings.info(...msg),
+            debug: (...msg) => global.loggings.debug(...msg),
+        };
+    }
+    /**
      * Updates Loggings config
      */
     config(config) {
         this.options = {
-            ...config
+            ...config,
         };
     }
     /**
@@ -73,7 +93,7 @@ class Loggings {
         this.options = {
             controller_title: Controller,
             controller_color: Color,
-            ...options
+            ...options,
         };
     }
     /**
@@ -82,7 +102,7 @@ class Loggings {
     get meta() {
         return {
             ...Loggings._default_configurations,
-            ...this.options
+            ...this.options,
         };
     }
     /**
@@ -131,7 +151,12 @@ class Loggings {
      * @returns {void}
      */
     txt(...messages) {
-        (0, Controller_1.Controller)({ ...this.options, current_level: "Info", register_text: true, console: false }, messages);
+        (0, Controller_1.Controller)({
+            ...this.options,
+            current_level: "Info",
+            register_text: true,
+            console: false,
+        }, messages);
     }
     /**
      * Table of Console.table

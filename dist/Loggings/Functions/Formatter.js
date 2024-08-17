@@ -4,6 +4,10 @@ exports.Formatter = void 0;
 const defaults_1 = require("../defaults");
 const Colors_1 = require("../Colors");
 const Loggings_1 = require("../../Loggings");
+const node_util_1 = require("node:util");
+const inspector = (msg) => {
+    return (0, node_util_1.inspect)(msg, { depth: null, colors: true });
+};
 function Formatter(messages) {
     let message_csl = "";
     let message_rgt = "";
@@ -23,17 +27,8 @@ function Formatter(messages) {
                 }
             });
         }
-        else if (typeof message === "number") {
-            message_csl += ` ${(0, Colors_1.Colors)("blue", message)}`;
-        }
-        else if (typeof message === "boolean") {
-            message_csl += ` ${message ? (0, Colors_1.Colors)("blue", "true") : (0, Colors_1.Colors)("red", "false")}`;
-        }
-        else if (typeof message === "object") {
-            message_csl += ` ${(0, Colors_1.Colors)("green", JSON.stringify(message))}`;
-        }
         else {
-            message_csl += ` ${message}`;
+            message_csl += inspector(message);
         }
     });
     /**
@@ -46,7 +41,7 @@ function Formatter(messages) {
                 return `"${text}"`;
             });
             const regexColors = /\x1B[[(?);]{0,2}(;?\d)*./g;
-            const messageWithoutColors = LoggingsTxT.replace(regexColors, '');
+            const messageWithoutColors = LoggingsTxT.replace(regexColors, "");
             const regexQuotes = /"(\d{1,})".*?"(\d{1,})"/g;
             const adjustedMessage = messageWithoutColors.replace(regexQuotes, (_, num1, num2) => {
                 return `"${num1}"${num2}"`;
@@ -60,7 +55,7 @@ function Formatter(messages) {
             message_rgt += ` ${message.toString()}`;
         }
         else if (typeof message === "object") {
-            message_rgt += ` "${JSON.stringify(message)}"`;
+            message_rgt += ` "${JSON.stringify(message, null, 2)}"`;
         }
         else {
             message_rgt += ` "${message}"`;
@@ -68,7 +63,7 @@ function Formatter(messages) {
     });
     return {
         message_csl,
-        message_rgt
+        message_rgt,
     };
 }
 exports.Formatter = Formatter;

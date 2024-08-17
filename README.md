@@ -60,6 +60,23 @@ logger.debug("This is alias of info message");
 logger.txt("This only registered message, not console viewer");
 ```
 
+### Alternatively
+
+Now modify the node js console to use loggings:
+
+```typescript
+import { Loggings } from "loggings";
+const logger = new Loggings("Loggings","blue")
+Loggings.useConsole(logger);
+
+console.error("This is an [error].red message");
+console.warn("This is an [warn].yellow message");
+console.info("This is an [info].blue message");
+console.log("This is alias of [info].blue message");
+console.debug("This is alias of [debug].magenta message");
+console.txt("This only registered message, not console viewer");
+```
+
 Use Colors in string Check Supported Colors in [Colors](./docs/Colors.md)
 
 ```typescript

@@ -1,4 +1,4 @@
-import { Progress } from "../Loggings";
+import { Loggings, Progress } from "../Loggings";
 import defaults, { LoggingsColors } from "./defaults";
 
 /**
@@ -70,7 +70,16 @@ export type LoggingsDefaultConfig = {
     console: boolean
     /**
      * Advanced: Function that is used by loggings to print the code on the terminal
-     * default :logger(m, t) { console[t](...m) }
+     * 
+     * ```js
+     * logger(contents, type) {
+        if (["info", "debug"].includes(type)) {
+            process.stdout.write(contents.formatted + "\n");
+        } else {
+            process.stderr.write(contents.formatted + "\n");
+        }
+    },
+     * ```
      */
     logger(contents: LoggingsLoggerContents, type: "error" | "warn" | "info" | "debug"): any
     /**
@@ -124,6 +133,19 @@ export type LoggingsDefaultConfig = {
      * Default: {register_dir}/{title}/{status}
      */
     register_locale_file: string;
+    /**
+     * Register File Format locale file.
+     * 
+     * Main Args:  {ext} | {status}
+     * 
+     * Timer Args: {day} | {month} | {year} | {hours} | {minutes}| {seconds} | {milliseconds}
+     * 
+     * Default: 
+     * ```js
+       const format = "{day}_{month}_{year}_{status}.{ext}";
+       ```
+     */
+    register_filename: string;
     /**
      * Register Format, in registration logs,
      * 
@@ -220,4 +242,7 @@ export type ProgressType = {
      * [Optional] Function executed when show was executed
      */
     progress_onShow?: (progress: InstanceType<typeof Progress>) => unknown | Promise<unknown>
+}
+declare global {
+    var loggings: Loggings | undefined;
 }

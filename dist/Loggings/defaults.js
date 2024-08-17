@@ -43,7 +43,14 @@ const LoggingsDefaults = {
     level: "Debug",
     color_fallback: "cyan",
     remove_colors: false,
-    logger(m, t) { console[t](m.formatted); },
+    logger(contents, type) {
+        if (["info", "debug"].includes(type)) {
+            process.stdout.write(contents.formatted + "\n");
+        }
+        else {
+            process.stderr.write(contents.formatted + "\n");
+        }
+    },
     controller_title: 'All',
     controller_color: "cyan",
     register: true,
@@ -51,6 +58,7 @@ const LoggingsDefaults = {
     register_limit: 10,
     register_dir: './logs',
     register_locale_file: '{register_dir}/{title}/{status}',
+    register_filename: "{day}_{month}_{year}_{status}.{ext}",
     register_format: '[ {day}/{month}/{year}-{hours}:{minutes}:{seconds} ] [ _.{title}._ ] {message}',
     register_type: 'log',
     status_colors: {

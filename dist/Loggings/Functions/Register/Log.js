@@ -34,8 +34,8 @@ exports.LoggingsRegisterLog = LoggingsRegisterLog;
  * @param args
  */
 function LoggingsRegisterLogFile(options, message) {
-    const timer = (0, Timer_1.Timer)("").timer;
-    const logFileName = `${timer.day}_${timer.month}_${timer.year}_${options.current_level}.log`;
+    const logFileName = (0, Timer_1.Timer)(options.register_filename).format
+        .replaceAll("{status}", options.current_level).replaceAll("{ext}", "log");
     const logFilePath = path_1.default.join(options.register_locale_file, logFileName);
     fs_1.default.appendFileSync(logFilePath, message + "\n");
 }
