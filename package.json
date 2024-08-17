@@ -6,7 +6,8 @@
   "scripts": {
     "build": "tsc --project ./tsconfig.json",
     "test:dev": "ts-node-dev --respawn --transpile-only --transpiler sucrase/ts-node-plugin test/test.ts",
-    "npm:update": "tsc --project ./tsconfig.json && npm run build && node ./test/test.js && npm version minor && npm publish"
+    "test": "ts-node-dev --transpile-only --transpiler sucrase/ts-node-plugin test/test.ts",
+    "npm:update": "tsc --project ./tsconfig.json && npm run build && npm run test && npm version minor && npm publish"
   },
   "repository": {
     "type": "git",
