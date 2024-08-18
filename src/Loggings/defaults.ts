@@ -1,9 +1,9 @@
 /**
  * Loggings Defaults Configurations.
  */
-import path from "path";
+import path from "node:path";
 import { LoggingsDefaultConfig } from "./types"
-import * as fs from "fs";
+import * as fs from "node:fs";
 import { Formatter } from "../Loggings";
 import { Bgc, Rgb } from "./Colors";
 /**

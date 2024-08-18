@@ -1,5 +1,5 @@
-import defaults, { LoggingsColors } from "../defaults";
-import { LoggingsColor, LoggingsMessage } from "../types";
+import { LoggingsColors } from "../defaults";
+import { LoggingsMessage } from "../types";
 import { Timer } from "./Timer";
 import { Formatter } from "./Formatter";
 import { Colors } from "../Colors";

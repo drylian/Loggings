@@ -1,6 +1,6 @@
-import path, { resolve } from "path";
+import path, { resolve } from "node:path";
 import { LoggingsController, LoggingsDefaultConfig } from "../types";
-import fs from "fs";
+import fs from "node:fs";
 import { LoggingsRegisterLogFile } from "./Register/Log";
 import { LoggingsRegisterJsonFile } from "./Register/Json";
 import { Unlinker } from "./Unlinker";

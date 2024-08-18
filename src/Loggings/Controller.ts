@@ -1,5 +1,4 @@
 import { LoggingsController, LoggingsMessage } from "./types";
-import defaults from "./defaults";
 import { Formatter } from "./Functions/Formatter";
 import { Timer } from "./Functions/Timer";
 import { Register } from "./Functions/Register";

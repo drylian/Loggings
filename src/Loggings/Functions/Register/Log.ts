@@ -1,4 +1,4 @@
-import path from "path";
+import path from "node:path";
 import {
     LoggingsController,
     LoggingsDefaultConfig,
@@ -6,7 +6,7 @@ import {
 } from "../../types";
 import { Formatter } from "../Formatter";
 import { Timer } from "../Timer";
-import fs from "fs";
+import fs from "node:fs";
 /**
  * Register Log type
  * @param options

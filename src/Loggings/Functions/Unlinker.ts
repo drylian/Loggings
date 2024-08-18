@@ -1,6 +1,6 @@
-import path, { join, resolve } from "path";
+import path, { join, resolve } from "node:path";
 import { LoggingsController, LoggingsDefaultConfig } from "../types";
-import fs, { statSync } from "fs";
+import fs, { statSync } from "node:fs";
 import { Console } from "./Console";
 
 /**
