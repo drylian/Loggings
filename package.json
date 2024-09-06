@@ -1,14 +1,22 @@
 {
   "name": "loggings",
-  "version": "1.5.0",
+  "version": "2.0b",
   "description": "Simple log system for your node js application, supported colors.",
-  "main": "./dist/Loggings.js",
   "scripts": {
-    "build": "tsc --project ./tsconfig.json",
-    "test:dev": "ts-node-dev --respawn --transpile-only --transpiler sucrase/ts-node-plugin test/test.ts",
-    "test": "ts-node-dev --transpile-only --transpiler sucrase/ts-node-plugin test/test.ts",
-    "npm:update": "tsc --project ./tsconfig.json && npm run build && npm run test && npm version minor && npm publish"
+    "build": "tsx tools/build.ts",
+    "deno:dev": "deno src/deno.ts",
+    "test": "tsx --watch tests/index.ts",
+    "build:dev": "tsx --watch tools/build.ts",
+    "npm:update": "tsc tools/build.ts && npm run build && npm run test && npm version minor && npm publish"
   },
+  "type": "module",
+  "main": "dist/index.min.cjs",
+  "module": "dist/index.min.mjs",
+  "types": "dist/types/node.d.ts",
+  "files": [
+    "dist",
+    "cdn.html"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/drylian/Loggings.git"
@@ -32,8 +40,8 @@
   "homepage": "https://github.com/drylian/Loggings#readme",
   "devDependencies": {
     "@types/node": "^20.11.27",
-    "sucrase": "^3.35.0",
-    "ts-node-dev": "^2.0.0",
-    "typescript": "^5.4.2"
+    "esbuild": "^0.21.0",
+    "esbuild-dts-path-alias": "^4.2.1",
+    "tsx": "^4.17.0"
   }
 }
