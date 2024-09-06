@@ -84,6 +84,7 @@ export class Test<Tests> {
             for (const error of Test.errors) {
                 console.warn(`${c["green"]}Test${c["reset"]} ${c["red"]}${error.index}${c["reset"]} ${c["gold"]}${Test.all[error.index].name}${c["reset"]}:`, error.error);
             }
+            throw "Error in Tests";
         } else {
             logger.pass(
                 ` ${c["green"]}${Test.all.length}${c["reset"]} - All tests ${
