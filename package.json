@@ -5,7 +5,7 @@
   "scripts": {
     "build": "tsx tools/build.ts",
     "deno:dev": "deno src/deno.ts",
-    "test": "tsx --watch tests/index.ts",
+    "test": "tsx tests/index.ts",
     "build:dev": "tsx --watch tools/build.ts",
     "npm:update": "tsc tools/build.ts && npm run build && npm run test && npm version minor && npm publish"
   },
