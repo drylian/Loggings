@@ -1,52 +1,39 @@
-name: Release
+name: Publish Loggings package
 
 on:
+  workflow_dispatch:
   push:
     tags:
-      - "*"
+      - "v*"
 
 jobs:
-  release:
-    name: Release
-    runs-on: ubuntu-20.04
+  publish:
+    name: Publish to NPM Registry
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
     steps:
-      - name: Code checkout
-        uses: actions/checkout@v3
+      - name: Code Checkout
+        uses: actions/checkout@v4
+      
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+      
+      - name: Installing dependencies
+        run: bun install --frozen-lockfile --production
 
-      - name: Setup Node
-        uses: actions/setup-node@v3
-        with:
-          node-version: 20
-
-      - name: Create release branch and bump version
-        env:
-          REF: ${{ github.ref }}
-        run: |
-          BRANCH=release/${REF:10}
-          git config --local user.email "drylian@users.noreply.github.com"
-          git config --local user.name "Loggings Releases"
-          git checkout -b $BRANCH
-          git push -u origin $BRANCH
-          sed -i "s/  '  "version": "Canary",/  "version": "${REF:11}",/' package.json
-          git add package.json
-          git commit -m "New Loggings release inbound!"
-          git push
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Build
-        run: npm run build
-
+      - name: Bundling package
+        run: bun bundle
+      
       - name: Remove unnecessary files 
-        run: | 
-          rm -rf node_modules test tsconfig.json src docs package-lock.json
+        run: rm -rf node_modules tests tools tsconfig.json src package-lock.json .github .git .gitignore .gitattributes _deno.json
 
-      - uses: actions/setup-node@v4
+      - name: Publishing
+        uses: actions/setup-node@v4
         with:
           node-version: '20.x'
           registry-url: 'https://registry.npmjs.org'
-      - run: npm ci
       - run: npm publish --provenance --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

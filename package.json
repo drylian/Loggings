@@ -13,10 +13,6 @@
   "main": "dist/index.min.cjs",
   "module": "dist/index.min.mjs",
   "types": "dist/types/node.d.ts",
-  "files": [
-    "dist",
-    "cdn.html"
-  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/drylian/Loggings.git"
