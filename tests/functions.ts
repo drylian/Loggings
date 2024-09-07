@@ -14,7 +14,6 @@ new Test({
       }),
     fn(def) {
         const response = JSON.stringify(Fragmenter("test [test].testing[[test].testad[]"));
-        console.log()
         if(response !== def) throw new Error(
             `Test failed. Expected ${def} but got ${
                 response

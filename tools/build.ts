@@ -44,13 +44,13 @@ await esbuild.build({
             name: "RemoveImports",
             setup(build) {
                 build.onLoad({ filter: /\.ts$/ }, async (args) => {
-                    let text = (await fs.promises.readFile(args.path, "utf8"))
+                    const text = (await fs.promises.readFile(args.path, "utf8"))
                         .replace(
                             /import\s+.*?\s+from\s+['"]node:console['"]/g,
                             "",
                         )
                         .replace(/import\s+.*?\s+from\s+['"]node:util['"]/g, "")
-                        .replace("extends Console", "")
+                        .replace("extends Console {", "{")
                         .replace(
                             "super(process.stdin, process.stderr)",
                             "super()",

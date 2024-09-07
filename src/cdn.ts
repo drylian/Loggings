@@ -2,9 +2,11 @@ import "./types.ts";
 
 export * from "./libs/functions/colors.ts";
 export * from "./libs/functions/formatter.ts";
+export * from "./libs/functions/fragmenter.ts";
 export * from "./libs/functions/pallet.ts";
 export * from "./libs/functions/timer.ts";
 export * from "./libs/class/plugin.ts";
+export * from "./libs/plugins/console/index.ts";
 
 import { LoggingsColors } from "./libs/functions/pallet.ts";
 import { LoggingsConsoleConfig } from "./libs/plugins/console/types.ts";
@@ -56,3 +58,5 @@ export class Loggings<
         };
     }
 }
+
+export default Loggings;

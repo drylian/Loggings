@@ -261,7 +261,7 @@ export class LoggingsCORE<LoggingsConfig extends LoggingsPluginData<object>>
      * @param {LoggingsLevel} type - The log level (info, error, trace, debug, warn).
      */
     public static controller(msgs: LoggingsMessage[], type: LoggingsLevel) {
-        this.plugins.forEach((plugin) => {
+        LoggingsCORE.plugins.forEach((plugin) => {
             plugin.onMessage(
                 {
                     ...LoggingsCORE.configs,
@@ -279,7 +279,7 @@ export class LoggingsCORE<LoggingsConfig extends LoggingsPluginData<object>>
      * @param {...LoggingsMessage[]} messages - The messages to be logged.
      */
     public static log(...messages: LoggingsMessage[]) {
-        this.controller(messages, "info");
+        LoggingsCORE.controller(messages, "info");
     }
 
     /**
@@ -288,7 +288,7 @@ export class LoggingsCORE<LoggingsConfig extends LoggingsPluginData<object>>
      * @param {...LoggingsMessage[]} messages - The messages to be logged.
      */
     public static error(...messages: LoggingsMessage[]) {
-        this.controller(messages, "error");
+        LoggingsCORE.controller(messages, "error");
     }
 
     /**
@@ -297,7 +297,7 @@ export class LoggingsCORE<LoggingsConfig extends LoggingsPluginData<object>>
      * @param {...LoggingsMessage[]} messages - The messages to be logged.
      */
     public static trace(...messages: LoggingsMessage[]) {
-        this.controller(messages, "trace");
+        LoggingsCORE.controller(messages, "trace");
     }
 
     /**
@@ -306,7 +306,7 @@ export class LoggingsCORE<LoggingsConfig extends LoggingsPluginData<object>>
      * @param {...LoggingsMessage[]} messages - The messages to be logged.
      */
     public static debug(...messages: LoggingsMessage[]) {
-        this.controller(messages, "debug");
+        LoggingsCORE.controller(messages, "debug");
     }
 
     /**
@@ -315,7 +315,7 @@ export class LoggingsCORE<LoggingsConfig extends LoggingsPluginData<object>>
      * @param {...LoggingsMessage[]} messages - The messages to be logged.
      */
     public static warn(...messages: LoggingsMessage[]) {
-        this.controller(messages, "warn");
+        LoggingsCORE.controller(messages, "warn");
     }
 
     /**
@@ -324,6 +324,6 @@ export class LoggingsCORE<LoggingsConfig extends LoggingsPluginData<object>>
      * @param {...LoggingsMessage[]} messages - The messages to be logged.
      */
     public static info(...messages: LoggingsMessage[]) {
-        this.controller(messages, "info");
+        LoggingsCORE.controller(messages, "info");
     }
 }

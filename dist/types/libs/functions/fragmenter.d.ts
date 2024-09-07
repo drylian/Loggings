@@ -19,26 +19,11 @@
  * //   ]
  * // }
  */
-export function Fragmenter(
-    text: string,
-    format: string = "<*>",
-): { text: string; frags: { key: string; value: string; bold: boolean }[] } {
-    const [left, right] = format.split("*");
-    const frags: { key: string; value: string; bold: boolean }[] = [];
-
-    const pattern = /\[([^\]]*)\]\.(\w+)(-b)?/g;
-
-    const result = text.replace(pattern, (_, value, key, boldFlag) => {
-        const bold = boldFlag === "-b";
-
-        const clear_value = value.replace(/^\[|\]$/g, '');
-        frags.push({ key, value: clear_value, bold });
-
-        const start = value.startsWith('[') ? '[' : '';
-        const end = value.endsWith(']') ? ']' : '';
-
-        return `${start}${left}${key}${right}${end}`;
-    });
-
-    return { text: result.trim(), frags };
-}
+export declare function Fragmenter(text: string, format?: string): {
+    text: string;
+    frags: {
+        key: string;
+        value: string;
+        bold: boolean;
+    }[];
+};
