@@ -17,12 +17,12 @@ const inspector = (msg: LoggingsMessage) => {
  * ```
  */
 export function Formatter(...messages: LoggingsMessage[]) {
-    return StaticFormatter({}, ...messages);
+    return StaticFormatter({},"{{{{*}}}}", ...messages);
 }
 
 export function StaticFormatter(
     colors: Record<string, string>,
-    format: string = "{{{{*}}}}",
+    format: string,
     ...messages: LoggingsMessage[]
 ) {
     let message_csl: string = "";
