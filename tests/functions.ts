@@ -32,6 +32,7 @@ new Test({
     fn(def) {
         const result = StaticFormatter(
             { testing_clo: "#testing" },
+            "{{{{*}}}}",
             "[Testing].blue [Formatter].red-b",
             "[Arguments].yellow",
             1,
