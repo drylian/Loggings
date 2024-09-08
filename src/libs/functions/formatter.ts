@@ -22,6 +22,7 @@ export function Formatter(...messages: LoggingsMessage[]) {
 
 export function StaticFormatter(
     colors: Record<string, string>,
+    format: string = "{{{{*}}}}",
     ...messages: LoggingsMessage[]
 ) {
     let message_csl: string = "";
@@ -32,14 +33,14 @@ export function StaticFormatter(
      */
     messages.forEach((message) => {
         if (typeof message === "string") {
-            const response = Fragmenter(message, "{{{{*}}}}");
+            const response = Fragmenter(message, format);
             response.frags.forEach(frag => {
                 let fragmented = frag.value;
                 if(frag.bold) fragmented = Colors("bold", frag.value, colors);
                 if (Object.keys(LoggingsColors).includes(frag.key)) {
                     fragmented = Colors(frag.key as keyof typeof LoggingsColors, fragmented, colors);
                 }
-                response.text = response.text.replace(`{{{{${frag.key}}}}}`, fragmented);
+                response.text = response.text.replace(`${format.split("*")[0]}${frag.key}${format.split("*")[1]}`, fragmented);
 
             })
             message_csl += response.text;
