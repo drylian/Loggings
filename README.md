@@ -1,6 +1,6 @@
 ## Loggings
 
-Loggings is a simple logging system for your Node.js applications, with support for colors.
+Loggings is a logging system for your Node.js applications, with loggings it is possible to standardize logs in a more professional and simple way, loggings has an integrated color system with practical use, currently a total of 0 dependencies.
 
 ### Installation
 
@@ -10,40 +10,39 @@ You can install Loggings via npm:
 npm install loggings
 ```
 
-### Configuration
-
-The loggings itself already has an internal configuration, but it also has support for customization, the logs can be configured using a configuration file if necessary. Here are examples of how to configure logs using TypeScript, JavaScript, and JSON formats:
-
-#### TypeScript (loggings.config.ts)
+### Deno Support
 
 ```typescript
-import { LoggingsConfig } from "loggings";
+import { Loggings } from "https://github.com/drylian/Loggings/blob/main/src/mod.ts";
+const logger = new Loggings("Deno");
+logger.log("Hello [World].blue-b")
+```
 
-LoggingsConfig({
+### CDN Support
+
+```js
+import { Loggings } from "https://cdn.jsdelivr.net/npm/loggings@latest/dist/cdn.min.mjs";
+const logger = new Loggings("Deno");
+logger.log("Hello [World].blue-b")
+```
+
+### Configuration
+
+The loggings itself already has an internal configuration, but it also has support for customization, the logs can be configured using a configuration file if necessary. Here are examples of how to configure the loggings:
+
+```typescript
+import { Loggings } from "loggings";
+// for all instances
+Loggings.config({
     register_dir: "./Logs",
-});
-```
+})
 
-#### JavaScript (loggings.config.js)
-
-```javascript
-/** @type {import('loggings').LoggingsOptionalConfig} */
-const { LoggingsConfig } = require("loggings");
-LoggingsConfig({
+// for instance
+const logger = new Loggings("instance");
+logger.config({
     register_dir: "./Logs",
-});
+})
 ```
-
-#### JSON (loggings.config.json)
-
-```json
-{
-    "register_dir": "./Logs"
-}
-```
-#### Configuration Arguments
-
-Check [Configurations](./docs/Configurations.md)
 
 ### Usage
 
@@ -77,7 +76,7 @@ console.debug("This is alias of [debug].magenta message");
 console.txt("This only registered message, not console viewer");
 ```
 
-Use Colors in string Check Supported Colors in [Colors](./docs/Colors.md)
+Use with Colors:
 
 ```typescript
 import { Loggings } from "loggings";
@@ -110,9 +109,6 @@ logger.info(true,"is [Boolean].blue"); // blue
 logger.info(false,"is [Boolean].red"); // red
 ```
 
-### Exemples
-
-Check [Exemples](./exemples/)
 
 ### Optionals
 
@@ -129,41 +125,8 @@ logger.warn("This is an warn message");
 logger.info("This is an info message");
 logger.log("This is alias of info message");
 logger.debug("This is an debug message");
-logger.txt("This only registered message, not console viewer");
 ```
 
-### Extra Function Progress
-
-Loggings has an extra progress system, an example of how to use it below:
-
-```typescript
-import { Progress } from "./src/Loggings";
-
-// Create a new instance of Progress
-const progressBar = new Progress();
-
-// Add a total of 100 units to the progress bar, for exemple, however, counts such as kbs, files and many other cases can be used
-progressBar.add(100);
-// progressBar.rem(100); // case need remove counts of total,, 
-
-// Set a message for the progress bar
-progressBar.msg("Processing...");
-// Show the progress bar and update it for each completed unit
-const interval = setInterval(() => {
-    // Update the progress bar
-    // Check if the progress bar has reached 100%
-    if (progressBar.meta.current >= progressBar.meta.total - 1) {
-        // Finish the interval
-        clearInterval(interval);
-        progressBar.msg("Complete!");
-        // Finish the progress bar and get the data
-        progressBar.end();
-    } else {
-        progressBar.cmt();
-    }
-}, 100);
-
-```
 ### License
 
 This project is licensed under the Apache-2.0 License. See the [LICENSE](LICENSE) file for details.
