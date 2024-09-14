@@ -1,4 +1,4 @@
-name: Publish Loggings package
+name: Publish Loggings Beta package
 
 on:
   workflow_dispatch:
