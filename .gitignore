@@ -1,4 +1,5 @@
 node_modules
 Logs
+dist
 bun.lockb
 package-lock.json
