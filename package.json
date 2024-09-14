@@ -1,5 +1,5 @@
 {
-  "name": "@loggings/beta",
+  "name": "loggings",
   "version": "2.0.0",
   "description": "Simple log system for your node js application, supported colors.",
   "scripts": {
