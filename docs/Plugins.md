@@ -41,7 +41,10 @@ To add a plugin to `Loggings`, use the `logger.add()` method, passing in an inst
 
 The `Loggings` configuration can be increased or decreased depending on the plugins installed. For example, when using the file logging plugin, you may need to configure the file path and log level.
 
-### Combined Configuration Example ```typescript import { Loggings } from "loggings";
+### Combined Configuration Example 
+
+```typescript
+import { Loggings } from "loggings";
 
 const logger = new Loggings("MyApp");
 
