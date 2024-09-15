@@ -48,9 +48,8 @@ import { Loggings } from "loggings";
 
 const logger = new Loggings("MyApp");
 
-// Logging Configuration Loggings.config({ format: "[{status}] [{hours}:{minutes}:{seconds}].gray {message}", level: "info", console: true, title: "My Application", color: "blue" });
-
-// Add the logging plugin to file logger.use(new FileLogger({ file: "./logs/app.log", level: "info" }));
+// Logging Configuration
+Loggings.config({ format: "[{status}] [{hours}:{minutes}:{seconds}].gray {message}", level: "info", console: true, title: "My Application", color: "blue" });
 
 logger.info("This is an info message.");
 ```
