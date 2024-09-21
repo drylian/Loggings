@@ -1,8 +1,8 @@
 node_modules
 Logs
-bun.lockb
 package-lock.json
-cdn.js
+cdn.mjs
+cdn.cjs
 node.cjs
 node.mjs
 types

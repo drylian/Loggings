@@ -11,23 +11,55 @@
     "build:dev": "tsx --watch tools/build.ts"
   },
   "type": "module",
-  "main": "dist/index.min.cjs",
-  "module": "dist/index.min.mjs",
-  "types": "dist/types/node.d.ts",
+  "main": "node.cjs",
+  "module": "node.mjs",
+  "types": "types/node.d.ts",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/drylian/Loggings.git"
   },
+  "typesVersions": {
+    "*": {
+      ".": [
+        "./types/node.d.ts"
+      ],
+      "globals": [
+        "./types/types.d.ts"
+      ]
+    }
+  },
+  "exports": {
+    ".": {
+      "types": "./types/node.d.ts",
+      "import": "./node.mjs",
+      "require": "./node.cjs"
+    },
+    "./cdn": {
+      "types": "./types/node.d.ts",
+      "import": "./cdn.mjs",
+      "require": "./cdn.cjs"
+    }
+  },
   "keywords": [
     "loggings",
+    "color",
     "logs",
     "logger",
     "log",
     "register",
     "colors",
-    "log",
     "npm",
-    "node"
+    "node",
+    "bun",
+    "deno",
+    "typescript",
+    "debug",
+    "console",
+    "output",
+    "performance",
+    "high-performance logging",
+    "structured logging",
+    "custom logger"
   ],
   "author": "Drylian",
   "license": "Apache-2.0",

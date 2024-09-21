@@ -51,14 +51,48 @@ await esbuild.build({
     }),],
 });
 
-console.log("Building Cdn resources...");
+console.log("Building Cdn mjs resources...");
 await esbuild.build({
     entryPoints: ["./src/cdn.ts"],
-    outfile: "./cdn.js",
+    outfile: "./cdn.mjs",
     bundle: true,
     minify: true,
     format: "esm",
     target: ["esnext"],
+    platform: "browser",
+    plugins: [
+        {
+            name: "RemoveImports",
+            setup(build) {
+                build.onLoad({ filter: /\.ts$/ }, async (args) => {
+                    const text = (await fs.promises.readFile(args.path, "utf8"))
+                        .replace(
+                            /import\s+.*?\s+from\s+['"]node:console['"]/g,
+                            "",
+                        )
+                        .replace(/import\s+.*?\s+from\s+['"]node:util['"]/g, "")
+                        .replace("extends Console {", "{")
+                        .replace(
+                            "super(process.stdin, process.stderr)",
+                            "super()",
+                        );
+                    return {
+                        contents: text,
+                        loader: "ts",
+                    };
+                });
+            },
+        },
+    ],
+});
+console.log("Building Cdn cjs resources...");
+await esbuild.build({
+    entryPoints: ["./src/cdn.ts"],
+    outfile: "./cdn.cjs",
+    bundle: true,
+    minify: true,
+    format: "cjs",
+    target: ["node14"],
     platform: "browser",
     plugins: [
         {
