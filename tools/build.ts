@@ -23,30 +23,32 @@ await esbuild.build({
     format: "cjs",
     target: ["node14"],
     platform: "node",
-    plugins: [dTSPathAliasPlugin({
+    plugins: [
+        {
+        name: "RenameImport",
+        setup(build) {
+            build.onLoad({ filter: /\.ts$/ }, async (args) => {
+                const text = (await fs.promises.readFile(args.path, "utf8"))
+                    .replace(
+                        /node:console/g,
+                        "console"
+                    )
+                    .replace(
+                        /node:util/g,
+                        "util"
+                    );
+                return {
+                    contents: text,
+                    loader: "ts",
+                };
+            });
+        },
+    }, 
+    dTSPathAliasPlugin({
         tsconfigPath: "./tsconfig.json",
         outputPath: "./types",
         debug: true,
-    }), {
-            name: "RemoveImports",
-            setup(build) {
-                build.onLoad({ filter: /\.ts$/ }, async (args) => {
-                    const text = (await fs.promises.readFile(args.path, "utf8"))
-                        .replace(
-                            /node:console/g,
-                            "console",
-                        )
-                        .replace(
-                            /node:util/g,
-                            "util",
-                        )
-                    return {
-                        contents: text,
-                        loader: "ts",
-                    };
-                });
-            },
-        },],
+    }),],
 });
 
 console.log("Building Cdn resources...");
