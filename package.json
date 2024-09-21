@@ -5,7 +5,7 @@
   "scripts": {
     "lint": "eslint 'src/**/*.ts'",
     "lint:fix": "eslint --fix",
-    "format": "prettier --write 'src/**/*.ts'",  
+    "format": "prettier --write 'src/**/*.ts'",
     "build": "tsx tools/build.ts",
     "test": "tsx tests/index.ts",
     "build:dev": "tsx --watch tools/build.ts"
@@ -41,6 +41,7 @@
     "esbuild": "^0.21.0",
     "esbuild-dts-path-alias": "^4.2.1",
     "globals": "^15.9.0",
-    "tsx": "^4.17.0"
+    "tsx": "^4.17.0",
+    "typescript": "^5.6.2"
   }
 }
