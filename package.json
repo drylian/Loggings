@@ -39,7 +39,7 @@
     "@eslint/js": "^9.10.0",
     "@types/node": "^20.11.27",
     "esbuild": "^0.21.0",
-    "esbuild-dts-path-alias": "^4.2.1",
+    "esbuild-dts-path-alias": "4.2.1",
     "globals": "^15.9.0",
     "tsx": "^4.17.0",
     "typescript": "^5.6.2"
