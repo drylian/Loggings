@@ -26,6 +26,10 @@ jobs:
       - name: Remove unnecessary files 
         run: rm -rf node_modules tests deno.json tools tsconfig.json bun.lockb docs src package-lock.json .github .git .gitignore .gitattributes
 
+      - name: Update Package
+        uses: actions/setup-node@v4
+        run: npm version minor
+
       - name: Publishing
         uses: actions/setup-node@v4
         with:
