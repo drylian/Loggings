@@ -14,22 +14,17 @@ jobs:
       contents: read
       id-token: write
     steps:
-      - name: Checkout code
+      - name: Code Checkout
         uses: actions/checkout@v4
-
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ matrix.node-version }}
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Build package
-        run: npm run build
       
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+      
+      - name: Installing dependencies
+        run: bun install --frozen-lockfile --production
+
       - name: Remove unnecessary files 
-        run: rm -rf node_modules tests tools tsconfig.json src package-lock.json .github .git .gitignore .gitattributes _deno.json
+        run: rm -rf node_modules tests deno.json tools tsconfig.json bun.lockb docs src package-lock.json .github .git .gitignore .gitattributes
 
       - name: Publishing
         uses: actions/setup-node@v4

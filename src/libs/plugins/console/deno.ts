@@ -12,6 +12,7 @@ export const DenoLoggingsConsole:LoggingsPluginData<typeof console_defaults> = {
     defaults: console_defaults,
 
     onMessage(options,current_level, args) {
+        console.log("tis")
         options.level = options.console_level ? options.console_level :options.level;
         if (options.console && current_level >= options.level) {
             let message_csl = Formatter(options.format)[options.disable_colors ? 1 : 0];
@@ -59,7 +60,7 @@ export const DenoLoggingsConsole:LoggingsPluginData<typeof console_defaults> = {
                     );
                 }
             }
-
+            console.log(message_csl)
             if (["info", "debug"].includes(current_level.toLowerCase())) {
                 Deno.stdout.write(new TextEncoder().encode(message_csl + "\n"));
             } else {

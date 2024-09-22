@@ -1,4 +1,4 @@
-import { LoggingsLevel } from "../../types";
+import { LoggingsLevel } from "../../types.ts";
 
 export type LoggingsRegisterConfig = {
     /**

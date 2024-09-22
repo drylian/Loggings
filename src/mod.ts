@@ -16,7 +16,7 @@ import { LoggingsCORE } from "./libs/class/core.ts";
 import { LoggingsPluginData } from "./libs/class/plugin.ts";
 import { DenoLoggingsConsole } from "./libs/plugins/console/deno.ts";
 import { DenoLoggingsRegister } from "./libs/plugins/register/deno.ts";
-
+import process from "node:process";
 /**
  * Configuration of Loggings
  */
@@ -27,9 +27,9 @@ LoggingsCORE.add(DenoLoggingsConsole, DenoLoggingsRegister);
  * Class of Loggings for Deno
  */
 export class Loggings<
-    ExtendedLoggingsConfig extends {} extends
+    ExtendedLoggingsConfig extends Record<string | number | symbol, never> extends
         LoggingsPluginData<Record<string, string>> ? ExtendedLoggingsConfig
-        : typeof DenoLoggingsConsole & typeof DenoLoggingsRegister,
+        : LoggingsPluginData<Record<string, string>>,
 > extends LoggingsCORE<ExtendedLoggingsConfig> {
     constructor(
         title?: string,
@@ -37,13 +37,34 @@ export class Loggings<
         advanced?: Partial<LoggingsConfig>,
     ) {
         super(process.stdin, process.stderr);
-        this.configs = Loggings.getDefaults();
-        if (title) this.configs.title = title;
+        this.configs = Loggings.getDefaults() as never;
+        if (title) (this.configs as { title:string }).title = title;
         if (color) {
-            this.configs.color = color;
+            (this.configs as { color:string }).color = color;
         }
         this.configs = { ...this.configs, ...advanced };
         LoggingsCORE.plugins.forEach((p) => p.onCreateInstance(this));
+    }
+
+    /**
+     * Configures global logging methods to use the provided Loggings instance.
+     *
+     * This method overrides the default console methods (log, error, warn, info, debug)
+     * to use the corresponding methods from the provided Loggings instance. It allows
+     * for custom logging behaviors such as using colors and recording logs/errors in the terminal.
+     *
+     * @param logger - An instance of Loggings to handle the logging.
+     */
+    public static useConsole(logger: InstanceType<typeof Loggings>) {
+        globalThis.loggings = logger;
+        globalThis.console = {
+            ...globalThis.console,
+            log: (...msg) => globalThis.loggings!.log(...msg),
+            error: (...msg) => globalThis.loggings!.error(...msg),
+            warn: (...msg) => globalThis.loggings!.warn(...msg),
+            info: (...msg) => globalThis.loggings!.info(...msg),
+            debug: (...msg) => globalThis.loggings!.debug(...msg),
+        };
     }
 
     public config(conf: Partial<LoggingsConfig>) {
@@ -59,5 +80,12 @@ export class Loggings<
             ...LoggingsCORE.configs as LoggingsConfig,
             ...this.configs,
         };
+    }
+}
+
+declare global {
+    var loggings: LoggingsCORE<LoggingsPluginData<object>>;
+    interface globalThis {
+        loggings?: LoggingsCORE<LoggingsPluginData<object>>;
     }
 }

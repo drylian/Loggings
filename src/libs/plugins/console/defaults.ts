@@ -1,4 +1,4 @@
-import { LoggingsConsoleConfig } from "./types";
+import { LoggingsConsoleConfig } from "./types.ts";
 
 /**
  * Defaults Configurations of Console Plugin

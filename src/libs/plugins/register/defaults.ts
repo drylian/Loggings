@@ -1,4 +1,4 @@
-import { LoggingsRegisterConfig } from "./types";
+import { LoggingsRegisterConfig } from "./types.ts";
 
 export const register_defaults: LoggingsRegisterConfig = {
         register: true,
