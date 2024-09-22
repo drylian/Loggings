@@ -21,7 +21,7 @@ jobs:
         uses: oven-sh/setup-bun@v2
       
       - name: Installing dependencies
-        run: bun install --frozen-lockfile --production
+        run: bun install --frozen-lockfile
 
       - name: Build Loggings
         run: bun run build
