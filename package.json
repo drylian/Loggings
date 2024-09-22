@@ -1,6 +1,6 @@
 {
   "name": "@loggings/beta",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "description": "Simple log system for your node js application, supported colors.",
   "scripts": {
     "lint": "eslint 'src/**/*.ts'",
