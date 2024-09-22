@@ -23,8 +23,11 @@ jobs:
       - name: Installing dependencies
         run: bun install --frozen-lockfile --production
 
+      - name: Build Loggings
+        run: bun run build
+
       - name: Remove unnecessary files 
-        run: rm -rf node_modules tests deno.json tools tsconfig.json bun.lockb docs src package-lock.json .github .git .gitignore .gitattributes
+        run: rm -rf node_modules tests deno.json deno.ts tools tsconfig.json bun.lockb docs src package-lock.json .github .git .gitignore .gitattributes
 
       - name: Update Package Version
         run: npm version minor
