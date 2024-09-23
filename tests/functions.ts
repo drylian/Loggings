@@ -1,22 +1,22 @@
 import { Test } from "../tools/Tester.ts";
 import { StaticFormatter } from "../src/libs/functions/formatter.ts";
 import { Fragmenter } from "../src/libs/functions/fragmenter.ts";
+import { areObjectsEqualDeep } from "./utils.ts";
 
 new Test({
     name: "Fragmenter test",
     desc: "should trigger return the value of def",
-    def: JSON.stringify({
+    def: {
         text: 'test <testing>[<testad>[]',
         frags: [
-          { key: 'testing', value: 'test', bold: false },
-          { key: 'testad', value: 'test', bold: false }  
+            { key: 'testing', value: 'test', bold: false },
+            { key: 'testad', value: 'test', bold: false }
         ]
-      }),
+    },
     fn(def) {
-        const response = JSON.stringify(Fragmenter("test [test].testing[[test].testad[]"));
-        if(response !== def) throw new Error(
-            `Test failed. Expected ${def} but got ${
-                response
+        const response = Fragmenter("test [test].testing[[test].testad[]");
+        if (!areObjectsEqualDeep(response, def)) throw new Error(
+            `Test failed. Expected ${JSON.stringify(def)} but got ${JSON.stringify(response)
             }`,
         );
     },
@@ -42,8 +42,7 @@ new Test({
         for (const key of Object.keys(result)) {
             if (result[Number(key)] !== def[Number(key)]) {
                 throw new Error(
-                    `Test failed. Expected ${def[Number(key)]} but got ${
-                        result[Number(key)]
+                    `Test failed. Expected ${def[Number(key)]} but got ${result[Number(key)]
                     }`,
                 );
             }
