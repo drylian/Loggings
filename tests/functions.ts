@@ -1,7 +1,7 @@
 import { Test } from "../tools/Tester.ts";
 import { StaticFormatter } from "../src/libs/functions/formatter.ts";
 import { Fragmenter } from "../src/libs/functions/fragmenter.ts";
-import { areObjectsEqualDeep } from "./utils.ts";
+import { areObjectsEqualDeep, areArraysEqualDeep } from "./utils.ts";
 
 new Test({
     name: "Fragmenter test",
@@ -39,7 +39,7 @@ new Test({
             { teste: "teste" },
             "[testasd].testing_clo",
         );
-        if (!areObjectsEqualDeep(def, result)) throw new Error(
+        if (!areArraysEqualDeep(def, result)) throw new Error(
             `Test failed. Expected ${JSON.stringify(def)} but got ${JSON.stringify(result)
             }`,
         );

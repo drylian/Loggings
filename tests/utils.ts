@@ -17,3 +17,17 @@ export function areObjectsEqualDeep(obj1: any, obj2: any): boolean {
 
     return true;
 }
+export function areArraysEqualDeep(arr1: any[], arr2: any[]): boolean {
+    if (arr1.length !== arr2.length) {
+        return false;
+    }
+
+    for (let i = 0; i < arr1.length; i++) {
+        if (!areObjectsEqualDeep(arr1[i], arr2[i])) {
+            console.warn(`Element at index ${i} not equal`);
+            return false;
+        }
+    }
+
+    return true;
+}
