@@ -1,10 +1,9 @@
-import { LoggingsLevel, LoggingsMessage } from "../types.ts";
+import type { LoggingsLevel, LoggingsMessage } from "../types.ts";
 import {
     LoggingsPlugin,
-    LoggingsPluginData,
-    LoggingsPluginLoader,
+    type LoggingsPluginData,
+    type LoggingsPluginLoader,
 } from "./plugin.ts";
-import { Console } from "node:console";
 
 /**
  * Loggings Core Class
@@ -18,8 +17,7 @@ import { Console } from "node:console";
  * log messages in various ways. The class provides methods for logging
  * different levels of messages (`info`, `error`, `trace`, `debug`, `warn`).
  */
-export class LoggingsCORE<LoggingsConfig extends LoggingsPluginData<object>>
-    extends Console {
+export class LoggingsCORE<LoggingsConfig extends LoggingsPluginData<object>> {
     /**
      * Static configurations for all instances of LoggingsCORE.
      *

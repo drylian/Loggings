@@ -1,6 +1,6 @@
 import { Test } from "../tools/Tester.ts";
-import { StaticFormatter } from "../src/libs/functions/formatter";
-import { Fragmenter } from "../src/libs/functions/fragmenter";
+import { StaticFormatter } from "../src/libs/functions/formatter.ts";
+import { Fragmenter } from "../src/libs/functions/fragmenter.ts";
 
 new Test({
     name: "Fragmenter test",

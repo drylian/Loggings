@@ -1,4 +1,4 @@
-import { LoggingsMessage } from "../types.ts";
+import type { LoggingsMessage } from "../types.ts";
 import { LoggingsColors } from "./pallet.ts";
 
 /**

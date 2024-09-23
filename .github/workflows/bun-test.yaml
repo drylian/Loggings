@@ -1,0 +1,27 @@
+name: Testing Loggings in Bun
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  publish:
+    name: Testing Loggings in Bun
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Code Checkout
+        uses: actions/checkout@v4
+      
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+      
+      - name: Installing dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Testing Loggings in Bun
+        run: bun run tests/index.ts

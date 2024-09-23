@@ -3,17 +3,12 @@
   "version": "2.0.0",
   "description": "Simple log system for your node js application, supported colors.",
   "scripts": {
-    "lint": "eslint 'src/**/*.ts'",
-    "lint:fix": "eslint --fix",
-    "format": "prettier --write 'src/**/*.ts'",
-    "build": "tsx tools/build.ts",
-    "test": "tsx tests/index.ts",
-    "build:dev": "tsx --watch tools/build.ts"
+    "build": "tsc --project ./tsconfig.json"
   },
   "type": "module",
-  "main": "node.cjs",
-  "module": "node.mjs",
-  "types": "types/node.d.ts",
+  "main": "dist/Loggings.js",
+  "module": "dist/Loggings.js",
+  "types": "dist/Loggings.d.ts",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/drylian/Loggings.git"
@@ -21,23 +16,23 @@
   "typesVersions": {
     "*": {
       ".": [
-        "./types/node.d.ts"
+        "./dist/Loggings.d.ts"
       ],
       "globals": [
-        "./types/types.d.ts"
+        "./dist/Loggings.d.ts"
       ]
     }
   },
   "exports": {
     ".": {
-      "types": "./types/node.d.ts",
-      "import": "./node.mjs",
-      "require": "./node.cjs"
+      "types": "./dist/Loggings.d.ts",
+      "import": "./dist/Loggings.js",
+      "require": "./dist/Loggings.js"
     },
     "./cdn": {
-      "types": "./types/node.d.ts",
-      "import": "./cdn.mjs",
-      "require": "./cdn.cjs"
+      "types": "./dist/Loggings.d.ts",
+      "import": "./dist/cdn.js",
+      "require": "./dist/cdn.js"
     }
   },
   "keywords": [
@@ -68,11 +63,11 @@
   },
   "homepage": "https://github.com/drylian/Loggings#readme",
   "devDependencies": {
-    "@eslint/js": "^9.10.0",
-    "@types/node": "^20.11.27",
-    "esbuild": "^0.21.0",
-    "esbuild-dts-path-alias": "4.2.1",
+    "@types/bun": "^1.1.10",
+    "@types/node": "^20.16.5",
+    "bun-plugin-dts": "^0.2.3",
     "globals": "^15.9.0",
-    "tsx": "^4.17.0"
+    "tsx": "^4.19.1",
+    "typescript": "^5.6.2"
   }
 }

@@ -1,12 +1,8 @@
-import { inspect } from "node:util";
-import { LoggingsMessage } from "../types.ts";
+import type { LoggingsMessage } from "../types.ts";
 import { Colors } from "./colors.ts";
 import { LoggingsColors } from "./pallet.ts";
 import { Fragmenter } from "./fragmenter.ts";
-
-const inspector = (msg: LoggingsMessage) => {
-    return inspect(msg, { depth: null, colors: true });
-};
+import { inspector } from "./inspector.ts";
 
 /**
  * Formatter of Colors

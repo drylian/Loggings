@@ -1,20 +1,15 @@
 {
-  "ts-node": {
-      "require": [
-          "tsconfig-paths/register"
-      ]
-  },
   "compilerOptions": {
       "allowJs": true,
       "target": "ESNext",
       "module": "ES2022",
+      "noEmit": true,
       "moduleResolution": "Node",
       "esModuleInterop": true,
       "jsx": "react-jsx",
       "forceConsistentCasingInFileNames": true,
       "resolveJsonModule": true,
       "allowImportingTsExtensions": true,
-      "noEmit": true,
       "allowSyntheticDefaultImports": true,
       "skipLibCheck": true,
       "baseUrl": "./",
@@ -27,7 +22,6 @@
       "src/**/*"
   ],
   "exclude": [
-      "node_modules",
-      "samp"
+      "node_modules"
   ]
 }

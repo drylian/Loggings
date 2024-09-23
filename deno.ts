@@ -1,7 +1,7 @@
-export * from "./src/mod.ts";
+export * from "./src/Loggings.ts";
 
-import { Loggings } from "./src/mod.ts";
+import { Loggings } from "./src/Loggings.ts";
 
 const logger= new Loggings();
-// Loggings.useConsole(logger);
-logger.log("Hi!")
+Loggings.useConsole(logger);
+console.log("Hi!")

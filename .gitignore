@@ -1,8 +1,5 @@
 node_modules
 Logs
+deno.lock
 package-lock.json
-cdn.mjs
-cdn.cjs
-node.cjs
-node.mjs
-types
+dist

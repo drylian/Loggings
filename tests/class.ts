@@ -1,18 +1,14 @@
 import { Test } from "../tools/Tester.ts";
-import { StaticFormatter } from "../src/libs/functions/formatter";
-import { LoggingsConsoleConfig } from "../src/libs/plugins/console/types.ts";
-import { LoggingsRegisterConfig } from "../src/libs/plugins/register/types.ts";
-import { Loggings, LoggingsPlugin, LoggingsPluginData, Timer } from "../src/node.ts";
-import { LoggingsRegister } from "../src/libs/plugins/register/node.ts";
-import { existsSync } from "fs";
-import { rm } from "fs/promises";
+import { Loggings, type LoggingsPluginData } from "../src/Loggings.ts";
+import { LoggingsRegister } from "../src/libs/plugins/register.ts";
+import type { EmtpyObj } from "../src/libs/types.ts";
 /**
  * Configuration of Loggings
  */
 Loggings.reset(); // removes register files;
 
 let statistics_results: string[] = [];
-const statistics: LoggingsPluginData<{}> = {
+const statistics: LoggingsPluginData<EmtpyObj> = {
     identify: "LoggingsStatistics",
     defaults: {},
     onMessage() {

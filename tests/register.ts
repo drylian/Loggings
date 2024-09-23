@@ -1,8 +1,8 @@
-import { existsSync } from "fs";
-import { LoggingsRegister } from "../src/libs/plugins/register/node";
-import { Loggings, Timer } from "../src/node";
-import { Test } from "../tools/Tester";
-import { rm } from "fs/promises";
+import { existsSync } from "node:fs";
+import { LoggingsRegister } from "../src/libs/plugins/register.ts";
+import { Loggings, Timer } from "../src/Loggings.ts";
+import { Test } from "../tools/Tester.ts";
+import { rm } from "node:fs/promises";
 
 new Test({
     name: "Registration Plugin make file",
