@@ -39,13 +39,9 @@ new Test({
             { teste: "teste" },
             "[testasd].testing_clo",
         );
-        for (const key of Object.keys(result)) {
-            if (result[Number(key)] !== def[Number(key)]) {
-                throw new Error(
-                    `Test failed. Expected ${def[Number(key)]} but got ${result[Number(key)]
-                    }`,
-                );
-            }
-        }
+        if (!areObjectsEqualDeep(def, result)) throw new Error(
+            `Test failed. Expected ${JSON.stringify(def)} but got ${JSON.stringify(result)
+            }`,
+        );
     },
 });
