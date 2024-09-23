@@ -1,7 +1,7 @@
 import { Test } from "../tools/Tester.ts";
 import { StaticFormatter } from "../src/libs/functions/formatter.ts";
 import { Fragmenter } from "../src/libs/functions/fragmenter.ts";
-import { areObjectsEqualDeep, areArraysEqualDeep } from "./utils.ts";
+import {  deepEqual } from "./utils.ts";
 
 new Test({
     name: "Fragmenter test",
@@ -15,7 +15,7 @@ new Test({
     },
     fn(def) {
         const response = Fragmenter("test [test].testing[[test].testad[]");
-        if (!areObjectsEqualDeep(response, def)) throw new Error(
+        if (!deepEqual(response, def)) throw new Error(
             `Test failed. Expected ${JSON.stringify(def)} but got ${JSON.stringify(response)
             }`,
         );
@@ -39,7 +39,7 @@ new Test({
             { teste: "teste" },
             "[testasd].testing_clo",
         );
-        if (!areArraysEqualDeep(def, result)) throw new Error(
+        if (!deepEqual(def, result)) throw new Error(
             `Test failed. Expected ${JSON.stringify(def)} but got ${JSON.stringify(result)
             }`,
         );
