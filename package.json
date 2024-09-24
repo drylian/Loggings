@@ -31,8 +31,8 @@
     },
     "./cdn": {
       "types": "./dist/Loggings.d.ts",
-      "import": "./dist/cdn.js",
-      "require": "./dist/cdn.js"
+      "import": "./dist/Loggings.js",
+      "require": "./dist/Loggings.js"
     }
   },
   "keywords": [
