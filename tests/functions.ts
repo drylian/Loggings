@@ -29,7 +29,8 @@ new Test({
         "[38;2;1;0;255mTesting[0m [38;2;255;0;0m[1mFormatter[0m[0m[38;2;255;255;0mArguments[0m[33m1[39m{ teste: [32m'teste'[39m }#testingtestasd[0m",
         '"Testing" "Formatter""Arguments" 1 "{\n  "teste": "teste"\n}""testasd"',
     ], ["\u001b[38;2;1;0;255mTesting\u001b[0m \u001b[38;2;255;0;0m\u001b[1mFormatter\u001b[0m\u001b[0m\u001b[38;2;255;255;0mArguments\u001b[0m\u001b[0m\u001b[33m1\u001b[0m{\n  \u001b[0mteste\u001b[2m:\u001b[0m \u001b[0m\u001b[32m\u001b[0m\u001b[32m\"teste\"\u001b[0m\u001b[0m\u001b[0m\u001b[2m,\u001b[0m\n}#testingtestasd\u001b[0m",
-         "\"Testing\" \"Formatter\"\"Arguments\" 1 \"{\n  \"teste\": \"teste\"\n}\"\"testasd\""]],
+        "\"Testing\" \"Formatter\"\"Arguments\" 1 \"{\n  \"teste\": \"teste\"\n}\"\"testasd\""], ["\u001b[38;2;1;0;255mTesting\u001b[0m \u001b[38;2;255;0;0m\u001b[1mFormatter\u001b[0m\u001b[0m\u001b[38;2;255;255;0mArguments\u001b[0m\u001b[33m1\u001b[39m{ teste: \u001b[32m\"teste\"\u001b[39m }#testingtestasd\u001b[0m",
+            "\"Testing\" \"Formatter\"\"Arguments\" 1 \"{\n  \"teste\": \"teste\"\n}\"\"testasd\""]],
     fn(def) {
         const result = StaticFormatter(
             { testing_clo: "#testing" },
@@ -40,8 +41,8 @@ new Test({
             { teste: "teste" },
             "[testasd].testing_clo",
         );
-        console.log(JSON.stringify(result))
-        if (!deepEqual(def[0], result) && !deepEqual(def[1], result)) throw new Error(
+        // node js Format, bun Format, deno Format
+        if (!deepEqual(def[0], result) && !deepEqual(def[1], result) && !deepEqual(def[2], result)) throw new Error(
             `Test failed. Expected ${JSON.stringify(def)} but got ${JSON.stringify(result)
             }`,
         );
