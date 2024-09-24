@@ -24,15 +24,16 @@ const file = await fs.promises.readFile("src/types.ts", { encoding:"utf-8"});
 const content = file.split("declare")[1];
 fs.appendFileSync("dist/Loggings.d.ts", `\ndeclare${content}`);
 
-const results = await Bun.build({
-    entrypoints: ["./src/Loggings.ts"],
-    bundle: true,
-    minify: true,
-    target: "browser",
-});
+// Cdn in working...
+// const results = await Bun.build({
+//     entrypoints: ["./src/Loggings.ts"],
+//     // bundle: true,
+//     // minify: true,
+//     target: "bun",
+// });
 
-for (const res of results.outputs) {
-    await res.text();
-    new Response(res);
-    Bun.write(path.join("dist", "cdn.js"), res);
-}
+// for (const res of results.outputs) {
+//     await res.text();
+//     new Response(res);
+//     Bun.write(path.join("dist", "cdn.js"), res);
+// }

@@ -3,7 +3,7 @@
   "version": "2.2.0",
   "description": "Simple log system for your node js application, supported colors.",
   "scripts": {
-    "build": "tsc --project ./tsconfig.json"
+    "build": "bun run tools/build.ts"
   },
   "type": "module",
   "main": "dist/Loggings.js",

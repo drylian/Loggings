@@ -59,26 +59,42 @@ export class Loggings<
                 throw new Error("Brownser not have support for useConsole function!")
             }
             case AppType.Deno: {
+                //@ts-ignore global args
                 globalThis.loggings = logger;
+                //@ts-ignore global args
                 globalThis.console = {
+                    //@ts-ignore global args
                     ...globalThis.console,
+                    //@ts-ignore global args
                     log: (...msg) => globalThis.loggings!.log(...msg),
+                    //@ts-ignore global args
                     error: (...msg) => globalThis.loggings!.error(...msg),
+                    //@ts-ignore global args
                     warn: (...msg) => globalThis.loggings!.warn(...msg),
+                    //@ts-ignore global args
                     info: (...msg) => globalThis.loggings!.info(...msg),
+                    //@ts-ignore global args
                     debug: (...msg) => globalThis.loggings!.debug(...msg),
                 };
                 break;
             }
             case AppType.Bun:
             case AppType.Node: {
+                //@ts-ignore global args
                 global.loggings = logger;
+                //@ts-ignore global args
                 global.console = {
+                    //@ts-ignore global args
                     ...global.console,
+                    //@ts-ignore global args
                     log: (...msg) => global.loggings!.log(...msg),
+                    //@ts-ignore global args
                     error: (...msg) => global.loggings!.error(...msg),
+                    //@ts-ignore global args
                     warn: (...msg) => global.loggings!.warn(...msg),
+                    //@ts-ignore global args
                     info: (...msg) => global.loggings!.info(...msg),
+                    //@ts-ignore global args
                     debug: (...msg) => global.loggings!.debug(...msg),
                 };
                 break;
