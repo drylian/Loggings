@@ -1,39 +1,124 @@
 import esbuild from "esbuild";
 import fs from "node:fs";
-import path from "node:path";
-import dts from "bun-plugin-dts";
+import { dTSPathAliasPlugin } from "esbuild-dts-path-alias";
 
-const result = await Bun.build({
-    entrypoints: ["./src/Loggings.ts"],
+console.log("Building Esm resources...");
+await esbuild.build({
+    entryPoints: ["./src/Loggings.ts"],
+    outfile: "./dist/Loggings.mjs",
     bundle: true,
     minify: true,
-    target: "node",
-    plugins: [dts()]
+    format: "esm",
+    target: ["esnext"],
+    platform: "node",
+    plugins:[
+        dTSPathAliasPlugin({
+            tsconfigPath: "./tsconfig.json",
+            outputPath: "./types",
+            debug: true,
+        }),
+    ]
 });
 
-for (const res of result.outputs) {
-    await res.text();
-    new Response(res);
-    Bun.write(path.join("dist", res.path), res);
-}
+console.log("Building Cjs resources...");
+await esbuild.build({
+    entryPoints: ["./src/Loggings.ts"],
+    outfile: "./dist/Loggings.cjs",
+    bundle: true,
+    minify: true,
+    minifySyntax: true,
+    format: "cjs",
+    target: ["node14"],
+    platform: "node",
+    plugins: [
+        {
+        name: "RenameImport",
+        setup(build) {
+            build.onLoad({ filter: /\.ts$/ }, async (args) => {
+                const text = (await fs.promises.readFile(args.path, "utf8"))
+                    .replace(
+                        /node:console/g,
+                        "console"
+                    )
+                    .replace("const require = Module.createRequire(import.meta.url);", "")
+                    .replace(
+                        /node:util/g,
+                        "util"
+                    );
+                return {
+                    contents: text,
+                    loader: "ts",
+                };
+            });
+        },
+    }],
+});
 
-/**
- * Add global types of loggings d.ts
- */
-const file = await fs.promises.readFile("src/types.ts", { encoding:"utf-8"});
-const content = file.split("declare")[1];
-fs.appendFileSync("dist/Loggings.d.ts", `\ndeclare${content}`);
-
-// Cdn in working...
-// const results = await Bun.build({
-//     entrypoints: ["./src/Loggings.ts"],
-//     // bundle: true,
-//     // minify: true,
-//     target: "bun",
+// console.log("Building Cdn mjs resources...");
+// await esbuild.build({
+//     entryPoints: ["./src/cdn.ts"],
+//     outfile: "./cdn.mjs",
+//     bundle: true,
+//     minify: true,
+//     format: "esm",
+//     target: ["esnext"],
+//     platform: "browser",
+//     plugins: [
+//         {
+//             name: "RemoveImports",
+//             setup(build) {
+//                 build.onLoad({ filter: /\.ts$/ }, async (args) => {
+//                     const text = (await fs.promises.readFile(args.path, "utf8"))
+//                         .replace(
+//                             /import\s+.*?\s+from\s+['"]node:console['"]/g,
+//                             "",
+//                         )
+//                         .replace(/import\s+.*?\s+from\s+['"]node:util['"]/g, "")
+//                         .replace("extends Console {", "{")
+//                         .replace(
+//                             "super(process.stdin, process.stderr)",
+//                             "super()",
+//                         );
+//                     return {
+//                         contents: text,
+//                         loader: "ts",
+//                     };
+//                 });
+//             },
+//         },
+//     ],
 // });
-
-// for (const res of results.outputs) {
-//     await res.text();
-//     new Response(res);
-//     Bun.write(path.join("dist", "cdn.js"), res);
-// }
+// console.log("Building Cdn cjs resources...");
+// await esbuild.build({
+//     entryPoints: ["./src/cdn.ts"],
+//     outfile: "./cdn.cjs",
+//     bundle: true,
+//     minify: true,
+//     format: "cjs",
+//     target: ["node14"],
+//     platform: "browser",
+//     plugins: [
+//         {
+//             name: "RemoveImports",
+//             setup(build) {
+//                 build.onLoad({ filter: /\.ts$/ }, async (args) => {
+//                     const text = (await fs.promises.readFile(args.path, "utf8"))
+//                         .replace(
+//                             /import\s+.*?\s+from\s+['"]node:console['"]/g,
+//                             "",
+//                         )
+//                         .replace(/import\s+.*?\s+from\s+['"]node:util['"]/g, "")
+//                         .replace("extends Console {", "{")
+//                         .replace(
+//                             "super(process.stdin, process.stderr)",
+//                             "super()",
+//                         );
+//                     return {
+//                         contents: text,
+//                         loader: "ts",
+//                     };
+//                 });
+//             },
+//         },
+//     ],
+// });
