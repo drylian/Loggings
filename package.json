@@ -1,6 +1,6 @@
 {
   "name": "@loggings/beta",
-  "version": "2.3.0",
+  "version": "2.4.0",
   "description": "Simple log system for your node js application, supported colors.",
   "scripts": {
     "build": "bun run tools/build.ts"
