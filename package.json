@@ -6,9 +6,9 @@
     "build": "bun run tools/build.ts"
   },
   "type": "module",
-  "main": "dist/Loggings.js",
-  "module": "dist/Loggings.js",
-  "types": "dist/Loggings.d.ts",
+  "main": "loggings.cjs",
+  "module": "loggings.mjs",
+  "types": "types/Loggings.d.ts",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/drylian/Loggings.git"
@@ -16,23 +16,18 @@
   "typesVersions": {
     "*": {
       ".": [
-        "./dist/Loggings.d.ts"
+        "./types/Loggings.d.ts"
       ],
       "globals": [
-        "./dist/Loggings.d.ts"
+        "./types/types.d.ts"
       ]
     }
   },
   "exports": {
     ".": {
-      "types": "./dist/Loggings.d.ts",
-      "import": "./dist/Loggings.js",
-      "require": "./dist/Loggings.js"
-    },
-    "./cdn": {
-      "types": "./dist/Loggings.d.ts",
-      "import": "./dist/Loggings.js",
-      "require": "./dist/Loggings.js"
+      "types": "./types/Loggings.d.ts",
+      "import": "./loggings.mjs",
+      "require": "./loggings.cjs"
     }
   },
   "keywords": [
@@ -65,12 +60,6 @@
   "devDependencies": {
     "@types/bun": "^1.1.10",
     "@types/node": "^20.16.5",
-    "bun-plugin-dts": "^0.2.3",
-    "globals": "^15.9.0",
-    "tsx": "^4.19.1",
-    "typescript": "^5.6.2"
-  },
-  "dependencies": {
-    "esbuild-dts-path-alias": "^4.2.1"
+    "esbuild": "0.21.5"
   }
 }
