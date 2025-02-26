@@ -85,7 +85,7 @@ function logger(type: LoggingsLevel, message: string) {
     switch (SystemExecutor) {
         case AppType.Deno: {
             const encoder = new TextEncoder();
-            const output = encoder.encode(`${message}\n`);
+            const output = new TextEncoder().encode(`${message}\n`);
             if (!["info", "debug"].includes(type.toLowerCase())) {
                 //@ts-ignore Ignore Deno
                 Deno.stderr.write(output);

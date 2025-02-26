@@ -48,7 +48,7 @@ export function StaticFormatter(
     /**
      * Transform Colors for Registration file
      */
-    messages.forEach((message) => {
+    messages.forEach((message) => { 
         if (typeof message === "string") {
             const colorTagPattern = /\[([^\]]+)\]\.(\w+)(-b)?/g;
             const LoggingsTxT = message.replace(colorTagPattern, (_, text) => {
