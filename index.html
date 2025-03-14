@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Loggings Terminal Demo</title>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.jsdelivr.net/npm/xterm/dist/xterm.min.css" rel="stylesheet">
+
+  <!-- Xterm.js -->
+  <script src="https://cdn.jsdelivr.net/npm/xterm" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/@xterm/addon-fit" defer></script>
+
+  <style>
+    :root {
+      --terminal-bg: #111418;
+      --terminal-text: #d1d5db;
+      --terminal-input-bg: #374151;
+      --terminal-input-focus: #1f2937;
+      --terminal-border: #4b5563;
+    }
+
+    .dark {
+      --terminal-bg: #0d1117;
+      --terminal-text: #e5e7eb;
+      --terminal-input-bg: #1f2937;
+      --terminal-input-focus: #111827;
+      --terminal-border: #374151;
+    }
+
+    body {
+      transition: background-color 0.3s ease;
+    }
+
+    .terminal-container {
+      max-width: 900px;
+      margin: 40px auto;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+      background-color: var(--terminal-bg);
+      padding: 20px;
+      border: 1px solid var(--terminal-border);
+      transition: all 0.3s ease;
+    }
+
+    .terminal-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 15px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--terminal-border);
+    }
+
+    .terminal-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      margin-right: 8px;
+    }
+
+    .terminal-title {
+      flex-grow: 1;
+      text-align: center;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--terminal-text);
+    }
+
+    .terminal-input-container {
+      display: flex;
+      align-items: center;
+      background-color: var(--terminal-input-bg);
+      border-radius: 6px;
+      padding: 0 10px;
+      margin-top: 15px;
+      transition: background-color 0.3s ease;
+    }
+
+    .terminal-prompt {
+      color: #10b981;
+      margin-right: 8px;
+      font-weight: bold;
+    }
+
+    .terminal-input {
+      width: 100%;
+      background-color: transparent;
+      border: none;
+      padding: 10px 0;
+      color: var(--terminal-text);
+      font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
+    }
+
+    .terminal-input:focus {
+      outline: none;
+    }
+
+    .terminal-input-container:focus-within {
+      background-color: var(--terminal-input-focus);
+      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
+    }
+
+    #output {
+      min-height: 350px;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    .xterm-viewport::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    .xterm-viewport::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 4px;
+    }
+
+    .xterm-viewport::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 4px;
+    }
+
+    .xterm-viewport::-webkit-scrollbar-thumb:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    .theme-toggle {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: none;
+      border: none;
+      color: var(--terminal-text);
+      cursor: pointer;
+      font-size: 20px;
+    }
+  </style>
+</head>
+
+<body class="bg-zinc-900 text-white min-h-screen flex items-center justify-center p-4">
+  <button id="themeToggle" class="theme-toggle">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sun hidden">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="moon">
+      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+    </svg>
+  </button>
+
+  <div class="terminal-container">
+    <div class="terminal-header">
+      <div class="terminal-dot bg-red-500"></div>
+      <div class="terminal-dot bg-yellow-500"></div>
+      <div class="terminal-dot bg-green-500"></div>
+      <div class="terminal-title">Loggings Terminal Demo</div>
+    </div>
+    <div id="output"></div>
+    <div class="terminal-input-container">
+      <span class="terminal-prompt">$</span>
+      <input id="input" type="text" class="terminal-input" placeholder="Type a command and press Enter">
+    </div>
+  </div>
+
+  <script type="module">
+    import { Loggings, ConsolePlugin, colorpik, LoggingsPallet } from "./dist/cdn/cdn.js";
+
+    // Theme toggle functionality
+    const themeToggle = document.getElementById('themeToggle');
+    const sunIcon = document.querySelector('.sun');
+    const moonIcon = document.querySelector('.moon');
+
+    themeToggle.addEventListener('click', () => {
+      document.body.classList.toggle('dark');
+      sunIcon.classList.toggle('hidden');
+      moonIcon.classList.toggle('hidden');
+    });
+
+    // Terminal setup
+    const term = new Terminal({
+      cols: 90,
+      rows: 24,
+      cursorBlink: true,
+      fontFamily: "'Menlo', 'Monaco', 'Courier New', monospace",
+      fontSize: 14,
+      lineHeight: 1.2,
+      theme: {
+        background: LoggingsPallet.zinc95,
+        foreground: LoggingsPallet.zinc10,
+        cursor: '#f3f4f6',
+        selection: '#9ca3af',
+        black: '#000',
+        red: '#f87171',
+        green: '#34d399',
+        yellow: '#fbbf24',
+        blue: '#60a5fa',
+        magenta: '#c084fc',
+        cyan: '#22d3ee',
+        white: '#e5e7eb',
+      }
+    });
+    const fitAddon = new FitAddon.FitAddon();
+    term.loadAddon(fitAddon);
+
+
+    term.open(document.getElementById('output'));
+    fitAddon.fit();
+
+    const input = document.getElementById("input");
+    window.addEventListener("resize", () => fitAddon.fit());
+
+    // Configure Loggings
+    Loggings.plugins = [ConsolePlugin({
+      onSend: (conf, level, message) => term.write(message + "\r\n")
+    })];
+
+    const logger = new Loggings("");
+    const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+    // Welcome messages with format kit examples
+    const messages = [
+      "[Welcome].green to the [Loggings].green-b Terminal Demo!",
+      "[Loggings].green-b is an advanced logging system with [rich formatting options].blue-b.",
+      "Try these format kits:",
+      "  • [Colors].red-b: [This is red text].red and [this is bold blue].blue-b",
+      "  • [Gradient].blue-b: [This text has a color gradient]gb(blue,purple)",
+      "  • [Styles].green-b: *Bold* -Italic- _Underline_ ~Strikethrough~ !Blink! #Reverse#",
+      "Type 'help' to see available commands or 'demo' to see more examples."
+    ];
+
+    // Display welcome messages with delay
+    (async function showWelcome() {
+      for (const message of messages) {
+        logger.log(message);
+        await delay(700);
+      }
+
+      // Focus the input after welcome messages
+      input.focus();
+    })();
+
+    // Command history functionality
+    const commandHistory = [];
+    let historyIndex = -1;
+
+    // Handle input commands
+    input.addEventListener("keydown", (e) => {
+      // Handle up/down arrows for command history
+      if (e.key === "ArrowUp") {
+        if (historyIndex < commandHistory.length - 1) {
+          historyIndex++;
+          input.value = commandHistory[commandHistory.length - 1 - historyIndex];
+        }
+        e.preventDefault();
+      } else if (e.key === "ArrowDown") {
+        if (historyIndex > 0) {
+          historyIndex--;
+          input.value = commandHistory[commandHistory.length - 1 - historyIndex];
+        } else if (historyIndex === 0) {
+          historyIndex = -1;
+          input.value = "";
+        }
+        e.preventDefault();
+      }
+    });
+
+    // Process commands
+    input.addEventListener("keypress", (e) => {
+      if (e.key === "Enter") {
+        const command = input.value.trim();
+
+        if (command) {
+          // Add to history
+          commandHistory.push(command);
+          historyIndex = -1;
+
+          // Echo command
+          logger.log(`[>].blue-b ${command}`);
+
+          // Process command
+          processCommand(command);
+
+          // Clear input
+          input.value = "";
+        }
+      }
+    });
+
+    // Command processor
+    function processCommand(command) {
+      const cmd = command.toLowerCase();
+
+      if (cmd === "help" || cmd === "?") {
+        showHelp();
+      } else if (cmd === "clear" || cmd === "cls") {
+        term.clear();
+      } else if (cmd === "colors") {
+        showColors();
+      } else if (cmd === "demo") {
+        showDemo();
+      } else if (cmd === "gradient") {
+        showGradientDemo();
+      } else if (cmd === "styles") {
+        showStylesDemo();
+      } else if (cmd === "about") {
+        showAbout();
+      } else if (cmd.startsWith("echo ")) {
+        logger.log(command.substring(5));
+      } else if (cmd === "exit" || cmd === "quit") {
+        logger.log("[Goodbye!].green-b");
+      } else {
+        logger.log(`[Command not found: ${command}].red-b. Type 'help' for available commands.`);
+      }
+    }
+
+    // Help command
+    function showHelp() {
+      logger.log("[Available Commands].green-b");
+      logger.log("  • [help].blue-b - Show this help message");
+      logger.log("  • [colors].blue-b - Show available colors");
+      logger.log("  • [demo].blue-b - Show formatting examples");
+      logger.log("  • [gradient].blue-b - Show gradient examples");
+      logger.log("  • [styles].blue-b - Show text style examples");
+      logger.log("  • [echo <text>].blue-b - Echo text with formatting");
+      logger.log("  • [clear].blue-b - Clear the terminal");
+      logger.log("  • [about].blue-b - About Loggings");
+    }
+
+    // Colors command
+    function showColors() {
+      logger.log("[Available Colors].green-b");
+
+      const colors = [
+        "black", "red", "green", "yellow", "blue", "magenta", "cyan", "white",
+        "gray", "brightRed", "brightGreen", "brightYellow", "brightBlue",
+        "brightMagenta", "brightCyan", "brightWhite"
+      ];
+
+
+      for (const color of colors) {
+        logger.log(`  • [${color}].${color} - [${color}-b].${color}-b (bold)`);
+      }
+    }
+
+    // Demo command
+    function showDemo() {
+      logger.log("[Formatting Examples].green-b");
+      logger.log("[Basic Colors].blue-b: [Red].red, [Green].green, [Blue].blue, [Yellow].yellow");
+      logger.log("[Bold Colors].blue-b: [Red Bold].red-b, [Green Bold].green-b, [Blue Bold].blue-b");
+      logger.log("[Gradient].blue-b: [Simple Blue to Purple]gb(blue,purple)");
+      logger.log("[Multi-color].blue-b: [Red].red + [Green].green + [Blue].blue = [Rainbow]gb(red,green,blue)");
+      logger.log("[Styles].blue-b: *Bold text* -Italic text- _Underlined text_ ~Strikethrough~");
+      logger.log("[Combined].blue-b: [*Bold Red*].red [_Underlined Blue_].blue [-Italic Green-].green");
+    }
+
+    // Gradient demo
+    function showGradientDemo() {
+      logger.log("[Gradient Examples].green-b");
+      logger.log("[Sunset]gb(orange,red,purple)");
+      logger.log("[Ocean]gb(cyan,blue,darkblue)");
+      logger.log("[Forest]gb(lightgreen,green,darkgreen)");
+      logger.log("[Fire]gb(yellow,orange,red)");
+      logger.log("[Rainbow]gb(red,orange,yellow,green,blue,purple)");
+      logger.log("[Custom gradients can be created with any color names or hex values]gb(#3498db,#2ecc71)");
+    }
+
+    // Styles demo
+    function showStylesDemo() {
+      logger.log("[Text Style Examples].green-b");
+      logger.log("*Bold text* - Use asterisks: *like this*");
+      logger.log("-Italic text- - Use hyphens: -like this-");
+      logger.log("_Underlined text_ - Use underscores: _like this_");
+      logger.log("~Strikethrough~ - Use tildes: ~like this~");
+      logger.log("!Blinking text! - Use exclamation marks: !like this!");
+      logger.log("#Reversed colors# - Use hash symbols: #like this#");
+      logger.log("[Combined styles].blue-b: *-Bold and italic-* *_Bold and underlined_*");
+    }
+
+    // About command
+    function showAbout() {
+      logger.log("[About Loggings].green-b");
+      logger.log("Loggings is an advanced terminal styling and logging system.");
+      logger.log("Features:");
+      logger.log("  • [Rich text formatting].blue");
+      logger.log("  • [Color support].red");
+      logger.log("  • [Gradients]gb(blue,purple)");
+      logger.log("  • [Text styles].green (*bold*, -italic-, etc.)");
+      logger.log("  • [Log file support].yellow");
+      logger.log("  • [Plugin system].cyan");
+      logger.log("");
+      logger.log("Version: [3.0.0].green-b");
+      logger.log("Documentation: [https://github.com/yourusername/loggings].blue");
+    }
+  </script>
+</body>
+
+</html>

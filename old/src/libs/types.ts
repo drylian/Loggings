@@ -1,7 +1,7 @@
 /**
  * Type of logs
  */
-export type LoggingsMessage = string | boolean | object | number;
+export type LoggingsMessage = string | boolean | object | number | undefined | null |Symbol;
 
 export type LoggingsLevel = "info" | "debug" | "warn" | "error" | "trace";
 

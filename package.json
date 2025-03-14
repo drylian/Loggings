@@ -1,9 +1,67 @@
 {
   "name": "loggings",
-  "module": "index.ts",
   "type": "module",
+  "description": "Simple log system for your node js application, supported colors.",
+  "version": "2.4.0",
+  "main": "loggings.cjs",
+  "module": "loggings.mjs",
+  "types": "types/Loggings.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/drylian/Loggings.git"
+  },
+  "typesVersions": {
+    "*": {
+      ".": [
+        "./types/Loggings.d.ts"
+      ],
+      "globals": [
+        "./types/types.d.ts"
+      ]
+    }
+  },
+  "exports": {
+    ".": {
+      "types": "./types/Loggings.d.ts",
+      "import": "./loggings.mjs",
+      "require": "./loggings.cjs"
+    }
+  },
+  "keywords": [
+    "loggings",
+    "color",
+    "logs",
+    "logger",
+    "log",
+    "register",
+    "colors",
+    "npm",
+    "node",
+    "bun",
+    "deno",
+    "typescript",
+    "debug",
+    "console",
+    "output",
+    "performance",
+    "high-performance logging",
+    "structured logging",
+    "custom logger"
+  ],
+  "author": "Drylian",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/drylian/Loggings/issues"
+  },
+  "homepage": "https://github.com/drylian/Loggings#readme",
+  "scripts": {
+    "build": "bun run tools/build.ts",
+    "test": "bun run tests/index.ts"
+  },
   "devDependencies": {
+    "@types/node": "^22.13.10",
     "dts-bundle-generator": "^9.5.1",
+    "swc": "^1.0.11",
     "tsup": "^8.3.5"
   },
   "peerDependencies": {

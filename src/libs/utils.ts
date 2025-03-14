@@ -1,4 +1,4 @@
-import type { TimerFormat } from "../types";
+import type { LoggingsLevel, TimerFormat } from "../types";
 
 const rgb_converter = (background: boolean, ...colors: number[]) => {
     const [r, g, b] = colors.map(color => Math.min(255, Math.max(0, color)));
@@ -28,14 +28,28 @@ export function timer(format: string): { format: string; timer: TimerFormat } {
         milliseconds: String(now.getMilliseconds()).padStart(3, "0")
     };
 
-    const formatted = Object.entries(timer).reduce((acc, [key, value]) => {
-        const regex = new RegExp(`{${value}}`, 'g');
+    const formatted = Object.entries(timer).reduce((acc, [key]) => {
+        const regex = new RegExp(`{${key}}`, 'g');
         return acc.replace(regex, String(timer[key as keyof typeof timer]));
     }, format);
 
     return { format: formatted, timer };
 }
 
+export function LoggingsLevelToNumber(level: LoggingsLevel) {
+    switch (level) {
+        case "debug":
+            return 4
+        case "info":
+            return 3
+        case "warn":
+            return 2
+        case "error":
+            return 1
+        default:
+            return 1
+    }
+}
 export enum Runtime {
     Node,
     Bun,

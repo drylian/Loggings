@@ -9,8 +9,9 @@ switch (runtime) {
     case Runtime.Node: {
         switch (true) {
             case typeof __filename == "undefined": {
-                const { inspect } = await import("node:util");
-                _inspect = (msg, nocolor = false) => inspect(msg, { colors: !nocolor });
+                import("node:util").then(({ inspect }) => {
+                    _inspect = (msg, nocolor = false) => inspect(msg, { colors: !nocolor });
+                });
                 break;
             }
             default: {

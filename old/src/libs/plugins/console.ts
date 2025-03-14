@@ -84,7 +84,6 @@ export const LoggingsConsole: LoggingsPluginData<typeof console_defaults> = {
 function logger(type: LoggingsLevel, message: string) {
     switch (SystemExecutor) {
         case AppType.Deno: {
-            const encoder = new TextEncoder();
             const output = new TextEncoder().encode(`${message}\n`);
             if (!["info", "debug"].includes(type.toLowerCase())) {
                 //@ts-ignore Ignore Deno
