@@ -173,9 +173,8 @@
       <input id="input" type="text" class="terminal-input" placeholder="Type a command and press Enter">
     </div>
   </div>
-
   <script type="module">
-    import { Loggings, ConsolePlugin, colorpik, LoggingsPallet } from "./dist/cdn/cdn.js";
+    import { Loggings, ConsolePlugin, colorpik, LoggingsPallet } from "/dist/cdn/cdn.js";
 
     // Theme toggle functionality
     const themeToggle = document.getElementById('themeToggle');
@@ -222,11 +221,18 @@
     window.addEventListener("resize", () => fitAddon.fit());
 
     // Configure Loggings
-    Loggings.plugins = [ConsolePlugin({
-      onSend: (conf, level, message) => term.write(message + "\r\n")
-    })];
+    Loggings.config({
+      plugins: []
+    });
 
-    const logger = new Loggings("");
+    const logger = new Loggings({
+      format: "{message}",
+      plugins:[
+      ConsolePlugin({
+        onSend: (conf, level, message) => term.write(message + "\r\n")
+      })
+      ]
+    });
     const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
     // Welcome messages with format kit examples
@@ -342,15 +348,8 @@
     function showColors() {
       logger.log("[Available Colors].green-b");
 
-      const colors = [
-        "black", "red", "green", "yellow", "blue", "magenta", "cyan", "white",
-        "gray", "brightRed", "brightGreen", "brightYellow", "brightBlue",
-        "brightMagenta", "brightCyan", "brightWhite"
-      ];
-
-
-      for (const color of colors) {
-        logger.log(`  • [${color}].${color} - [${color}-b].${color}-b (bold)`);
+      for (const color in LoggingsPallet) {
+        logger.log(`  • [${color}].${color}-b - [${color}].${color} (bold)`);
       }
     }
 
@@ -401,7 +400,7 @@
       logger.log("  • [Plugin system].cyan");
       logger.log("");
       logger.log("Version: [3.0.0].green-b");
-      logger.log("Documentation: [https://github.com/yourusername/loggings].blue");
+      logger.log("Documentation: [https://github.com/drylian/loggings].blue");
     }
   </script>
 </body>
