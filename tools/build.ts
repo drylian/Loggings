@@ -1,117 +1,69 @@
-import esbuild from "esbuild";
-import fs from "node:fs";
-import { dTSPathAliasPlugin } from "esbuild-dts-path-alias";
-import { execSync } from "node:child_process";
+import { build, type Options } from 'tsup'
+import { writeFile } from 'fs/promises'
+import { generateDtsBundle } from 'dts-bundle-generator'
+import { dirname, join } from 'path'
+import { mkdir } from 'fs/promises'
+import { existsSync } from 'fs'
+import { rm } from 'fs/promises'
 
-console.log("Building Esm resources...");
-await esbuild.build({
-  entryPoints: ["./src/Loggings.ts"],
-  outfile: "./loggings.mjs",
+if (existsSync('dist')) await rm('dist', { recursive: true })
+
+const sharedConfig: Options = {
+  platform: 'node',
+  entry: ['src/loggings.ts'],
   bundle: true,
   minify: true,
-  format: "esm",
-  target: ["esnext"],
-  platform: "node",
-});
-console.log("Building Types resources...");
-execSync("tsc --project ./tsconfig.json");
-console.log("Building Cjs resources...");
-await esbuild.build({
-  entryPoints: ["./src/Loggings.ts"],
-  outfile: "./loggings.cjs",
-  bundle: true,
-  minify: true,
+  minifyIdentifiers: true,
   minifySyntax: true,
-  format: "cjs",
-  target: ["node14"],
-  platform: "node",
-  plugins: [
-    {
-      name: "RenameImport",
-      setup(build) {
-        build.onLoad({ filter: /\.ts$/ }, async (args) => {
-          const text = (await fs.promises.readFile(args.path, "utf8"))
-            .replace(/node:console/g, "console")
-            .replace(
-              "const require = Module.createRequire(import.meta.url);",
-              "",
-            )
-            .replace(/node:util/g, "util");
-          return {
-            contents: text,
-            loader: "ts",
-          };
-        });
-      },
-    },
-  ],
-});
+  minifyWhitespace: true,
+  skipNodeModulesBundle: true,
+  clean: true,
+  dts: false
+}
 
-// console.log("Building Cdn mjs resources...");
-// await esbuild.build({
-//     entryPoints: ["./src/cdn.ts"],
-//     outfile: "./cdn.mjs",
-//     bundle: true,
-//     minify: true,
-//     format: "esm",
-//     target: ["esnext"],
-//     platform: "browser",
-//     plugins: [
-//         {
-//             name: "RemoveImports",
-//             setup(build) {
-//                 build.onLoad({ filter: /\.ts$/ }, async (args) => {
-//                     const text = (await fs.promises.readFile(args.path, "utf8"))
-//                         .replace(
-//                             /import\s+.*?\s+from\s+['"]node:console['"]/g,
-//                             "",
-//                         )
-//                         .replace(/import\s+.*?\s+from\s+['"]node:util['"]/g, "")
-//                         .replace("extends Console {", "{")
-//                         .replace(
-//                             "super(process.stdin, process.stderr)",
-//                             "super()",
-//                         );
-//                     return {
-//                         contents: text,
-//                         loader: "ts",
-//                     };
-//                 });
-//             },
-//         },
-//     ],
-// });
-// console.log("Building Cdn cjs resources...");
-// await esbuild.build({
-//     entryPoints: ["./src/cdn.ts"],
-//     outfile: "./cdn.cjs",
-//     bundle: true,
-//     minify: true,
-//     format: "cjs",
-//     target: ["node14"],
-//     platform: "browser",
-//     plugins: [
-//         {
-//             name: "RemoveImports",
-//             setup(build) {
-//                 build.onLoad({ filter: /\.ts$/ }, async (args) => {
-//                     const text = (await fs.promises.readFile(args.path, "utf8"))
-//                         .replace(
-//                             /import\s+.*?\s+from\s+['"]node:console['"]/g,
-//                             "",
-//                         )
-//                         .replace(/import\s+.*?\s+from\s+['"]node:util['"]/g, "")
-//                         .replace("extends Console {", "{")
-//                         .replace(
-//                             "super(process.stdin, process.stderr)",
-//                             "super()",
-//                         );
-//                     return {
-//                         contents: text,
-//                         loader: "ts",
-//                     };
-//                 });
-//             },
-//         },
-//     ],
-// });
+await build({
+  format: 'cjs',
+  outDir: 'cjs',
+  tsconfig: './tsconfig.cjs.json',
+  splitting: false,
+  shims: true,
+  ...sharedConfig
+})
+
+await build({
+  format: 'esm',
+  outDir: 'mjs',
+  tsconfig: './tsconfig.mjs.json',
+  splitting: true,
+  cjsInterop: false,
+  ...sharedConfig
+})
+
+await build({
+  format: 'esm',
+  outDir: 'cdn',
+  tsconfig: './tsconfig.mjs.json',
+  splitting: true,
+  cjsInterop: false,
+  ...sharedConfig,
+  target:["es2024"],
+  entry:['src/cdn.ts'],
+})
+
+await writeFile('cjs/package.json', JSON.stringify({ type: 'commonjs' }, null, 2))
+await writeFile('mjs/package.json', JSON.stringify({ type: 'module' }, null, 2))
+
+const dtsPath = join(process.cwd(), 'loggings.d.ts')
+let dtsCode = generateDtsBundle([{
+  filePath: join(process.cwd(), 'src/loggings.ts'),
+  output: {
+    sortNodes: true,
+    exportReferencedTypes: true,
+    inlineDeclareExternals: true,
+    inlineDeclareGlobals: true
+  }
+}]).join("\n")
+
+await mkdir(dirname(dtsPath), { recursive: true });
+dtsCode = `import { Console } from "console"\n` + dtsCode
+await writeFile(dtsPath, dtsCode, { encoding: 'utf-8' })

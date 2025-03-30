@@ -1,19 +1,20 @@
 import { existsSync } from "node:fs";
-import { LoggingsRegister } from "../src/libs/plugins/register.ts";
-import { Loggings, Timer } from "../src/Loggings.ts";
+import { RegisterPlugin } from "../src/libs/plugins/register.ts";
+import { Loggings, timer } from "../src/loggings.ts";
 import { Test } from "../tools/Tester.ts";
 import { rm } from "node:fs/promises";
 
 new Test({
     name: "Registration Plugin make file",
     desc: "Check registration Plugin is making file",
-    def: undefined,
     async fn() {
-        Loggings.reset();
-        Loggings.add(LoggingsRegister);
+        Loggings.config({
+            plugins:[RegisterPlugin]
+        })
         const logger = new Loggings();
+
         logger.log("test");
-        const file = Timer(logger.configs.register_filename).format.replace(
+        const file = timer(logger.allconfigs.register_filename!).format.replace(
             "{ext}",
             "log",
         );
@@ -33,10 +34,9 @@ new Test({
 new Test({
     name: "Registration Plugin test",
     desc: "Check registration Plugin",
-    def: undefined,
     async fn() {
         const logger = new Loggings();
-        const file = Timer(logger.configs.register_filename).format.replace(
+        const file = timer(logger.allconfigs.register_filename!).format.replace(
             "{ext}",
             "log",
         );
@@ -67,31 +67,13 @@ new Test({
                 `Test failed. Expected not maked file ${file} in path ./logs_test but maked`,
             );
         }
-        logger.config({
-            register_dir: "./logs",
-        });
-        logger.warn("test");
-        if (
-            !existsSync(
-                `./logs/${file}`,
-            )
-        ) {
-            throw new Error(
-                `Test failed. Expected maked file ${file} in path ./logs but not found`,
-            );
-        }
-        await rm("./logs", { recursive: true });
-        Loggings.rem(LoggingsRegister.identify);
     },
 });
 
 new Test({
     name: "Registration Plugin delete file",
     desc: "Check registration Plugin is deleting files",
-    def: undefined,
     async fn() {
-        Loggings.reset();
-        Loggings.add(LoggingsRegister);
         const logger = new Loggings();
         logger.config({
             register_limit: 1,

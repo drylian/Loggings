@@ -1,12 +1,14 @@
-import { Formatter } from "../functions/formatter.ts";
-import { Timer } from "../functions/timer.ts";
-import type { LoggingsLevel } from "../types.ts";
-import path from "node:path";
-import fs from "node:fs";
-import type { LoggingsPluginData } from "../class/plugin.ts";
-import type { console_defaults } from "./console.ts";
+import fs from "fs";
+import path from "path";
+import type { LoggingsLevel, LoggingsPluginData } from "../../types";
+import type { LoggingsBaseConfig } from "../defaults";
+import { LoggingsLevelToNumber, timer } from "../utils";
+import { LoggingsFormatKitController } from "../formatkits";
 
-export const register_defaults: LoggingsRegisterConfig = {
+/**
+ * Loggings Register Default options
+ */
+export const RegisterPluginDefault: LoggingsRegisterConfig = {
     register: true,
     register_del: true,
     register_limit: 10,
@@ -15,96 +17,108 @@ export const register_defaults: LoggingsRegisterConfig = {
     register_filename: "{day}_{month}_{year}.{ext}",
     register_format:
         "[ {day}/{month}/{year}-{hours}:{minutes}:{seconds} ] [ _.{title}._ ] {message}",
+}
+/**
+ * Loggings Register plugin
+ * 
+ * Allow loggings show logs in terminal with colors
+ * 
+ * @version 2.0.0
+ */
+export const RegisterPlugin = (opts: LoggingsRegisterOptions = {}): LoggingsPluginData<LoggingsRegisterConfig & Partial<LoggingsBaseConfig>> => ({
+    ident: "loggings-register",
+    default: RegisterPluginDefault,
+    onInit:opts.onInit,
+    onPreMessage: (config, level, messages) => {
+        const logLevel = LoggingsLevelToNumber(config.register_level ?? config.level!);
+        const globalLevel = LoggingsLevelToNumber(config.level!);
+        if (!config.register || logLevel < globalLevel) return undefined;
+
+        return opts.onPreMessage ? opts.onPreMessage(config, level, messages) : messages;
+    },
+    onMessage(config, level, messages) {
+        if (opts.onMessage) opts.onMessage(config, level, messages);
+        let message = config.register_format;
+        message = timer(message).format;
+        if (message.includes("{title}")) {
+            message = message.replace(
+                new RegExp("{title}", 'g'),
+                config.title!,
+            );
+        }
+        if (message.includes("{status}")) {
+            message = message.replace(
+                new RegExp("{status}", 'g'),
+                level,
+            );
+        }
+        if (message.includes("{message}")) {
+            message = message.replace(
+                new RegExp("{message}", 'g'),
+                LoggingsFormatKitController(messages, config.formatKits, true)
+            );
+        }
+        return message;
+    },
+    onSend(config, level, message) {
+        if (opts.onSend) opts.onSend(config, level, message);
+        let filepath = config.register_locale_file.replace(
+            new RegExp("{register_dir}", 'g'),
+            config.register_dir,
+        );
+        filepath = filepath.replace(
+            new RegExp("{title}", 'g'),
+            config.title!,
+        );
+        filepath = filepath.replace(
+            new RegExp("{status}", 'g'),
+            level,
+        );
+        const logFileName = timer(config.register_filename).format
+            .replace(
+                new RegExp("{status}", 'g'),
+                level,
+            )
+            .replace(
+                new RegExp("{ext}", 'g'),
+                "log",
+            );
+
+        const logFilePath = path.join(filepath, logFileName);
+        const logFolderPath = path.resolve(config.register_dir);
+        if (!fs.existsSync(logFolderPath)) {
+            fs.mkdirSync(logFolderPath, { recursive: true });
+        }
+        fs.appendFileSync(logFilePath, message + "\n");
+
+        if (config.register_del && config.register_limit > 0) {
+            const logFilesPattern = new RegExp(`.log`);
+            const logFiles = fs
+                .readdirSync(filepath)
+                .filter((file) => logFilesPattern.test(file))
+                .sort((a, b) => {
+                    const aStat = fs.statSync(path.join(filepath, a));
+                    const bStat = fs.statSync(path.join(filepath, b));
+                    return aStat.mtime.getTime() - bStat.mtime.getTime();
+                });
+            const filesToDelete = logFiles.slice(
+                0,
+                logFiles.length - config.register_limit,
+            ); // Get the oldest files to delete
+            filesToDelete.forEach((file) => {
+                const filePath = path.join(filepath, file);
+                fs.unlinkSync(filePath);
+            });
+        }
+    },
+});
+
+export type LoggingsRegisterOptions = {
+    onPreMessage?: LoggingsPluginData<LoggingsRegisterConfig>['onPreMessage'];
+    onMessage?: LoggingsPluginData<LoggingsRegisterConfig>['onMessage'];
+    onSend?: LoggingsPluginData<LoggingsRegisterConfig>['onSend'];
+    onInit?: LoggingsPluginData<LoggingsRegisterConfig>['onInit'];
 };
-
-export const LoggingsRegister:LoggingsPluginData<typeof register_defaults & typeof console_defaults> = {
-  identify: "LoggingsRegister",
-  defaults: register_defaults as typeof register_defaults & typeof console_defaults,
-  onMessage(
-      options,
-      current_level,
-      args,
-  ): void {
-      options.level = options.register_level ? options.register_level :options.level;
-      if (options.register && current_level >= options.level) {
-          /**
-           * Make File path
-           */
-          let filepath = options.register_locale_file.replace(
-              new RegExp("{register_dir}", 'g'),
-              options.register_dir,
-          );
-          filepath = filepath.replace(
-              new RegExp("{title}", 'g'),
-              options.title,
-          );
-          filepath = filepath.replace(
-              new RegExp("{status}", 'g'),
-              current_level,
-          );
-          const logFileName = Timer(options.register_filename).format
-              .replace(
-                  new RegExp("{status}", 'g'),
-                  current_level,
-              )
-              .replace(
-                  new RegExp("{ext}", 'g'),
-                  "log",
-              );
-
-          /**
-           * Make File message
-           */
-          let message = options.register_format;
-          message = Timer(message).format;
-          if (message.includes("{title}")) {
-              message = message.replace(
-                  new RegExp("{title}", 'g'),
-                  options.title,
-              );
-          }
-          if (message.includes("{status}")) {
-              message = message.replace(
-                  new RegExp("{status}", 'g'),
-                  current_level,
-              );
-          }
-          if (message.includes("{message}")) {
-              message = message.replace(
-                  new RegExp("{message}", 'g'),
-                  Formatter(...args)[1],
-              );
-          }
-          const logFilePath = path.join(filepath, logFileName);
-          const logFolderPath = path.resolve(path.join(filepath));
-          if (!fs.existsSync(logFolderPath)) {
-              fs.mkdirSync(logFolderPath, { recursive: true });
-          }
-          fs.appendFileSync(logFilePath, message + "\n");
-
-          if (options.register_del && options.register_limit > 0) {
-              const logFilesPattern = new RegExp(`.log`);
-              const logFiles = fs
-                  .readdirSync(filepath)
-                  .filter((file) => logFilesPattern.test(file))
-                  .sort((a, b) => {
-                      const aStat = fs.statSync(path.join(filepath, a));
-                      const bStat = fs.statSync(path.join(filepath, b));
-                      return aStat.mtime.getTime() - bStat.mtime.getTime();
-                  });
-              const filesToDelete = logFiles.slice(
-                  0,
-                  logFiles.length - options.register_limit,
-              ); // Get the oldest files to delete
-              filesToDelete.forEach((file) => {
-                  const filePath = path.join(filepath, file);
-                  fs.unlinkSync(filePath);
-              });
-          }
-      }
-  }
-};
-
 
 export type LoggingsRegisterConfig = {
     /**
@@ -118,8 +132,7 @@ export type LoggingsRegisterConfig = {
     register_del: boolean;
     /** 
      * Loggings Level
-     * Register-specific level will be used, if not used
-     * will use the global "level"
+     * Register-specific level will be used
      */
     register_level?: LoggingsLevel;
     /**
@@ -137,7 +150,7 @@ export type LoggingsRegisterConfig = {
      *
      * Suported Args:  {register_dir} | {status} | {title}
      *
-     * Default: {register_dir}/{title}/{status}
+     * @default "{register_dir}/{status}"
      */
     register_locale_file: string;
     /**
@@ -147,10 +160,7 @@ export type LoggingsRegisterConfig = {
      *
      * Timer Args: {day} | {month} | {year} | {hours} | {minutes}| {seconds} | {milliseconds}
      *
-     * Default:
-     * ```js
-       const format = "{day}_{month}_{year}_{status}.{ext}";
-       ```
+     * @default "{day}_{month}_{year}.{ext}"
      */
     register_filename: string;
     /**
@@ -160,7 +170,7 @@ export type LoggingsRegisterConfig = {
      *
      * Timer Args: {day} | {month} | {year} | {hours} | {minutes}| {seconds} | {milliseconds}
      *
-     * Default: [ {day}/{month}/{year} ás {hours}:{minutes}:{seconds} ] [ _.{title}._ ]{message}
+     * @default "[ {day}/{month}/{year} in {hours}:{minutes}:{seconds} ] [ _.{title}._ ]{message}"
      */
     register_format: string;
 }

@@ -21,8 +21,8 @@ logger.log("Hello [World].blue-b")
 ### CDN Support
 
 ```js
-import { Loggings } from "https://cdn.jsdelivr.net/npm/loggings@latest/dist/cdn.min.mjs";
-const logger = new Loggings("Deno");
+import { Loggings } from "https://cdn.jsdelivr.net/npm/loggings@latest/dist/cdn.mjs";
+const logger = new Loggings();
 logger.log("Hello [World].blue-b")
 ```
 

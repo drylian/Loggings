@@ -1,14 +1,11 @@
 {
-  "name": "@loggings/beta",
-  "version": "2.4.0",
-  "description": "Simple log system for your node js application, supported colors.",
-  "scripts": {
-    "build": "bun run tools/build.ts"
-  },
+  "name": "@caeljs/logger",
   "type": "module",
-  "main": "loggings.cjs",
-  "module": "loggings.mjs",
-  "types": "types/Loggings.d.ts",
+  "description": "Simple log system for your node js application, supported colors.",
+  "version": "2.9.0",
+  "main": "cjs/loggings.cjs",
+  "module": "esm/loggings.js",
+  "types": "loggings.d.ts",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/drylian/Loggings.git"
@@ -16,21 +13,22 @@
   "typesVersions": {
     "*": {
       ".": [
-        "./types/Loggings.d.ts"
-      ],
-      "globals": [
-        "./types/types.d.ts"
+        "./loggings.d.ts"
       ]
     }
   },
   "exports": {
     ".": {
-      "types": "./types/Loggings.d.ts",
-      "import": "./loggings.mjs",
-      "require": "./loggings.cjs"
+      "types": "./loggings.d.ts",
+      "import": "./esm/loggings.js",
+      "require": "./cjs/loggings.cjs"
     }
   },
   "keywords": [
+    "logger",
+    "log",
+    "backend",
+    "caeljs",
     "loggings",
     "color",
     "logs",
@@ -57,9 +55,14 @@
     "url": "https://github.com/drylian/Loggings/issues"
   },
   "homepage": "https://github.com/drylian/Loggings#readme",
+  "scripts": {
+    "build": "bun run tools/build.ts",
+    "test": "bun run tests/index.ts"
+  },
   "devDependencies": {
-    "@types/bun": "^1.1.10",
-    "@types/node": "^20.16.5",
-    "esbuild": "0.21.5"
+    "@types/node": "^22.13.10",
+    "dts-bundle-generator": "^9.5.1",
+    "tsup": "^8.3.5",
+    "typescript": "^5.0.0"
   }
 }

@@ -1,21 +1,20 @@
 import {
-    Bgc,
-    LoggingsColors as c,
-    Rgb,
-} from "../src/libs/functions/pallet.ts";
+    termcolor,
+    termcolor as c,
+} from "../src/libs/pallet";
 type LogType = "error" | "info" | "warn" | "debug" | "pass";
 function bg(type: LogType) {
     switch (type) {
         case "error":
-            return Bgc(255, 0, 0); // FAIL
+            return termcolor("red", true); // FAIL
         case "info":
-            return Bgc(0, 0, 255); // PASS
+            return termcolor("green", true); // PASS
         case "pass":
-            return Bgc(0, 255, 0); // PASS
+            return termcolor("blue", true); // PASS
         case "warn":
-            return Bgc(255, 255, 0); // WARN
+            return termcolor("yellow", true); // WARN
         case "debug":
-            return Bgc(255, 0, 255); // DEBUG
+            return termcolor("purple", true); // DEBUG
         default:
             return "";
     }
@@ -24,8 +23,8 @@ function bg(type: LogType) {
 function log(type: LogType, message: string) {
     const bgColor = bg(type);
     console.log(
-        `${c["bold"]}${c["white"]}${bgColor} ${type.toUpperCase()} ${
-            c["reset"]
+        `${c("bold")}${c("white")}${bgColor} ${type.toUpperCase()} ${
+            c("reset")
         }: ${message} \x1b[0m`,
     );
 }
@@ -38,10 +37,10 @@ const logger = {
     debug: (...msgs: string[]) => log("debug", msgs.join(" ")),
 };
 
-interface TestConstructor<Defs> {
+interface TestConstructor<Defs = unknown> {
     name: string;
     desc: string;
-    def: Defs;
+    def?: Defs;
     fn: (def: Defs) => unknown;
 }
 
@@ -59,15 +58,15 @@ export class Test<Tests> {
         logger.log(`Starting tests of Loggings`);
         for await (const [index, test] of Object.entries(Test.all)) {
             logger.log(
-                `TESTING: ${c["gold"]}${test.name}${c["reset"]} - ${
-                    c["cyan"]
-                }${test.desc}${c["reset"]}`,
+                `TESTING: ${c("gold")}${test.name}${c("reset")} - ${
+                    c("cyan")
+                }${test.desc}${c("reset")}`,
             );
             try {
                 await test.fn(test.def);
-                logger.pass(`PASS: ${c["gold"]}${test.name}${c["reset"]}\n`);
+                logger.pass(`PASS: ${c("gold")}${test.name}${c("reset")}\n`);
             } catch (e) {
-                logger.error(`FAIL: ${c["gold"]}${test.name}${c["reset"]}`);
+                logger.error(`FAIL: ${c("gold")}${test.name}${c("reset")}`);
                 logger.error(e.message + "\n");
                 Test.errors.push({ index: Number(index), error: e });
             }
@@ -75,21 +74,21 @@ export class Test<Tests> {
 
         if (Test.errors.length > 0) {
             logger.warn(
-                `out of ${c["green"]}${Test.all.length}${c["reset"]} tests, ${
-                    c["red"]
+                `out of ${c("green")}${Test.all.length}${c("reset")} tests, ${
+                    c("red")
                 }${Test.errors.length}${
-                    c["reset"]
+                    c("reset")
                 } errors occurred during verification.`,
             );
             for (const error of Test.errors) {
-                console.warn(`${c["green"]}Test${c["reset"]} ${c["red"]}${error.index}${c["reset"]} ${c["gold"]}${Test.all[error.index].name}${c["reset"]}:`, error.error);
+                console.warn(`${c("green")}Test${c("reset")} ${c("red")}${error.index}${c("reset")} ${c("gold")}${Test.all[error.index].name}${c("reset")}:`, error.error);
             }
             throw "Error in Tests";
         } else {
             logger.pass(
-                ` ${c["green"]}${Test.all.length}${c["reset"]} - All tests ${
-                    c["green"]
-                }passed${c["reset"]} without errors.`,
+                ` ${c("green")}${Test.all.length}${c("reset")} - All tests ${
+                    c("green")
+                }passed${c("reset")} without errors.`,
             );
         }
     }

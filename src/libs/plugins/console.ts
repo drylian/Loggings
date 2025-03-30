@@ -1,131 +1,114 @@
-import SystemExecutor, { AppType } from "../../appl.ts";
-import type { LoggingsColors } from "../functions/pallet.ts";
-import type { LoggingsLevel } from "../types.ts";
-import type { LoggingsPluginData } from "../class/plugin.ts";
-import { Formatter } from "../functions/formatter.ts";
-import { Timer } from "../functions/timer.ts";
-import { Colors } from "../functions/colors.ts";
+import type { LoggingsLevel, LoggingsPluginData } from "../../types";
+import type { LoggingsBaseConfig } from "../defaults";
+import { colorpik, type LoggingsPallet } from "../pallet";
+import { LoggingsFormatKitController } from "../formatkits";
+import { LoggingsLevelToNumber, Runtime, runtime, timer } from "../utils";
+
 /**
- * Defaults Configurations of Console Plugin
+ * Loggings Console Default options 
  */
-export const console_defaults: LoggingsConsoleConfig = {
-    format: "[{status}] {title} [{hours}:{minutes}:{seconds}].gray {message}",
+export const ConsolePluginDefault: LoggingsConsoleConfig = {
+    format: "[{status}] [{hours}:{minutes}:{seconds}].gray {message}",
     status: {
-        trace: "ncoral",
-        error: "nred",
-        warn: "nyellow",
-        info: "nblue",
-        debug: "npurple",
+        error: "red50",
+        debug: "purple50",
+        info: "blue40",
+        warn: "yellow40",
+        trace: "yellow95",
+        txt:"none"
     },
-    console: true,
-    level: "info",
-    color_fallback: "cyan",
+    color: "green",
+    fallback: "white",
     disable_colors: false,
-    title: "All",
-    color: "cyan",
-};
-
-export const LoggingsConsole: LoggingsPluginData<typeof console_defaults> = {
-    identify: "LoggingsConsole",
-    defaults: console_defaults,
-    onMessage(options, current_level, args): void {
-        options.level = options.console_level ? options.console_level : options.level;
-        if (options.console && current_level >= options.level) {
-            let message_csl = Formatter(options.format)[options.disable_colors ? 1 : 0];
-            message_csl = Timer(message_csl).format;
-
-            if (!options.disable_colors) {
-                if (message_csl.includes("{title}")) {
-                    message_csl = message_csl.replace(
-                        new RegExp("{title}", 'g'),
-                        Colors(options.color, options.title),
-                    );
-                }
-                if (message_csl.includes("{status}")) {
-                    message_csl = message_csl.replace(
-                        new RegExp("{status}", 'g'),
-                        Colors(
-                            options.status[current_level],
-                            Colors("bold", current_level),
-                        ),
-                    );
-                }
-                if (message_csl.includes("{message}")) {
-                    message_csl = message_csl.replace(
-                        new RegExp("{message}", 'g'),
-                        Formatter(...args)[0],
-                    );
-                }
-            } else {
-                if (message_csl.includes("{title}")) {
-                    message_csl = message_csl.replace(
-                        new RegExp("{title}", 'g'),
-                        options.title,
-                    );
-                }
-                if (message_csl.includes("{status}")) {
-                    message_csl = message_csl.replace(
-                        new RegExp("{status}", 'g'),
-                        current_level,
-                    );
-                }
-                if (message_csl.includes("{message}")) {
-                    message_csl = message_csl.replace(
-                        new RegExp("{message}", 'g'),
-                        Formatter(...args)[1],
-                    );
-                }
-            }
-            logger(current_level, message_csl);
-        }
-    }
-};
-
-function logger(type: LoggingsLevel, message: string) {
-    switch (SystemExecutor) {
-        case AppType.Deno: {
-            const encoder = new TextEncoder();
-            const output = encoder.encode(`${message}\n`);
-            if (!["info", "debug"].includes(type.toLowerCase())) {
-                //@ts-ignore Ignore Deno
-                Deno.stderr.write(output);
-            } else {
-                //@ts-ignore Ignore Deno
-                Deno.stdout.write(output);
-            }
-            break;
-        }
-        case AppType.Node: {
-            if (!["info", "debug"].includes(type.toLowerCase())) {
-                //@ts-ignore Ignore process of node js
-                process.stderr.write(`${message}\n`);
-            } else {
-                //@ts-ignore Ignore process of node js
-                process.stdout.write(`${message}\n`);
-            }
-            break;
-        }
-        case AppType.Bun: {
-            if (!["info", "debug"].includes(type.toLowerCase())) {
-                //@ts-ignore Ignore Bun
-                Bun.write(Bun.stderr, `${message}\n`);
-            } else {
-                //@ts-ignore Ignore Bun
-                Bun.write(Bun.stdout, `${message}\n`);
-            }
-            break;
-        }
-        case AppType.Browser: {
-            // Navegador usa console para logging
-            console[type.toLowerCase() as LoggingsLevel](message);
-            break;
-        }
-        default: {
-            throw new Error("Unknown environment");
-        }
-    }
+    console: true,
+    colors: {},
 }
 
+/**
+ * Loggings Console plugin
+ * 
+ * Allow loggings show logs in terminal with colors
+ * 
+ * @version 2.0.0
+ */
+export const ConsolePlugin = (opts: LoggingsConsoleOptions = {}): LoggingsPluginData<LoggingsConsoleConfig & Partial<LoggingsBaseConfig>> => ({
+    ident: "loggings-console",
+    default: ConsolePluginDefault,
+    onInit: opts.onInit,
+    onPreMessage: (config, level, messages) => {
+        if(level == "txt") return undefined;
+        const logLevel = LoggingsLevelToNumber(config.console_level ?? config.level!);
+        const globalLevel = LoggingsLevelToNumber(config.level!);
+        if (!config.console || logLevel < globalLevel) return undefined;
+
+        return opts.onPreMessage ? opts.onPreMessage(config, level, messages) : messages;
+    },
+    onMessage(config, level, messages) {
+        config.level = config.console_level ? config.console_level : config.level;
+        if (opts.onMessage) opts.onMessage(config, level, messages);
+        let message = LoggingsFormatKitController(config.format, config.formatKits, config.disable_colors);
+        message = timer(message).format;
+
+        const disabled = config.disable_colors;
+        if (message.includes("{title}")) {
+            message = message.replace(
+                new RegExp("{title}", 'g'),
+                disabled ? config.title! : colorpik(config.color, config.title!, config.colors),
+            );
+        }
+        if (message.includes("{status}")) {
+            message = message.replace(
+                new RegExp("{status}", 'g'),
+                disabled ? level : colorpik(
+                    config.status[level],
+                    colorpik("bold", level),
+                    config.colors
+                ),
+            );
+        }
+        if (message.includes("{message}")) {
+            message = message.replace(
+                new RegExp("{message}", 'g'),
+                LoggingsFormatKitController(messages, config.formatKits, config.disable_colors)
+            );
+        }
+        return message;
+    },
+    onSend(config, level, message) {
+        if (opts.onSend) opts.onSend(config, level, message);
+        const nmessage = `${message}\n`;
+        switch (runtime) {
+            case Runtime.Deno: {
+                const output = new TextEncoder().encode(nmessage);
+                //@ts-ignore Ignore Deno
+                return ["info", "debug"].includes(level.toLowerCase()) ? Deno.stderr.info(output) : Deno.stdout.error(output);
+            }
+            case Runtime.Node: {
+                //@ts-ignore Ignore Node
+                return ["info", "debug"].includes(level.toLowerCase()) ? process.stderr.write(nmessage) : process.stdout.write(nmessage);
+            }
+            case Runtime.Bun: {
+                //@ts-ignore Ignore Bun
+                return ["info", "debug"].includes(level.toLowerCase()) ? Bun.write(Bun.stderr, nmessage) : Bun.write(Bun.stdout, nmessage);
+            }
+            case Runtime.Browser: {
+                // Navegador usa console para logging
+                console[level.toLowerCase() as "log"](message);
+                break;
+            }
+            default: {
+                throw new Error("Unknown environment");
+            }
+        }
+    },
+});
+
+export type LoggingsConsoleOptions = {
+    onPreMessage?: LoggingsPluginData<LoggingsConsoleConfig>['onPreMessage'];
+    onMessage?: LoggingsPluginData<LoggingsConsoleConfig>['onMessage'];
+    onSend?: LoggingsPluginData<LoggingsConsoleConfig>['onSend'];
+    onInit?: LoggingsPluginData<LoggingsConsoleConfig>['onInit'];
+};
 
 export type LoggingsConsoleConfig = {
     /**
@@ -135,27 +118,27 @@ export type LoggingsConsoleConfig = {
      *
      * Timer Args: {day} | {month} | {year} | {hours} | {minutes}| {seconds} | {milliseconds}
      *
-     * Default: [{status}] [{{hours}:{minutes}:{seconds}}].gray {message}
+     * @default "[{status}] [{{hours}:{minutes}:{seconds}}].gray {message}"
      */
     format: string;
     /** 
      * Loggings Level
-     * Console-specific level will be used, if not used
-     * will use the global "level"
+     * Console-specific level will be used
      */
     console_level?: LoggingsLevel;
     /**
      * Status colors
      */
-    status: Record<string, keyof typeof LoggingsColors>;
+    status: Record<LoggingsLevel, keyof typeof LoggingsPallet>;
     /**
      * Add new Colors code(ansi or rgb code colors), used in logs functions,
      * e.g:
-     * ```ts
+     * @default ```ts
+     * import Loggings, { rgb } from "loggings";
      * const logger = new Loggings();
-     * LoggingsConfig({
+     * logger.config({
      *     colors: {
-     *          "ngreen": Rgb(57, 255, 20) // Neon Green
+     *          "ngreen": rgb(57, 255, 20)() // Neon Green
      *     }
      * })
      * logger.log("[Hello].ngreen")
@@ -166,7 +149,7 @@ export type LoggingsConsoleConfig = {
      * If any color using the [].color declaration is wrong,
      * we will use that color instead.
      */
-    color_fallback: keyof typeof LoggingsColors;
+    fallback: keyof typeof LoggingsPallet;
     /**
      * In some types of hosting, the terminal does not support
      * ansi colors or uses the terminal to display logs.
@@ -183,23 +166,12 @@ export type LoggingsConsoleConfig = {
      */
     disable_colors: boolean;
     /**
-     * Global Level for show/register logs,
-     * Used if console_level or register_level are not set
-     * Suported Levels: "error" | "warn" | "info" | "debug"
-     */
-    level: LoggingsLevel;
-    /**
      * Allows show logs in terminal
      */
     console: boolean;
     /**
-     * Title show in {title} arg, but is used in logs register.
-     * Case "register" is allowed
+     * Color of title
      */
-    title: string;
-    /**
-     * Color in {title} arg, only visual.
-     */
-    color: keyof typeof LoggingsColors;
+    color: keyof typeof LoggingsPallet;
 };
 
