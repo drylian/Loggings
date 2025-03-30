@@ -27,6 +27,5 @@
   },
   "include": [
     "src",
-    "build.ts"
   ]
 }

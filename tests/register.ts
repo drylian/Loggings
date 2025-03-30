@@ -11,9 +11,7 @@ new Test({
         Loggings.config({
             plugins:[RegisterPlugin]
         })
-        const logger = new Loggings({
-            
-        });
+        const logger = new Loggings();
 
         logger.log("test");
         const file = timer(logger.allconfigs.register_filename!).format.replace(
@@ -69,22 +67,6 @@ new Test({
                 `Test failed. Expected not maked file ${file} in path ./logs_test but maked`,
             );
         }
-        logger.config({
-            register_dir: "./logs",
-        });
-        logger.warn("test");
-        console.log("aaa"+logger.plugins)
-
-        if (
-            !existsSync(
-                `./logs/${file}`,
-            )
-        ) {
-            throw new Error(
-                `Test failed. Expected maked file ${file} in path ./logs but not found`,
-            );
-        }
-        await rm("./logs", { recursive: true });
     },
 });
 

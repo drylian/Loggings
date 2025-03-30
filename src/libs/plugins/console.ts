@@ -35,7 +35,10 @@ export const ConsolePlugin = (opts: LoggingsConsoleOptions = {}): LoggingsPlugin
     default: ConsolePluginDefault,
     onInit: opts.onInit,
     onPreMessage: (config, level, messages) => {
-        if (!config.console || (LoggingsLevelToNumber(config.console_level ? config.console_level : config.level!) < LoggingsLevelToNumber(config.level!))) return undefined;
+        const logLevel = LoggingsLevelToNumber(config.console_level ?? config.level!);
+        const globalLevel = LoggingsLevelToNumber(config.level!);
+        if (!config.console || logLevel < globalLevel) return undefined;
+
         return opts.onPreMessage ? opts.onPreMessage(config, level, messages) : messages;
     },
     onMessage(config, level, messages) {

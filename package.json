@@ -1,11 +1,11 @@
 {
-  "name": "loggings",
+  "name": "@caeljs/logger",
   "type": "module",
   "description": "Simple log system for your node js application, supported colors.",
-  "version": "2.4.0",
-  "main": "loggings.cjs",
-  "module": "loggings.mjs",
-  "types": "types/Loggings.d.ts",
+  "version": "2.9.0",
+  "main": "cjs/loggings.cjs",
+  "module": "esm/loggings.js",
+  "types": "loggings.d.ts",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/drylian/Loggings.git"
@@ -13,21 +13,22 @@
   "typesVersions": {
     "*": {
       ".": [
-        "./types/Loggings.d.ts"
-      ],
-      "globals": [
-        "./types/types.d.ts"
+        "./loggings.d.ts"
       ]
     }
   },
   "exports": {
     ".": {
-      "types": "./types/Loggings.d.ts",
-      "import": "./loggings.mjs",
-      "require": "./loggings.cjs"
+      "types": "./loggings.d.ts",
+      "import": "./esm/loggings.js",
+      "require": "./cjs/loggings.cjs"
     }
   },
   "keywords": [
+    "logger",
+    "log",
+    "backend",
+    "caeljs",
     "loggings",
     "color",
     "logs",
@@ -61,10 +62,7 @@
   "devDependencies": {
     "@types/node": "^22.13.10",
     "dts-bundle-generator": "^9.5.1",
-    "swc": "^1.0.11",
-    "tsup": "^8.3.5"
-  },
-  "peerDependencies": {
+    "tsup": "^8.3.5",
     "typescript": "^5.0.0"
   }
 }

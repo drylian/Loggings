@@ -23,7 +23,7 @@ const sharedConfig: Options = {
 
 await build({
   format: 'cjs',
-  outDir: 'dist/cjs',
+  outDir: 'cjs',
   tsconfig: './tsconfig.cjs.json',
   splitting: false,
   shims: true,
@@ -32,7 +32,7 @@ await build({
 
 await build({
   format: 'esm',
-  outDir: 'dist/mjs',
+  outDir: 'mjs',
   tsconfig: './tsconfig.mjs.json',
   splitting: true,
   cjsInterop: false,
@@ -41,7 +41,7 @@ await build({
 
 await build({
   format: 'esm',
-  outDir: 'dist/cdn',
+  outDir: 'cdn',
   tsconfig: './tsconfig.mjs.json',
   splitting: true,
   cjsInterop: false,
@@ -50,11 +50,11 @@ await build({
   entry:['src/cdn.ts'],
 })
 
-await writeFile('dist/cjs/package.json', JSON.stringify({ type: 'commonjs' }, null, 2))
-await writeFile('dist/mjs/package.json', JSON.stringify({ type: 'module' }, null, 2))
+await writeFile('cjs/package.json', JSON.stringify({ type: 'commonjs' }, null, 2))
+await writeFile('mjs/package.json', JSON.stringify({ type: 'module' }, null, 2))
 
-const dtsPath = join(process.cwd(), 'dist/types/index.ts')
-const dtsCode = generateDtsBundle([{
+const dtsPath = join(process.cwd(), 'loggings.d.ts')
+let dtsCode = generateDtsBundle([{
   filePath: join(process.cwd(), 'src/loggings.ts'),
   output: {
     sortNodes: true,
@@ -62,7 +62,8 @@ const dtsCode = generateDtsBundle([{
     inlineDeclareExternals: true,
     inlineDeclareGlobals: true
   }
-}])
+}]).join("\n")
 
-await mkdir(dirname(dtsPath), { recursive: true })
+await mkdir(dirname(dtsPath), { recursive: true });
+dtsCode = `import { Console } from "console"\n` + dtsCode
 await writeFile(dtsPath, dtsCode, { encoding: 'utf-8' })

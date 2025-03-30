@@ -10,7 +10,7 @@ export * from "./libs/plugins/register";
 export * from "./libs/utils";
 export * from "./libs/formatkits";
 
-import { Console as ClassConsole } from "console";
+import { Console } from "console";
 import defaults, { type LoggingsBaseConfig, type LoggingsConstructorConfig } from "./libs/defaults";
 import { ConsolePlugin } from "./libs/plugins/console";
 import { RegisterPlugin } from "./libs/plugins/register";
@@ -29,7 +29,7 @@ declare const global: typeof globalThis & { __INTERNAL_LOGGINGS_INSTANCE__: Inst
  */
 export class Loggings<
     const in out Plugins extends LoggingsPlugin<any>[] = typeof LoggingsDefaultPlugins,
-> extends ClassConsole {
+> extends Console {
     /**
      * Global logging configuration.
      */
@@ -44,7 +44,7 @@ export class Loggings<
      * Get all instance configurations including plugins configurations
      */
     public get allconfigs() {
-        return Object.assign({ ...Loggings.configs, ...this.configs }, ...Loggings.pluginLoader(this.plugins).map(a => a.default))
+        return Object.assign({ ...Loggings.allconfigs, ...this.configs })
     }
 
     /**
@@ -86,7 +86,7 @@ export class Loggings<
         this.plugins = [...(IsOpt ? opts?.plugins ?? [] : []), ...(advanced?.plugins ?? [])] as unknown as Plugins;
         this.configs = { color, ...advanced, ...(typeof opts == "string" ? { title: opts } : opts) } as unknown as LoggingsConstructorConfig<Plugins>;
         Loggings.pluginLoader(this.plugins).forEach((plugin) => {
-            if (plugin.onInit) plugin.onInit({ ...plugin.default, ...Loggings.configs, ...this.configs, });
+            if (plugin.onInit) plugin.onInit(this.allconfigs);
         });
     }
 
@@ -126,7 +126,7 @@ export class Loggings<
         }
         this.configs = { ...this.configs, ...advanced };
         Loggings.pluginLoader(this.plugins, true).forEach((plugin) => {
-            if (plugin.onInit) plugin.onInit({ ...plugin.default, ...Loggings.configs, ...this.configs, });
+            if (plugin.onInit) plugin.onInit(this.allconfigs);
         });
         //@ts-expect-error
         return this;
@@ -148,7 +148,7 @@ export class Loggings<
         }
         this.configs = { ...Loggings.configs, ...advanced };
         Loggings.pluginLoader(Loggings.plugins, true).forEach((plugin) => {
-            if (plugin.onInit) plugin.onInit({ ...plugin.default, ...this.configs, });
+            if (plugin.onInit) plugin.onInit(this.allconfigs);
         });
         //@ts-expect-error
         return this;
@@ -180,15 +180,14 @@ export class Loggings<
      */
     public controller(msgs: LoggingsMessage[], level: LoggingsLevel) {
         Loggings.pluginLoader(this.plugins).forEach((plugin) => {
-            const configs = { ...plugin.default, ...Loggings.configs, ...this.configs, };
             try {
-                let messages = plugin.onPreMessage ? plugin.onPreMessage(configs, level, msgs) : msgs;
+                let messages = plugin.onPreMessage ? plugin.onPreMessage(this.allconfigs, level, msgs) : msgs;
                 if (messages && plugin.onMessage) {
-                    const message = plugin.onMessage(configs, level, messages);
-                    if (plugin.onSend) plugin.onSend(configs, level, message);
+                    const message = plugin.onMessage(this.allconfigs, level, messages);
+                    if (plugin.onSend) plugin.onSend(this.allconfigs, level, message);
                 }
             } catch (e) {
-                if (plugin.onError) plugin.onError(configs, e as Error);
+                if (plugin.onError) plugin.onError(this.allconfigs, e as Error);
                 else throw e;
             }
         });

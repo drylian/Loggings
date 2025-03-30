@@ -30,7 +30,10 @@ export const RegisterPlugin = (opts: LoggingsRegisterOptions = {}): LoggingsPlug
     default: RegisterPluginDefault,
     onInit:opts.onInit,
     onPreMessage: (config, level, messages) => {
-        if (!config.register || (LoggingsLevelToNumber(config.register_level ? config.register_level! : config.level!) < LoggingsLevelToNumber(config.level!))) return undefined;
+        const logLevel = LoggingsLevelToNumber(config.register_level ?? config.level!);
+        const globalLevel = LoggingsLevelToNumber(config.level!);
+        if (!config.register || logLevel < globalLevel) return undefined;
+
         return opts.onPreMessage ? opts.onPreMessage(config, level, messages) : messages;
     },
     onMessage(config, level, messages) {
@@ -82,7 +85,7 @@ export const RegisterPlugin = (opts: LoggingsRegisterOptions = {}): LoggingsPlug
             );
 
         const logFilePath = path.join(filepath, logFileName);
-        const logFolderPath = path.resolve(path.join(filepath));
+        const logFolderPath = path.resolve(config.register_dir);
         if (!fs.existsSync(logFolderPath)) {
             fs.mkdirSync(logFolderPath, { recursive: true });
         }
