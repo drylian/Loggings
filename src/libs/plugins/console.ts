@@ -15,6 +15,7 @@ export const ConsolePluginDefault: LoggingsConsoleConfig = {
         info: "blue40",
         warn: "yellow40",
         trace: "yellow95",
+        txt:"none"
     },
     color: "green",
     fallback: "white",
@@ -35,6 +36,7 @@ export const ConsolePlugin = (opts: LoggingsConsoleOptions = {}): LoggingsPlugin
     default: ConsolePluginDefault,
     onInit: opts.onInit,
     onPreMessage: (config, level, messages) => {
+        if(level == "txt") return undefined;
         const logLevel = LoggingsLevelToNumber(config.console_level ?? config.level!);
         const globalLevel = LoggingsLevelToNumber(config.level!);
         if (!config.console || logLevel < globalLevel) return undefined;
@@ -91,7 +93,7 @@ export const ConsolePlugin = (opts: LoggingsConsoleOptions = {}): LoggingsPlugin
             }
             case Runtime.Browser: {
                 // Navegador usa console para logging
-                console[level.toLowerCase() as typeof level](message);
+                console[level.toLowerCase() as "log"](message);
                 break;
             }
             default: {

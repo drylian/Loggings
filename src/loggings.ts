@@ -199,6 +199,8 @@ export class Loggings<
     public trace(...messages: LoggingsMessage[]) { this.controller(messages, "trace"); return this; }
     public info(...messages: LoggingsMessage[]) { this.controller(messages, "info"); return this; }
     public warn(...messages: LoggingsMessage[]) { this.controller(messages, "warn"); return this; }
+    public txt(...messages: LoggingsMessage[]) { this.controller(messages, "txt"); return this; }
+
 }
 
 export default Loggings;

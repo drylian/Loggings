@@ -17,7 +17,7 @@ export type TimerFormat = {
 /**
  * Supported levels of loggings
  */
-export type LoggingsLevel = "info" | "debug" | "warn" | "trace" | "error";
+export type LoggingsLevel = "info" | "debug" | "warn" | "trace" | "error" | "txt";
 export type LoggingsFormatKitFunction = (nocolor: boolean, input: string) => string
 export type LoggingsMessage = string | boolean | object | number | undefined | null | Symbol;
 export type LoggingsPlugin<T extends object> = LoggingsPluginData<T> | (() => LoggingsPluginData<T>)
