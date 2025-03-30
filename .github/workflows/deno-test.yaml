@@ -23,4 +23,4 @@ jobs:
           deno-version: v1.x
 
       - name: Test Loggings in Deno
-        run: deno run --allow-all tests/index.ts 
+        run: deno run --allow-all tests/index.ts --unstable-sloppy-imports
