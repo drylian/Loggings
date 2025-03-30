@@ -9,13 +9,12 @@ export * from "./libs/plugins/console";
 export * from "./libs/plugins/register";
 export * from "./libs/utils";
 export * from "./libs/formatkits";
-
+import { LoggingsPallet } from "./libs/pallet";
 import { Console } from "console";
 import defaults, { type LoggingsBaseConfig, type LoggingsConstructorConfig } from "./libs/defaults";
 import { ConsolePlugin } from "./libs/plugins/console";
 import { RegisterPlugin } from "./libs/plugins/register";
 import type { LoggingsLevel, LoggingsMessage, LoggingsPlugin, LoggingsPluginData, LoggingsPluginsConfig, LoggingsPluginsConfiguration } from "./types";
-import type { LoggingsPallet } from "./cdn";
 
 /**
  * Default plugins used in the logging system.
