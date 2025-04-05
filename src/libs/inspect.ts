@@ -1,6 +1,6 @@
 import { Runtime, runtime } from "./utils";
 
-let _inspect = (msg: string | boolean | object | number, nocolor:boolean = false) => {
+let _inspect = (msg: string | boolean | object | number, nocolor: boolean = false) => {
     // @ts-expect-error in browser inspect is global
     return inspect(msg, { colors: !nocolor });
 }
@@ -9,9 +9,7 @@ switch (runtime) {
     case Runtime.Node: {
         switch (true) {
             case typeof __filename == "undefined": {
-                import("node:util").then(({ inspect }) => {
-                    _inspect = (msg, nocolor = false) => inspect(msg, { colors: !nocolor });
-                });
+                _inspect = (msg, nocolor = false) => import("node:util").then(({ inspect }) => inspect(msg, { colors: !nocolor }));
                 break;
             }
             default: {
