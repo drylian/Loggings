@@ -2,7 +2,7 @@
   "name": "@caeljs/logger",
   "type": "module",
   "description": "Simple log system for your node js application, supported colors.",
-  "version": "3.0.2",
+  "version": "3.1.0",
   "main": "cjs/loggings.cjs",
   "module": "mjs/loggings.js",
   "types": "loggings.d.ts",

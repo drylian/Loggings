@@ -8,17 +8,16 @@ export * from "./libs/pallet";
 export * from "./libs/plugins/console";
 export * from "./libs/utils";
 export * from "./libs/formatkits";
-
+import { LoggingsPallet } from "./libs/pallet";
 import defaults, { type LoggingsBaseConfig, type LoggingsConstructorConfig } from "./libs/defaults";
 import { ConsolePlugin } from "./libs/plugins/console";
 import type { LoggingsLevel, LoggingsMessage, LoggingsPlugin, LoggingsPluginData, LoggingsPluginsConfig, LoggingsPluginsConfiguration } from "./types";
-import type { LoggingsPallet } from "./cdn";
 
 /**
  * Default plugins used in the logging system.
  */
 export const LoggingsDefaultPlugins = [ConsolePlugin];
-declare const global: typeof globalThis & { __INTERNAL_LOGGINGS_INSTANCE__: InstanceType<typeof Loggings> };
+declare const global: typeof globalThis & { __INTERNAL_LOGGINGS_INSTANCE__: InstanceType<typeof Loggings> , };
 
 /**
  * Loggings class extends the built-in Console class and provides
@@ -178,6 +177,8 @@ export class Loggings<
     public trace(...messages: LoggingsMessage[]) { this.controller(messages, "trace"); return this; }
     public info(...messages: LoggingsMessage[]) { this.controller(messages, "info"); return this; }
     public warn(...messages: LoggingsMessage[]) { this.controller(messages, "warn"); return this; }
+    public txt(...messages: LoggingsMessage[]) { this.controller(messages, "txt"); return this; }
+
 }
 
 export default Loggings;

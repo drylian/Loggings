@@ -28,7 +28,7 @@ export const LoggingsFormatParser = (
     cb: (nocolor: boolean, ...text: string[]) => string
 ): LoggingsFormatKitFunction => {
     return (nocolor, text) => {
-        const regex = new RegExp(parser);
+        const regex = typeof parser === 'string' ? new RegExp(parser) : parser;
         return typeof text === "string"
             ? text.replace(regex, (...args) => cb(nocolor, ...args))
             : _inspect(text, nocolor);
@@ -36,11 +36,97 @@ export const LoggingsFormatParser = (
 };
 
 /**
- * Returns Grandient Text in terminal colors
+ * 
+ * @param nocolor 
+ * @param _ 
+ * @param text 
+ * @param _colors 
+ * @returns 
+ */
+const GradientFunction = (nocolor: boolean, _: string, text: string, _colors: string) => {
+    if (nocolor) return text;
+
+    const interpolate = (colorA: number, colorB: number, factor: number) => {
+        const rA = (colorA >> 16) & 255, gA = (colorA >> 8) & 255, bA = colorA & 255;
+        const rB = (colorB >> 16) & 255, gB = (colorB >> 8) & 255, bB = colorB & 255;
+
+        const r = Math.round(rA + (rB - rA) * factor);
+        const g = Math.round(gA + (gB - gA) * factor);
+        const b = Math.round(bA + (bB - bA) * factor);
+        return rgb(r, g, b)();
+    };
+
+    const splited_colors = _colors.split(",");
+    const colors = (splited_colors.length == 1 ? [splited_colors[0], splited_colors[0]] : splited_colors)
+        .map(a => a.trim())
+        .map(a => toHexadecimal(a));
+
+    const emojiRegex = /(\p{Emoji_Presentation}|\p{Emoji}\uFE0F)/gu;
+    
+    const emojiMatches = [];
+    let match;
+    while ((match = emojiRegex.exec(text)) !== null) {
+        emojiMatches.push({
+            index: match.index,
+            length: match[0].length,
+            emoji: match[0]
+        });
+    }
+
+    const chars = [];
+    let currentIndex = 0;
+    for (const emoji of emojiMatches) {
+        while (currentIndex < emoji.index) {
+            chars.push({
+                char: text[currentIndex],
+                isEmoji: false
+            });
+            currentIndex++;
+        }
+        chars.push({
+            char: emoji.emoji,
+            isEmoji: true
+        });
+        currentIndex += emoji.length;
+    }
+    while (currentIndex < text.length) {
+        chars.push({
+            char: text[currentIndex],
+            isEmoji: false
+        });
+        currentIndex++;
+    }
+
+    const textLength = chars.filter(c => !c.isEmoji).length;
+    const sections = colors.length - 1;
+    const section_length = Math.ceil(textLength / sections);
+
+    let gradient = "";
+    let charIndex = 0;
+    
+    for (const {char, isEmoji} of chars) {
+        if (isEmoji) {
+            gradient += char;
+        } else {
+            const index = Math.floor(charIndex / section_length);
+            const factor = (charIndex - index * section_length) / section_length;
+            const colorA = colors[index];
+            const colorB = colors[Math.min(index + 1, colors.length - 1)];
+            const result = interpolate(colorA, colorB, factor);
+            gradient += result + char;
+            charIndex++;
+        }
+    }
+
+    return gradient + LoggingsAnsiSpecials.reset;
+};
+
+/**
+ * Returns Gradient Text in terminal colors
  * 
  * @since Loggings v3.0.0
  */
-export const LoggingsGrandient = (text:string) => LOGGINGS_FORMATKITS[2](false, text);
+export const LoggingsGrandient = (text: string) => LOGGINGS_FORMATKITS[2](false, text);
 
 /**
  * Default Loggings Formatkits
@@ -59,9 +145,11 @@ export const LOGGINGS_FORMATKITS: LoggingsFormatKitFunction[] = [
         const pattern = /\[([^\[\]]+)\]\.(\w+)(-b)?/g;
         const fragments: {
             key: string;
+            count: number;
             value: string;
             bold: boolean;
         }[] = [];
+        let counter = 0;
         const fragment = (input: string): string => {
             let output = input;
 
@@ -71,14 +159,15 @@ export const LOGGINGS_FORMATKITS: LoggingsFormatKitFunction[] = [
 
                 const [matched, value, key, boldFlag] = match;
                 const isBold = boldFlag === "-b";
-
+                const count = counter++;
                 fragments.push({
                     key,
+                    count,
                     value,
                     bold: isBold,
                 });
 
-                const replacement = `<${key}>`;
+                const replacement = `<__LOGGINGS_$${count}>`;
                 output = output.replace(matched, replacement);
                 pattern.lastIndex = 0;
             }
@@ -89,7 +178,7 @@ export const LOGGINGS_FORMATKITS: LoggingsFormatKitFunction[] = [
         const text = fragment(input);
         let result = text;
         fragments.reverse().forEach(frag => {
-            const key = `<${frag.key}>`;
+            const key = `<__LOGGINGS_$${frag.count}>`;
             let fragmented = frag.value;
             if (frag.bold) fragmented = nocolor ? fragmented : LoggingsAnsiSpecials.bold + fragmented;
 
@@ -99,47 +188,6 @@ export const LOGGINGS_FORMATKITS: LoggingsFormatKitFunction[] = [
 
         return result;
     },
-    /**
-     * Loggings Grandient formatkit
-     * 
-     * @version 1.0.0v
-     * @since Loggings v3.0.0
-     */
-    LoggingsFormatParser("\\[([^\\[\\]]+)\\]gb\\((.*?)\\)", (nocolor, _, text, _colors) => {
-        if (nocolor) return text;
-
-        const interpolate = (colorA: number, colorB: number, factor: number) => {
-            const rA = (colorA >> 16) & 255, gA = (colorA >> 8) & 255, bA = colorA & 255;
-            const rB = (colorB >> 16) & 255, gB = (colorB >> 8) & 255, bB = colorB & 255;
-
-            const r = Math.round(rA + (rB - rA) * factor);
-            const g = Math.round(gA + (gB - gA) * factor);
-            const b = Math.round(bA + (bB - bA) * factor);
-            return rgb(r, g, b)();
-        };
-
-        // number[]
-        const splited_colors = _colors.split(",");
-        const colors = (splited_colors.length == 1 ? [splited_colors[0], splited_colors[0]] : splited_colors)
-            .map(a => a.trim())
-            .map(a => toHexadecimal(a));
-
-        const textLength = text.length;
-        const sections = colors.length - 1;
-        const section_length = Math.ceil(textLength / sections);
-
-        let gradient = "";
-        for (let i = 0; i < textLength; i++) {
-            const index = Math.floor(i / section_length);
-            const factor = (i - index * section_length) / section_length;
-            const colorA = colors[index];
-            const colorB = colors[Math.min(index + 1, colors.length - 1)];
-            const result = interpolate(colorA, colorB, factor);
-            gradient += result + text[i];
-        }
-
-        return gradient + LoggingsAnsiSpecials.reset;
-    }),
     /**
      * Loggings Bold formatkit
      * 
@@ -152,7 +200,7 @@ export const LOGGINGS_FORMATKITS: LoggingsFormatKitFunction[] = [
      * @version 1.0.0v
      * @since Loggings v3.0.0
      */
-    LoggingsFormatParser("~(.*?)~", (nocolor, _, text) => nocolor ? text :  colorpik('strikethrough', text)),
+    LoggingsFormatParser("~(.*?)~", (nocolor, _, text) => nocolor ? text : colorpik('strikethrough', text)),
     /**
      * Loggings Italic formatkit
      * 
@@ -181,6 +229,14 @@ export const LOGGINGS_FORMATKITS: LoggingsFormatKitFunction[] = [
      * @since Loggings v3.0.0
      */
     LoggingsFormatParser("#(.*?)#", (nocolor, _, text) => nocolor ? text : colorpik('reverse', text)),
+    /**
+     * Loggings Gradient formatkit
+     * 
+     * @version 1.0.0v
+     * @since Loggings v3.0.0
+     */
+    LoggingsFormatParser("\\(([^()]+)\\)gd\\((.*?)\\)", GradientFunction),
+    LoggingsFormatParser("\\(([^()]+)\\)gb\\((.*?)\\)", GradientFunction),
 ];
 
 /**
@@ -210,10 +266,11 @@ export const LoggingsFormatKitController = (
     let output = typeof texts === "string" ? [texts] : [...texts]; // Garante que é sempre um array
     let changed = false;
     const tools = [...LOGGINGS_FORMATKITS, ...extraformats];
-
+    let iterations = 0;
+    const max = 10; // Número razoável para formatos aninhados
+    
     do {
         changed = false;
-
         tools.forEach(func => {
             output = output.map(input => {
                 const nextupt = func(nocolor, input);
@@ -221,8 +278,8 @@ export const LoggingsFormatKitController = (
                 return nextupt;
             });
         });
-
-    } while (changed);
+        iterations++;
+    } while (changed && iterations < max);
 
     return output.join(" ");
 };

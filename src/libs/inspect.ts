@@ -1,38 +1,51 @@
 import { Runtime, runtime } from "./utils";
+import { inspect as Inpector } from "node:util";
+const opts = {
+    depth: null,
+    showHidden: false,
+    showProxy: false,
+    maxArrayLength: null,
+    breakLength: Infinity,
+    compact: false
+};
 
-let _inspect = (msg: string | boolean | object | number, nocolor: boolean = false) => {
-    // @ts-expect-error in browser inspect is global
-    return inspect(msg, { colors: !nocolor, depth: 3 });
+let _inspect = (msg: string | boolean | object | number, _nocolor: boolean = false) => {
+    return msg as string;
 }
 
 switch (runtime) {
     case Runtime.Node: {
-        switch (true) {
-            case typeof __filename == "undefined": {
-                _inspect = (msg, nocolor = false) => 
-                    import("node:util").then(({ inspect }) => 
-                        inspect(msg, { colors: !nocolor, depth: 3 }));
-                break;
-            }
-            default: {
-                const inspect = require("node:util");
-                _inspect = (msg, nocolor = false) => 
-                    inspect(msg, { colors: !nocolor, depth: 3 });
-                break;
-            }
-        }
+        _inspect = (msg, nocolor = false) => Inpector(msg, {
+            colors: !nocolor,
+            ...opts
+        });
         break;
     }
     case Runtime.Bun: {
-        // @ts-expect-error @types/Bun not installed
-        _inspect = (msg, nocolor = false) => Bun.inspect(msg, { colors: !nocolor, depth: 3 });
+        try {
+            // @ts-expect-error @types/Bun not installed
+            _inspect = (msg, nocolor = false) => Bun.inspect(msg, {
+                colors: !nocolor,
+                ...opts
+            });
+        } catch (e) {
+            console.warn("Failed to use Bun.inspect, using fallback");
+        }
         break;
     }
     case Runtime.Deno: {
-        // @ts-expect-error @types/Deno not installed
-        _inspect = (msg, nocolor = false) => Deno.inspect(msg, { colors: !nocolor, depth: 3 });
+        try {
+            // @ts-expect-error @types/Deno not installed
+            _inspect = (msg, nocolor = false) => Deno.inspect(msg, {
+                colors: !nocolor,
+                ...opts
+            });
+        } catch (e) {
+            console.warn("Failed to use Deno.inspect, using fallback");
+        }
         break;
     }
 }
+
 
 export default _inspect;

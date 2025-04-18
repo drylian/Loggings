@@ -3,7 +3,7 @@
     "compilerOptions": {
        "module": "commonjs",
        "moduleResolution": "Node",
-       "target": "es2015",
+       "target": "es2022",
        "rootDir": "src",
        "outDir": "dist/cjs",
        "skipLibCheck": true

@@ -20,7 +20,7 @@ import type { LoggingsLevel, LoggingsMessage, LoggingsPlugin, LoggingsPluginData
  * Default plugins used in the logging system.
  */
 export const LoggingsDefaultPlugins = [ConsolePlugin, RegisterPlugin];
-declare const global: typeof globalThis & { __INTERNAL_LOGGINGS_INSTANCE__: InstanceType<typeof Loggings> };
+declare const global: typeof globalThis & { __INTERNAL_LOGGINGS_INSTANCE__: InstanceType<typeof Loggings> , };
 
 /**
  * Loggings class extends the built-in Console class and provides

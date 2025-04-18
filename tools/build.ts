@@ -48,6 +48,23 @@ await build({
   ...sharedConfig,
   target:["es2024"],
   entry:['src/cdn.ts'],
+  noExternal: ['node:util'], // Isso força o tsup a incluir o módulo no bundle
+  esbuildPlugins: [
+    {
+      name: 'replace-node-module',
+      setup(build) {
+        build.onResolve({ filter: /^node:util$/ }, () => {
+          return { path: 'node:util', namespace: 'replace-node-module' }
+        })
+        build.onLoad({ filter: /.*/, namespace: 'replace-node-module' }, () => {
+          return {
+            contents: 'export const inspect = (...any) => global.inpect',
+            loader: 'js'
+          }
+        })
+      }
+    }
+  ]
 })
 
 await writeFile('cjs/package.json', JSON.stringify({ type: 'commonjs' }, null, 2))
