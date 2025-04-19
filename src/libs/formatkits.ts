@@ -29,9 +29,7 @@ export const LoggingsFormatParser = (
 ): LoggingsFormatKitFunction => {
     return (nocolor, text) => {
         const regex = typeof parser === 'string' ? new RegExp(parser) : parser;
-        return typeof text === "string"
-            ? text.replace(regex, (...args) => cb(nocolor, ...args))
-            : _inspect(text, nocolor);
+        return text.replace(regex, (...args) => cb(nocolor, ...args));
     };
 };
 
@@ -259,27 +257,34 @@ export const LOGGINGS_FORMATKITS: LoggingsFormatKitFunction[] = [
  * ```
  */
 export const LoggingsFormatKitController = (
-    texts: string | any[],
+    texts: any | any[],
     extraformats: LoggingsFormatKitFunction[] = [],
     nocolor = false
 ) => {
-    let output = typeof texts === "string" ? [texts] : [...texts]; // Garante que é sempre um array
-    let changed = false;
+    let output = typeof texts === "string" ? [texts] : [...texts]; 
     const tools = [...LOGGINGS_FORMATKITS, ...extraformats];
-    let iterations = 0;
-    const max = 10; // Número razoável para formatos aninhados
     
-    do {
-        changed = false;
-        tools.forEach(func => {
-            output = output.map(input => {
-                const nextupt = func(nocolor, input);
-                if (nextupt !== input) changed = true;
-                return nextupt;
-            });
-        });
-        iterations++;
-    } while (changed && iterations < max);
+    output = output.map(input => {
+        if (typeof input === "string") {
+            let changed = false;
+            let iterations = 0;
+            const max = 10;
+            let current = input;
+            
+            do {
+                changed = false;
+                tools.forEach(func => {
+                    const nextupt = func(nocolor, current);
+                    if (nextupt !== current) changed = true;
+                    current = nextupt;
+                });
+                iterations++;
+            } while (changed && iterations < max);
+            
+            return current;
+        }
+        return _inspect(input, nocolor);
+    });
 
     return output.join(" ");
 };

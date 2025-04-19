@@ -3,10 +3,6 @@ import { writeFile } from 'fs/promises'
 import { generateDtsBundle } from 'dts-bundle-generator'
 import { dirname, join } from 'path'
 import { mkdir } from 'fs/promises'
-import { existsSync } from 'fs'
-import { rm } from 'fs/promises'
-
-if (existsSync('dist')) await rm('dist', { recursive: true })
 
 const sharedConfig: Options = {
   platform: 'node',
@@ -48,7 +44,7 @@ await build({
   ...sharedConfig,
   target:["es2024"],
   entry:['src/cdn.ts'],
-  noExternal: ['node:util'], // Isso força o tsup a incluir o módulo no bundle
+  noExternal: ['node:util'],
   esbuildPlugins: [
     {
       name: 'replace-node-module',
@@ -58,7 +54,7 @@ await build({
         })
         build.onLoad({ filter: /.*/, namespace: 'replace-node-module' }, () => {
           return {
-            contents: 'export const inspect = (...any) => global.inpect',
+            contents: 'export const inspect = (...any) => any.join("\n")',
             loader: 'js'
           }
         })
