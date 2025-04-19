@@ -54,7 +54,7 @@ await build({
         })
         build.onLoad({ filter: /.*/, namespace: 'replace-node-module' }, () => {
           return {
-            contents: 'export const inspect = (...any) => any.join("\n")',
+            contents: 'export const inspect = (msg) => msg',
             loader: 'js'
           }
         })
